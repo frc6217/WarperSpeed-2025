@@ -23,19 +23,12 @@ public class BBCANEncoder implements IEncoder{
 
         CANcoderConfiguration caNcoderConfiguration = new CANcoderConfiguration();
         caNcoderConfiguration.MagnetSensor.MagnetOffset = -constants.absEncoderOffset;
-        caNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        caNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         caNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         encoder.getConfigurator().apply(caNcoderConfiguration);
         //Offset Is ALways In Degrees
         
         //encoder.configFeedbackCoefficient(0.00153416806, "radians", SensorTimeBase.PerSecond);
-    }
-
-
-    @Override
-    public int getTest(double tomatoes) {
-        // TODO Auto-generated method stub
-        return 0;
     }
 
     @Override

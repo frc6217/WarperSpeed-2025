@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -26,9 +26,10 @@ public class SwerveModule extends SubsystemBase{
   final CANSparkMax steerMotor;
   RelativeEncoder driveEncoder;
   RelativeEncoder steerEncoder;
-  SparkMaxPIDController drivePID;
+  SparkPIDController drivePID;
+
   double driveSetpoint = 0;
-  SparkMaxPIDController steerPID;
+  SparkPIDController steerPID;
   double steerSetpoint = 0;
   IEncoder absEncoder;
   String name;
@@ -118,22 +119,6 @@ public class SwerveModule extends SubsystemBase{
   }
   */
 
-  private double getSetPointAngle() {
-    return steerSetpoint;
-  }
-  
-  private double getSetPointSpeed() {
-    return driveSetpoint;
-  }
-
-  private double getDriveSpeed(){
-    return driveEncoder.getVelocity();
-  }
-
-  private double getDrivePosition(){
-    return driveEncoder.getPosition();
-  }
-
 
   private double getSteerPosition(){
     if(steerEncoder.getPosition() < 0){
@@ -143,54 +128,7 @@ public class SwerveModule extends SubsystemBase{
     }
   }
 
-  private double getDriveP(){
-    return drivePID.getP();
-  }
-
-  private double getDriveI(){
-    return drivePID.getI();
-  }
-
-  private double getDriveD(){
-    return drivePID.getD();
-  }
-
-  private void setDriveP(double p){
-   drivePID.setP(p);
-  }
-
-  private void setDriveI(double i){
-   drivePID.setI(i);
-  }
-
-  private void setDriveD(double d){
-   drivePID.setD(d);
-  }
   
-  private double getSteerP(){
-    return steerPID.getP();
-  }
-
-  private double getSteerI(){
-    return steerPID.getI();
-  }
-
-  private double getSteerD(){
-    return steerPID.getD();
-  }
-
-  private void setSteerP(double p){
-    steerPID.setP(p);
-  }
-
-  private void setSteerI(double i){
-   steerPID.setI(i);
-  }
-
-  private void setSteerD(double d){
-   steerPID.setD(d);
-  }
-
   public SwerveModulePosition getModulePosition(){
    // return new SwerveModulePosition(getDistance(), absEncoder.getAngle());
   return new SwerveModulePosition(getDistance(), getCurrentAngle());

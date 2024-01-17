@@ -5,25 +5,19 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
-import edu.wpi.first.hal.simulation.EncoderDataJNI;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.interfaces.IEncoder;
 
 /** Add your docs here. */
 public class BBAbsoluteEncoder implements IEncoder{
-    SparkMaxAbsoluteEncoder encoder;
+    SparkAbsoluteEncoder encoder;
     BBAbsoluteEncoder(CANSparkMax motor){
         encoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
     }
 
-    @Override
-    public int getTest(double tomatoes) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 
     @Override
     public double getRawValue() {

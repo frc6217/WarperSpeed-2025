@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 /** Add your docs here. */
 public interface IEncoder {
-    int getTest(double tomatoes);
     double getRawValue();
     Rotation2d getAngle();
 }

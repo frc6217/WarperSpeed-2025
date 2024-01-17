@@ -114,14 +114,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   */
 
-  private double[] getChassisSpeed() {
-    return new double[] {cSpeeds.vxMetersPerSecond, cSpeeds.vyMetersPerSecond, cSpeeds.omegaRadiansPerSecond};
-  }
-
-  private double[] getOdometry() {
-    return new double[] {sOdometry.getPoseMeters().getX(), sOdometry.getPoseMeters().getY()};
-  }
-
   public Command getResetCommand(){
     return this.runOnce(() -> reset());
 
@@ -154,12 +146,6 @@ public class SwerveDrivetrain extends SubsystemBase {
     cSpeeds.vyMetersPerSecond = 0;
   }
 
-  public void setupSmartDashboard() {
-    SmartDashboard.putData("DriveTrain", this);
-    for(SwerveModule module : modules){
-  //    module.setupSmartDashboard();
-    }
-  }
 
 public double getAngle() {
     return pigeon2.getYaw().getValueAsDouble();

@@ -43,11 +43,9 @@ public class RobotContainer {
     swerveDrivetrain.setName("driveTrain1");
   
     
-    swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> mJoystick.getY(), () -> mJoystick.getZ(), () -> -mJoystick.getX(), mJoystick));
+    //swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> mJoystick.getX(), () -> mJoystick.getZ(), () -> -mJoystick.getY(), mJoystick));
     
-    //swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> m_driverController.getLeftY(), () -> m_driverController.getRightX(), () -> -m_driverController.getLeftX(), mJoystick));
-    
-    swerveDrivetrain.setupSmartDashboard();
+    swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftY(), () -> -m_driverController.getRightX(), () -> m_driverController.getLeftX(), mJoystick));     
 
     SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
 
