@@ -7,10 +7,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import java.util.ResourceBundle.Control;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -22,8 +26,8 @@ import frc.robot.subsystems.SwerveModule.Constants.encoderType;
 public class SwerveModule extends SubsystemBase{
   /** Creates a new SwerveModule. */
 
-  final CANSparkMax driveMotor;
-  final CANSparkMax steerMotor;
+  public final CANSparkMax driveMotor;
+  public final CANSparkMax steerMotor;
   RelativeEncoder driveEncoder;
   RelativeEncoder steerEncoder;
   SparkPIDController drivePID;
@@ -78,8 +82,8 @@ public class SwerveModule extends SubsystemBase{
     //steerEncoder.setPosition(0);
     steerEncoder.setPositionConversionFactor(2*Math.PI / 21.4285714286);
     steerEncoder.setPosition(absEncoder.getAngle().getRadians());
-
-    drivePID.setP(0);
+//todo make drive pid work
+    drivePID.setP(0.0008);
     drivePID.setD(0);
     drivePID.setI(0);
     drivePID.setFF(0);
@@ -141,7 +145,8 @@ public class SwerveModule extends SubsystemBase{
   private void setSpeed(SwerveModuleState state){
     driveSetpoint = state.speedMetersPerSecond;
     if(Math.abs(driveSetpoint) > .03){
-    driveMotor.set(driveSetpoint);
+      driveMotor.set(driveSetpoint);
+      //drivePID.setReference(driveSetpoint, ControlType.kVelocity);
     } else{
       driveMotor.set(0);
     }

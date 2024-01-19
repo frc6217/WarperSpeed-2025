@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FindKS;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrivetrain;
@@ -48,6 +49,7 @@ public class RobotContainer {
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftY(), () -> -m_driverController.getRightX(), () -> m_driverController.getLeftX(), mJoystick));     
 
     SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
+    m_driverController.button(1).onTrue(new FindKS(swerveDrivetrain.frontRightModule.driveMotor, swerveDrivetrain));
 
   }
 
