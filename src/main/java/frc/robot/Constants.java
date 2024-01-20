@@ -29,7 +29,7 @@ public final class Constants {
     public static final double steerGearRatio = 1.2;
     public static final double wheelDiameter = Units.inchesToMeters(4);
     public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
-    public static final double rotationMaxAngleVelo = 2*Math.PI;
+    public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
     //Random numberdecided make actually number that the angle velo max actually is. 
 /*
     // Practice Robot

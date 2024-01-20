@@ -17,7 +17,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.commands.Drive;
 
 
 public class SwerveDrivetrain extends SubsystemBase {
@@ -34,8 +37,18 @@ public class SwerveDrivetrain extends SubsystemBase {
   public SwerveModule[] modules;
   public ChassisSpeeds cSpeeds;
 
-  public SwerveDrivetrain() {
-
+  public enum USER_CONTROLLER {
+    JOYSTICK,
+    XBOX
+  }
+  public CommandJoystick cj;
+  public CommandXboxController cx;
+  public USER_CONTROLLER controller = USER_CONTROLLER.JOYSTICK;
+ 
+  public SwerveDrivetrain(CommandJoystick cj, CommandXboxController cx) {
+    this.cj = cj;
+    this.cx = cx;
+    this.toggleUserController();
     frontRightModule = new SwerveModule(Constants.RobotConstants.frontRight);
     backLeftModule = new SwerveModule(Constants.RobotConstants.backLeft);
     backRightModule = new SwerveModule(Constants.RobotConstants.backRight);
@@ -147,7 +160,19 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
 
 
-public double getAngle() {
-    return pigeon2.getYaw().getValueAsDouble();
-}
+  public double getAngle() {
+      return pigeon2.getYaw().getValueAsDouble();
+  }
+
+  public void toggleUserController(){
+    if (controller == USER_CONTROLLER.JOYSTICK){
+      SmartDashboard.putString("current drive controller", "xbox");
+      controller = USER_CONTROLLER.XBOX;
+          this.setDefaultCommand(new Drive(this, () -> -cx.getLeftY(), () -> -cx.getRightX(), () -> cx.getLeftX(), cj));     
+    } else if(controller == USER_CONTROLLER.XBOX){
+            SmartDashboard.putString("current drive controller", "joystick");
+          this.setDefaultCommand(new Drive(this, () -> -cj.getY(), () -> -cj.getZ(), () -> cj.getX(), cj));
+      controller = USER_CONTROLLER.JOYSTICK;
+    }
+  }
 }

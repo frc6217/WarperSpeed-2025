@@ -10,6 +10,7 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FindKS;
 import frc.robot.commands.ResetDriveTrain;
+import frc.robot.commands.UserControllerSwitch;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,27 +29,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain();
-  private final CommandJoystick mJoystick = new CommandJoystick(0);
-  public double controllerVar = 0;
 
+  private final CommandJoystick mJoystick = new CommandJoystick(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
+  public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick, m_driverController);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    swerveDrivetrain.setName("driveTrain1");
   
+    SmartDashboard. putData(new UserControllerSwitch(swerveDrivetrain));
     
-    //swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> mJoystick.getX(), () -> mJoystick.getZ(), () -> -mJoystick.getY(), mJoystick));
-    
-    swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftY(), () -> -m_driverController.getRightX(), () -> m_driverController.getLeftX(), mJoystick));     
-
-    SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
+    //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
     m_driverController.button(1).onTrue(new FindKS(swerveDrivetrain.frontRightModule.driveMotor, swerveDrivetrain));
 
   }

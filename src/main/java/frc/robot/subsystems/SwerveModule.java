@@ -14,12 +14,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.interfaces.IEncoder;
 import frc.robot.subsystems.SwerveModule.Constants.encoderType;
 
@@ -83,9 +86,9 @@ public class SwerveModule extends SubsystemBase{
     steerEncoder.setPositionConversionFactor(2*Math.PI / 21.4285714286);
     steerEncoder.setPosition(absEncoder.getAngle().getRadians());
 //todo make drive pid work
-    drivePID.setP(0.0008);
-    drivePID.setD(0);
+    drivePID.setP(0);
     drivePID.setI(0);
+    drivePID.setD(0);
     drivePID.setFF(0);
 
     steerPID.setP(0.3);
@@ -96,7 +99,8 @@ public class SwerveModule extends SubsystemBase{
     absEncoderOffset = constants.absEncoderOffset;
 
     operationOrderID = constants.position;
-
+    steerMotor.burnFlash();
+    driveMotor.burnFlash();
   }
 
   /*
@@ -143,9 +147,11 @@ public class SwerveModule extends SubsystemBase{
   }
   
   private void setSpeed(SwerveModuleState state){
-    driveSetpoint = state.speedMetersPerSecond;
+    driveSetpoint = state.speedMetersPerSecond/RobotConstants.driveMaxVelo;
+    SmartDashboard.putNumber(name+" Drive Setpoint ", driveSetpoint);
     if(Math.abs(driveSetpoint) > .03){
-      driveMotor.set(driveSetpoint);
+     //System.out.println(name  + ": " + MathUtil.clamp(driveSetpoint, -1, 1));
+      driveMotor.set(MathUtil.clamp(driveSetpoint, -.9, .9));
       //drivePID.setReference(driveSetpoint, ControlType.kVelocity);
     } else{
       driveMotor.set(0);
@@ -161,6 +167,7 @@ public class SwerveModule extends SubsystemBase{
     }
     //steerSetpoint = (Math.abs(steerSetpoint-getSteerPosition()) < 0.15) ? 0 : steerSetpoint;
     steerPID.setReference(steerSetpoint, ControlType.kPosition);
+    //System.out.println(name + "pid out " + steerMotor.get());
   }
 
   public Rotation2d getCurrentAngle(){
