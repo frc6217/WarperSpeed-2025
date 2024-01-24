@@ -50,14 +50,8 @@ public class SwerveModule extends SubsystemBase{
     steerMotor = new CANSparkMax(constants.steerMotorID, MotorType.kBrushless);
   //Add to COnstants
 
-    driveMotor.setInverted(true);
-    steerMotor.setInverted(true);
-
-    if(constants.type == encoderType.CAN){
-      absEncoder = new BBCANEncoder(constants);
-    }else if(constants.type == encoderType.Spark){
-      absEncoder = new BBAbsoluteEncoder(steerMotor);
-    }
+    absEncoder = new BBCANEncoder(constants);
+    
     driveEncoder = driveMotor.getEncoder();
     steerEncoder = steerMotor.getEncoder();
     drivePID = driveMotor.getPIDController();
@@ -67,6 +61,9 @@ public class SwerveModule extends SubsystemBase{
 
     driveMotor.restoreFactoryDefaults();
     steerMotor.restoreFactoryDefaults();
+
+    driveMotor.setInverted(true);
+    steerMotor.setInverted(true);
 
     driveMotor.setIdleMode(IdleMode.kCoast);
     steerMotor.setIdleMode(IdleMode.kCoast);
@@ -85,6 +82,7 @@ public class SwerveModule extends SubsystemBase{
     //steerEncoder.setPosition(0);
     steerEncoder.setPositionConversionFactor(2*Math.PI / 21.4285714286);
     steerEncoder.setPosition(absEncoder.getAngle().getRadians());
+
 //todo make drive pid work
     drivePID.setP(0);
     drivePID.setI(0);

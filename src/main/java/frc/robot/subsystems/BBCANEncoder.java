@@ -22,8 +22,8 @@ public class BBCANEncoder implements IEncoder{
         encoder = new CANcoder(constants.absEncoderID, constants.canTypeString);
 
         CANcoderConfiguration caNcoderConfiguration = new CANcoderConfiguration();
-        caNcoderConfiguration.MagnetSensor.MagnetOffset = -constants.absEncoderOffset;
-        caNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        caNcoderConfiguration.MagnetSensor.MagnetOffset = constants.absEncoderOffset;
+        caNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         caNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         encoder.getConfigurator().apply(caNcoderConfiguration);
         //Offset Is ALways In Degrees
