@@ -43,6 +43,7 @@ public final class Constants {
     public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 31, 2, 59,0.131592, "Front Right", encoderType.CAN,"CTRSwerve");
     public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 18, 19, 61,0.667236, "Back Left", encoderType.CAN, "CTRSwerve");
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 3, 30, 62,0.061279, "Back Right", encoderType.CAN,"CTRSwerve");
+    public static final double laserNoteThresholdInches = 7.3;
   }
 
 

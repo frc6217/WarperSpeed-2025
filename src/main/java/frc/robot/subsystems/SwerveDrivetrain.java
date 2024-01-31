@@ -44,6 +44,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   public CommandJoystick cj;
   public CommandXboxController cx;
   public USER_CONTROLLER controller = USER_CONTROLLER.JOYSTICK;
+  public AllianceSelector allianceSelector;
  
   public SwerveDrivetrain(CommandJoystick cj, CommandXboxController cx) {
     this.cj = cj;
@@ -53,6 +54,8 @@ public class SwerveDrivetrain extends SubsystemBase {
     backLeftModule = new SwerveModule(Constants.RobotConstants.backLeft);
     backRightModule = new SwerveModule(Constants.RobotConstants.backRight);
     frontLeftModule = new SwerveModule(Constants.RobotConstants.frontLeft);
+
+    allianceSelector = new AllianceSelector();
 
     pigeon2.reset();
     
