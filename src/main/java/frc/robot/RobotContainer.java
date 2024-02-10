@@ -12,10 +12,13 @@ import frc.robot.commands.FindKS;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.UserControllerSwitch;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -37,8 +40,9 @@ public class RobotContainer {
 
   //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick, m_driverController);
-
+  public final Intake intake = new Intake();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public final Shooter shooter=new Shooter();
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -46,8 +50,12 @@ public class RobotContainer {
     SmartDashboard. putData(new UserControllerSwitch(swerveDrivetrain));
     
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    m_driverController.button(1).onTrue(new FindKS(swerveDrivetrain.frontRightModule.driveMotor, swerveDrivetrain));
-
+    m_driverController.a().onTrue(Commands.runOnce(intake::on1Intake, intake));
+    m_driverController.b().onTrue(Commands.runOnce(intake::off1Intake, intake));
+    m_driverController.x().onTrue(Commands.runOnce(intake::on2Intake, intake));
+    m_driverController.y().onTrue(Commands.runOnce(intake::off2Intake, intake));
+     m_driverController.rightBumper().onTrue(Commands.runOnce(shooter::on, shooter));
+    m_driverController.leftBumper().onTrue(Commands.runOnce(shooter::off, shooter));
   }
 
   /*

@@ -39,10 +39,12 @@ public final class Constants {
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 13, 23, 0, "Back Right", encoderType.Spark);
  */
     // Competition Robot
-    public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 16, 15, 60,0.561279, "Front Left", encoderType.CAN, "CTRSwerve");
-    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59,0.131592, "Front Right", encoderType.CAN,"CTRSwerve");
-    public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 19, 18, 61,0.667236, "Back Left", encoderType.CAN, "CTRSwerve");
-    public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,0.061279, "Back Right", encoderType.CAN,"CTRSwerve");
+
+    //bevel gear on wheel goes right
+    public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 16, 15, 60,-0.057617, "Front Left", encoderType.CAN, "CTRSwerve");
+    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59,-0.677490, "Front Right", encoderType.CAN,"CTRSwerve");
+    public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 19, 18, 61,-0.070801, "Back Left", encoderType.CAN, "CTRSwerve");
+    public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.096924, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
   }
 
