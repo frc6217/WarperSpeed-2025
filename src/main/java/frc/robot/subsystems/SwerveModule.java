@@ -62,8 +62,8 @@ public class SwerveModule extends SubsystemBase{
     driveMotor.restoreFactoryDefaults();
     steerMotor.restoreFactoryDefaults();
 
-    driveMotor.setInverted(true);
-    steerMotor.setInverted(true);
+    driveMotor.setInverted(false);
+    steerMotor.setInverted(false);
 
     driveMotor.setIdleMode(IdleMode.kCoast);
     steerMotor.setIdleMode(IdleMode.kCoast);

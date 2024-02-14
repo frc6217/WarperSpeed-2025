@@ -45,6 +45,11 @@ public class Intake extends SubsystemBase {
   public void on1Intake(){
     firstIntake.set(SmartDashboard.getNumber("intake1speed", 0));
   }
+
+  public void reverse1Intake(){
+    firstIntake.set(-SmartDashboard.getNumber("intake1speed", 0));
+  }
+
   public void off1Intake(){
     firstIntake.set(0);
   }
@@ -52,6 +57,11 @@ public class Intake extends SubsystemBase {
   public void on2Intake(){
     secondIntake.set(SmartDashboard.getNumber("intake2speed", 0));
   }
+
+   public void reverse2Intake(){
+    secondIntake.set(-SmartDashboard.getNumber("intake2speed", 0));
+  }
+
   public void off2Intake(){
     secondIntake.set(0);
   }
