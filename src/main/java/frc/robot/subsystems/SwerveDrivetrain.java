@@ -119,7 +119,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
     sOdometry.update(getGyroRotation2d(), getModulePositions());
     SmartDashboard.putNumber("Gyro Angle", getGyroRotation2d().getDegrees());
-    SmartDashboard.putNumber("Pigeon getYaw Value: ", getAngle());
+   // SmartDashboard.putNumber("Pigeon getYaw Value: ", getAngle());
     SmartDashboard.putNumber("Odometry pose X: ", sOdometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry pose Y: ", sOdometry.getPoseMeters().getY());
 
@@ -193,6 +193,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     public double fastGovernor = Constants.OperatorConstants.kDefaultFast;
     public double slowGovernor = Constants.OperatorConstants.kDefaultSlow;
 
+    public Governor(){
+      SmartDashboard.putString("Governor Mode: ", mode.toString());
+    }
+
     public double getGovernor(){
       switch (mode) {
         case SLOW:
@@ -204,9 +208,11 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
     public void setSlowMode(){
       mode = MODE.SLOW;
+      SmartDashboard.putString("Governor Mode: ", mode.toString());
     }
     public void setFastMode(){
       mode = MODE.FAST;
+      SmartDashboard.putString("Governor Mode: ", mode.toString());
     }
     public void increment(){ 
       switch (mode) {

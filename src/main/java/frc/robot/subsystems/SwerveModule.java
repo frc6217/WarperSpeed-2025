@@ -146,7 +146,7 @@ public class SwerveModule extends SubsystemBase{
   
   private void setSpeed(SwerveModuleState state){
     driveSetpoint = state.speedMetersPerSecond/RobotConstants.driveMaxVelo;
-    SmartDashboard.putNumber(name+" Drive Setpoint ", driveSetpoint);
+    //SmartDashboard.putNumber(name+" Drive Setpoint ", driveSetpoint);
     if(Math.abs(driveSetpoint) > .03){
      //System.out.println(name  + ": " + MathUtil.clamp(driveSetpoint, -1, 1));
       driveMotor.set(MathUtil.clamp(driveSetpoint, -.9, .9));
@@ -193,21 +193,17 @@ public class SwerveModule extends SubsystemBase{
     }
   }
 
-  public void setupSmartDashboard() {
-    SmartDashboard.putData(name, this);
-  }
-
   @Override
   public void periodic() {
 
     // if we aren't adjusting steering AND some time passed (5sec maybe)
     // then get ABS enc value and set it to relative postion (with conversion?)
-    SmartDashboard.putNumber(name + " Wheel Angle", Math.toDegrees(getSteerPosition()));
-    SmartDashboard.putNumber(name + " Absolute Encoder", absEncoder.getAngle().getDegrees());
+    SmartDashboard.putNumber(name + " Wheel Angle (degree)", Math.round(Math.toDegrees(getSteerPosition())));
+    //SmartDashboard.putNumber(name + " Absolute Encoder", absEncoder.getAngle().getDegrees());
     SmartDashboard.putNumber(name + " Absolute Encoder Raw Value: ", absEncoder.getRawValue());
-    SmartDashboard.putNumber(name + " Steer Setpoints", Math.toDegrees(steerSetpoint));
+    //SmartDashboard.putNumber(name + " Steer Setpoints", Math.toDegrees(steerSetpoint));
     
-    SmartDashboard.putNumber(name + "RPM of Motor", driveMotor.getEncoder().getVelocity());
+    //SmartDashboard.putNumber(name + "RPM of Motor", driveMotor.getEncoder().getVelocity());
     /*
     SmartDashboard.putNumber(name + " DrivePosition", getDrivePosition());
     SmartDashboard.putNumber(name + " DriveSpeed", getDriveSpeed());
