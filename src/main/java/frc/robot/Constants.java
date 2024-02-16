@@ -22,6 +22,12 @@ public final class Constants {
     public static final int kOperatorControllerPort = 2;
     public static final int kLeftBackButton = 7;
     public static final int kRightBackButton = 8;
+    public static final int leftTriggerAxis = 2;
+    public static final int rightTriggerAxis = 3;
+    public static final double kFastInc = 0.1;
+    public static final double kSlowInc = 0.01;
+    public static final double kDefaultFast = 1;
+    public static final double kDefaultSlow = 0.3;
   }
 
   

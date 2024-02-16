@@ -45,6 +45,8 @@ public class SwerveDrivetrain extends SubsystemBase {
   public CommandXboxController cx;
   public USER_CONTROLLER controller = USER_CONTROLLER.JOYSTICK;
   public AllianceSelector allianceSelector;
+
+  public Governor governor = new Governor();
  
   public SwerveDrivetrain(CommandJoystick cj, CommandXboxController cx) {
     this.cj = cj;
@@ -180,6 +182,47 @@ public class SwerveDrivetrain extends SubsystemBase {
             SmartDashboard.putString("current drive controller", "joystick");
           this.setDefaultCommand(new Drive(this, () -> -cj.getY(), () -> -cj.getZ(), () -> cj.getX(), cj));
       controller = USER_CONTROLLER.JOYSTICK;
+    }
+  }
+
+  public class Governor{
+    public enum MODE {SLOW, FAST};
+    public MODE mode = MODE.FAST;
+    public double fastInc = Constants.OperatorConstants.kFastInc;
+    public double slowInc = Constants.OperatorConstants.kSlowInc;
+    public double fastGovernor = Constants.OperatorConstants.kDefaultFast;
+    public double slowGovernor = Constants.OperatorConstants.kDefaultSlow;
+
+    public double getGovernor(){
+      switch (mode) {
+        case SLOW:
+          return slowGovernor;
+        case FAST:
+          return fastGovernor;
+      }
+      return 0;
+    }
+    public void setSlowMode(){
+      mode = MODE.SLOW;
+    }
+    public void setFastMode(){
+      mode = MODE.FAST;
+    }
+    public void increment(){ 
+      switch (mode) {
+        case SLOW:
+          slowGovernor += slowInc;
+        case FAST:
+          fastGovernor += fastInc;
+      }
+    }
+    public void decrement(){ 
+      switch (mode) {
+        case SLOW:
+          slowGovernor -= slowInc;
+        case FAST:
+          fastGovernor -= fastInc;
+      }
     }
   }
 }

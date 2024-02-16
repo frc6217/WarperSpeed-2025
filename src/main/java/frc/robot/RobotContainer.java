@@ -60,8 +60,13 @@ public class RobotContainer {
     m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
     m_gameOperatorController.button(Constants.OperatorConstants.kRightBackButton).whileTrue(new ShootCommand(shooter));
 
-    m_gameOperatorController.leftBumper().onTrue(new VibrateController(m_driverController));
-    m_driverController.leftBumper().onTrue(new VibrateController(m_driverController));
+   // m_gameOperatorController.leftBumper().onTrue(new VibrateController(m_driverController));
+   // m_driverController.leftBumper().onTrue(new VibrateController(m_driverController));
+
+    m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
+    m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
+    m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
+    m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
   }
 
   /*
