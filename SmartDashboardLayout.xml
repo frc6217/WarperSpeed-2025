@@ -1,0 +1,187 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="highShooterspeed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="278" y="178"/>
+	</widget>
+	<widget field="lowShooterspeed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="278" y="0"/>
+	</widget>
+	<widget field="intake2speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="777"/>
+	</widget>
+	<widget field="intake1speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="756"/>
+	</widget>
+	<widget field="seetarget" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="735"/>
+	</widget>
+	<widget field="PIDController[6]" type="PIDController" class="edu.wpi.first.smartdashboard.gui.elements.PIDEditor">
+		<location x="282" y="272"/>
+	</widget>
+	<widget field="PIDController[3]" type="PIDController" class="edu.wpi.first.smartdashboard.gui.elements.PIDEditor">
+		<location x="288" y="83"/>
+	</widget>
+	<widget field="p rotation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="714"/>
+	</widget>
+	<widget field="p strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="693"/>
+	</widget>
+	<widget field="p translation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="672"/>
+	</widget>
+	<widget field="tpid out" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="651"/>
+	</widget>
+	<widget field="skew" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="630"/>
+	</widget>
+	<widget field="LimelightArea" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="609"/>
+	</widget>
+	<widget field="LimelightY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="588"/>
+	</widget>
+	<widget field="LimelightX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="567"/>
+	</widget>
+	<widget field="limelight_Interface" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="546"/>
+	</widget>
+	<widget field="limelight_Stream" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="525"/>
+	</widget>
+	<widget field="limelight_PipelineName" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="433"/>
+	</widget>
+	<widget field="Distance (Lazer)" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="417" y="429"/>
+	</widget>
+	<widget field="Feet (not William's) Odometry pose Y: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="239" y="230"/>
+	</widget>
+	<widget field="Feet Odometry pose X: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="309" y="251"/>
+	</widget>
+	<widget field="Pigeon Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="412"/>
+	</widget>
+	<widget field="Drive Governor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="391"/>
+	</widget>
+	<widget field="Back Right Drive Setpoint " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="370"/>
+	</widget>
+	<widget field="Back Left Drive Setpoint " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="349"/>
+	</widget>
+	<widget field="Front Right Drive Setpoint " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="328"/>
+	</widget>
+	<widget field="Front Left Drive Setpoint " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="307"/>
+	</widget>
+	<widget field="Desired Rotation: (RPS)" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="286"/>
+	</widget>
+	<widget field="UserControllerSwitch" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="252"/>
+	</widget>
+	<widget field="Front LeftRPM of Motor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="231"/>
+	</widget>
+	<widget field="Back RightRPM of Motor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="210"/>
+	</widget>
+	<widget field="Back LeftRPM of Motor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="189"/>
+	</widget>
+	<widget field="Front RightRPM of Motor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="168"/>
+	</widget>
+	<widget field="current drive controller" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="147"/>
+	</widget>
+	<widget field="Front Right Absolute Encoder Raw Value: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="882" y="339"/>
+	</widget>
+	<widget field="Back Right Absolute Encoder Raw Value: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="887" y="379"/>
+	</widget>
+	<widget field="Front Left Absolute Encoder Raw Value: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="888" y="359"/>
+	</widget>
+	<widget field="Pigeon getYaw Value: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="63"/>
+	</widget>
+	<widget field="Back Left Absolute Encoder Raw Value: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="892" y="399"/>
+	</widget>
+	<widget field="Front Left Steer Setpoints" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="504" y="7"/>
+	</widget>
+	<widget field="Front Left Absolute Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="963" y="1"/>
+	</widget>
+	<widget field="Back Right Steer Setpoints" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="501" y="65"/>
+	</widget>
+	<widget field="Back Right Absolute Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="927" y="66"/>
+	</widget>
+	<widget field="Back Left Steer Setpoints" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="507" y="44"/>
+	</widget>
+	<widget field="Back Left Absolute Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="933" y="46"/>
+	</widget>
+	<widget field="Front Right Steer Setpoints" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="497" y="25"/>
+	</widget>
+	<widget field="Front Right Absolute Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="922" y="23"/>
+	</widget>
+	<widget field="Desired Rotation: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="504"/>
+	</widget>
+	<widget field="Desired Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="483"/>
+	</widget>
+	<widget field="Desired X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="21"/>
+	</widget>
+	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="462"/>
+	</widget>
+	<widget field="cSpeeds Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="42"/>
+	</widget>
+	<widget field="Reset Drive System" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="584" y="243"/>
+	</widget>
+	<widget field="DriveTrain" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
+		<location x="424" y="155"/>
+	</widget>
+	<widget field="Front Left Wheel Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="723" y="3"/>
+	</widget>
+	<widget field="Odometry pose Y: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="260" y="41"/>
+	</widget>
+	<widget field="Odometry pose X: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="259" y="62"/>
+	</widget>
+	<widget field="Back Left Wheel Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="729" y="43"/>
+	</widget>
+	<widget field="Front Right Wheel Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="718" y="22"/>
+	</widget>
+	<widget field="Back Right Wheel Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="723" y="64"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+	<hidden field="Teleop Drive"/>
+</xml>
