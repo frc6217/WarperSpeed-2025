@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.FindKS;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.UserControllerSwitch;
@@ -54,11 +55,11 @@ public class RobotContainer {
     SmartDashboard. putData(new UserControllerSwitch(swerveDrivetrain));
     
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    m_gameOperatorController.a().whileTrue(Commands.runOnce(intake::on1Intake, intake));
-    m_gameOperatorController.b().whileTrue(Commands.runOnce(intake:: off1Intake, intake));
-    m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
-    m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
-    m_gameOperatorController.button(Constants.OperatorConstants.kRightBackButton).whileTrue(new ShootCommand(shooter));
+    m_gameOperatorController.a().whileTrue(new IntakeCommand(intake, -.3));
+    m_gameOperatorController.b().whileTrue(new IntakeCommand(intake,.3));
+    // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
+    // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
+    m_gameOperatorController.leftBumper().whileTrue(new ShootCommand(shooter));
 
    // m_gameOperatorController.leftBumper().onTrue(new VibrateController(m_driverController));
    // m_driverController.leftBumper().onTrue(new VibrateController(m_driverController));

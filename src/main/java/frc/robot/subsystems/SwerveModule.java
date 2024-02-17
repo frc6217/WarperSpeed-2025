@@ -83,6 +83,7 @@ public class SwerveModule extends SubsystemBase{
     steerEncoder.setPositionConversionFactor(2*Math.PI / 21.4285714286);
     steerEncoder.setPosition(absEncoder.getAngle().getRadians());
 
+
 //todo make drive pid work
     drivePID.setP(0);
     drivePID.setI(0);
@@ -99,6 +100,9 @@ public class SwerveModule extends SubsystemBase{
     operationOrderID = constants.position;
     steerMotor.burnFlash();
     driveMotor.burnFlash();
+
+    driveEncoder.setPositionConversionFactor(0.044458);
+
   }
 
   /*

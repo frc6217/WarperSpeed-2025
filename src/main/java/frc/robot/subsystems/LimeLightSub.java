@@ -49,7 +49,7 @@ NetworkTableEntry ta;
   public double getX(){
     return tx.getDouble(0);
   }
-  public double getSkew(){
+  public double getY(){
     return ty.getDouble(0);
   }
 }
