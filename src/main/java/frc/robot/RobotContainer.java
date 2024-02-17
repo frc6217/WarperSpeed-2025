@@ -7,13 +7,12 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FindKS;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.UserControllerSwitch;
 import frc.robot.commands.VibrateController;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
@@ -46,6 +45,7 @@ public class RobotContainer {
   public final Intake intake = new Intake();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public final Shooter shooter = new Shooter();
+  public final Indexer indexer = new Indexer();
   
   public RobotContainer() {
     // Configure the trigger bindings
