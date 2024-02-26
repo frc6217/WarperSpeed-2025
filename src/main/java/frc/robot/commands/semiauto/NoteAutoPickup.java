@@ -12,19 +12,19 @@ import frc.robot.subsystems.SwerveDrivetrain;
 
 public class NoteAutoPickup extends Command {
   /** Creates a new noteAutoPickup. */
-  SwerveDrivetrain sDrivetrain;
+  SwerveDrivetrain swerveDrivetrain;
   Intake intake;
-  LimeLightSub limelight;
+  LimeLightSub limeLight;
 
   PIDController translationPidController = new PIDController(0.1,0,0);
   PIDController strafePidController = new PIDController(0.1,0,0);
-  PIDController rotationPidController = new PIDController(0.1,0,0)
+  PIDController rotationPidController = new PIDController(0.1,0,0);
 
   public NoteAutoPickup(SwerveDrivetrain sDrivetrain, Intake intake, LimeLightSub limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.sDrivetrain = sDrivetrain;
+    this.swerveDrivetrain = sDrivetrain;
     this.intake = intake;
-    this.limelight = limelight;
+    this.limeLight = limelight;
     addRequirements(sDrivetrain, intake, limelight);
   }
 

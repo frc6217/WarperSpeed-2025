@@ -18,9 +18,9 @@ public class AprilTagFollow extends Command {
   SwerveDrivetrain sDrivetrain;
   LimeLightSub limeLightSub;
 
-  float rotationSetpoint = 0;
-  Double strafeSetpoint = .5;
-  Double translationSetpoint = .5;
+  double rotationSetpoint = 0;
+  double strafeSetpoint = .5;
+  double translationSetpoint = .5;
 
   PIDController rotationPidController = new PIDController(0, 0, 0);
   PIDController strafePidController = new PIDController(0, 0, 0);

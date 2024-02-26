@@ -50,10 +50,15 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   public Governor governor = new Governor();
  
-  public SwerveDrivetrain(CommandJoystick cj, CommandXboxController cx) {
-    this.cj = cj;
+  public SwerveDrivetrain(CommandXboxController cx) {
+
     this.cx = cx;
-    this.toggleUserController();
+
+    SmartDashboard.putNumber("Auto xPID P", 0.1);
+    SmartDashboard.putNumber("Auto yPID P", 0.1);
+    SmartDashboard.putNumber("Auto rotationPID P", 0);
+    
+
     frontRightModule = new SwerveModule(Constants.RobotConstants.frontRight);
     backLeftModule = new SwerveModule(Constants.RobotConstants.backLeft);
     backRightModule = new SwerveModule(Constants.RobotConstants.backRight);
@@ -160,32 +165,31 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   public void reset() {
     pigeon2.reset();
-    sOdometry.resetPosition(pigeon2.getRotation2d(), getModulePositions(), new Pose2d());
-    frontLeftModule.steerEncoder.setPosition(0);
-    frontRightModule.steerEncoder.setPosition(0);
-    backLeftModule.steerEncoder.setPosition(0);
-    backRightModule.steerEncoder.setPosition(0);
+    frontLeftModule.driveEncoder.setPosition(0);
+    frontRightModule.driveEncoder.setPosition(0);
+    backLeftModule.driveEncoder.setPosition(0);
+    backRightModule.driveEncoder.setPosition(0);
     cSpeeds.omegaRadiansPerSecond = 0;
     cSpeeds.vxMetersPerSecond = 0;
     cSpeeds.vyMetersPerSecond = 0;
+    sOdometry.resetPosition(pigeon2.getRotation2d(), getModulePositions(), new Pose2d());
   }
-
 
   public double getAngle() {
       return pigeon2.getYaw().getValueAsDouble();
   }
 
-  public void toggleUserController(){
-    if (controller == USER_CONTROLLER.JOYSTICK){
-      SmartDashboard.putString("current drive controller", "xbox");
-      controller = USER_CONTROLLER.XBOX;
-          this.setDefaultCommand(new Drive(this, () -> -cx.getLeftX(), () -> -cx.getRightX(), () -> -cx.getLeftY(), cj));     
-    } else if(controller == USER_CONTROLLER.XBOX){
-            SmartDashboard.putString("current drive controller", "joystick");
-          this.setDefaultCommand(new Drive(this, () -> -cj.getY(), () -> -cj.getZ(), () -> cj.getX(), cj));
-      controller = USER_CONTROLLER.JOYSTICK;
-    }
-  }
+  // public void toggleUserController(){
+  //   if (controller == USER_CONTROLLER.JOYSTICK){
+  //     SmartDashboard.putString("current drive controller", "xbox");
+  //     controller = USER_CONTROLLER.XBOX;
+  //         this.setDefaultCommand(new Drive(this, () -> -cx.getLeftX(), () -> -cx.getRightX(), () -> -cx.getLeftY(), cj));     
+  //   } else if(controller == USER_CONTROLLER.XBOX){
+  //           SmartDashboard.putString("current drive controller", "joystick");
+  //         this.setDefaultCommand(new Drive(this, () -> -cj.getY(), () -> -cj.getZ(), () -> cj.getX(), cj));
+  //     controller = USER_CONTROLLER.JOYSTICK;
+  //   }
+  // }
 
   public class Governor{
     public enum MODE {SLOW, FAST};

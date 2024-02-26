@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -22,6 +23,10 @@ NetworkTableEntry ta;
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
+
+    for(int port = 5800; port <= 5807; port++){
+      PortForwarder.add(port, "limelight. local", port);
+    }
   }
 
   @Override

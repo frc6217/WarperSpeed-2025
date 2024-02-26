@@ -19,7 +19,7 @@ public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
   CANSparkMax indexer = new CANSparkMax(7, MotorType.kBrushless);
   DutyCycleEncoder absEncoder = new DutyCycleEncoder(0);
-  double flingDid = .6;
+  double flingDid = 0.145;
   public enum STATE {
     WAIT, FLING, FLINGWAIT, RESET
   };
@@ -32,7 +32,8 @@ public class Indexer extends SubsystemBase {
   @Override
   public void periodic() {
     //getAbsolutePosistion or getPosistion????????????????????
-    SmartDashboard.putNumber("abs value", absEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("abs value indexer", absEncoder.getDistance());
+    SmartDashboard.putNumber("relative value indexer", indexer.getEncoder().getPosition());
     SmartDashboard.putString("Indexer State", state.toString());
     switch (state) {
       case WAIT:
@@ -40,9 +41,10 @@ public class Indexer extends SubsystemBase {
         break;
       case FLING:
       {
-        if (absEncoder.getAbsolutePosition() < flingDid){
-          indexer.set(.5);
+        if (absEncoder.getDistance() < flingDid){
+          indexer.set(-.2);
         } else{
+          indexer.set(0);
           state = STATE.FLINGWAIT;
           timer.reset();
           timer.start();
@@ -52,15 +54,15 @@ public class Indexer extends SubsystemBase {
       }
       case FLINGWAIT:
       {
-        if(timer.hasElapsed(1)){
+        if(timer.hasElapsed(.4)){
           state = STATE.RESET;
         }
         break;
       }
       case RESET:
       {
-        if (absEncoder.getAbsolutePosition() > .05){
-          indexer.set(-.1);
+        if (absEncoder.getDistance() > .05){
+          indexer.set(.2);
         } else{
           indexer.set(0);
           state = STATE.WAIT;

@@ -15,8 +15,8 @@ public class Shooter extends SubsystemBase {
   CANSparkMax topShooter = new CANSparkMax(6, MotorType.kBrushless);
   /** Creates a new Shooter. */
   public Shooter() {
-    SmartDashboard.putNumber("lowShooterspeed", -.4);
-    SmartDashboard.putNumber("highShooterspeed", -.4);
+    SmartDashboard.putNumber("lowShooterspeed", -.7);
+    SmartDashboard.putNumber("highShooterspeed", -.7);
     topShooter.setInverted(true);
   }
 
@@ -24,10 +24,11 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-
   public void on() {
     lowShooter.set(SmartDashboard.getNumber("lowShooterspeed", 0));
     topShooter.set(SmartDashboard.getNumber("highShooterspeed", 0));
+    // lowShooter.set(-0.7);
+    // topShooter.set(-0.7);
   }
 
   public void off() {

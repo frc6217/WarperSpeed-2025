@@ -11,16 +11,21 @@ import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.UserControllerSwitch;
 import frc.robot.commands.VibrateController;
+import frc.robot.commands.semiauto.DiseredDriveNoPID;
+import frc.robot.commands.semiauto.DriveXfeetYfeetDiseredDegreeAngle;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,14 +40,15 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final CommandJoystick mJoystick = new CommandJoystick(0);
+// private final CommandJoystick mJoystick = new CommandJoystick(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_gameOperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-
+  
+  
   //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
-  public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick, m_driverController);
+  public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
   public final Intake intake = new Intake();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public final Shooter shooter = new Shooter();
@@ -51,18 +57,25 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-  
-    SmartDashboard. putData(new UserControllerSwitch(swerveDrivetrain));
-    
+    SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
+
+    swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    m_gameOperatorController.a().whileTrue(new IntakeCommand(intake, -.3));
-    m_gameOperatorController.b().whileTrue(new IntakeCommand(intake,.3));
+    m_gameOperatorController.b().whileTrue(new IntakeCommand(intake, -.5));
+    m_gameOperatorController.a().whileTrue(new IntakeCommand(intake,.65));
+
+    //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
+    //m_gameOperatorController.povUp().whileTrue(new DiseredDriveNoPID(5,0, 0,swerveDrivetrain));
+    
     // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
     m_gameOperatorController.leftBumper().whileTrue(new ShootCommand(shooter));
+    m_gameOperatorController.y().onTrue(Commands.runOnce(indexer::shoot, indexer));
 
-   // m_gameOperatorController.leftBumper().onTrue(new VibrateController(m_driverController));
-   // m_driverController.leftBumper().onTrue(new VibrateController(m_driverController));
+    m_gameOperatorController.povDown().onTrue(new VibrateController(m_driverController));
+    m_driverController.povDown().onTrue(new VibrateController(m_driverController));
 
     m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
     m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
@@ -96,7 +109,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
    // return Autos.exampleAuto(m_exampleSubsystem);
-   return null;
+  //return null;
+  return  Commands.runOnce(swerveDrivetrain::enableBrakes, swerveDrivetrain);
+  //return new ShootCommand(shooter);
   }
 
 }

@@ -98,6 +98,9 @@ public class SwerveModule extends SubsystemBase{
     absEncoderOffset = constants.absEncoderOffset;
 
     operationOrderID = constants.position;
+
+    driveMotor.setSmartCurrentLimit(0, 40);
+
     steerMotor.burnFlash();
     driveMotor.burnFlash();
 

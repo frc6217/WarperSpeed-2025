@@ -24,14 +24,13 @@ public class Drive extends Command {
   Double governor;
   CommandJoystick cJoystick;
 
-  public Drive(SwerveDrivetrain swerveDrivetrain, DoubleSupplier strafeSupplier, DoubleSupplier rotationSupplier, DoubleSupplier translationSupplier, CommandJoystick commandJoystick) {
+  public Drive(SwerveDrivetrain swerveDrivetrain, DoubleSupplier strafeSupplier, DoubleSupplier rotationSupplier, DoubleSupplier translationSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrivetrain);
     this.translationSupplier = translationSupplier;
     this.rotationSupplier = rotationSupplier;
     this.strafeSupplier = strafeSupplier;
     this.swerveDrivetrain = swerveDrivetrain;
-    this.cJoystick = commandJoystick;
     governor = (double) 1;
     SmartDashboard.putData("Teleop Drive", this);
     
