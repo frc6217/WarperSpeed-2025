@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
      //new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain));
-     new Trigger(this::isEnabled).negate().debounce(3).onTrue(new UnenableBrakes(m_robotContainer.swerveDrivetrain));
+     //new Trigger(this::isEnabled).negate().debounce(3).onTrue(new UnenableBrakes(m_robotContainer.swerveDrivetrain));
      
     // Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain).schedule();
   
