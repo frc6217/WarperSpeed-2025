@@ -66,6 +66,20 @@ public class Intake extends SubsystemBase {
     secondIntake.set(0);
   }
 
+  public void intakeOn(){
+    firstIntake.set(.65);
+    secondIntake.set(.65);
+  }
+  
+  public void intakeReverse(){
+    firstIntake.set(-.5);
+    secondIntake.set(-.5);
+  }
+
+  public void intakeOff(){
+    firstIntake.set(0);
+    secondIntake.set(0);
+  }
   public void setSpeed(Double speed) {
     firstIntake.set(speed);
     secondIntake.set(-speed);

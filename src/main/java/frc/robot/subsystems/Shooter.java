@@ -35,4 +35,9 @@ public class Shooter extends SubsystemBase {
     lowShooter.set(0);
     topShooter.set(0);
   }
+
+  public void speedShoot(double topSpeed, double lowSpeed){
+    lowShooter.set(lowSpeed);
+    topShooter.set(topSpeed);
+  }
 }

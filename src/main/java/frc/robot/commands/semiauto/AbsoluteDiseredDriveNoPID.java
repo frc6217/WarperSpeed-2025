@@ -13,12 +13,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
-public class DiseredDriveNoPID extends Command {
+public class AbsoluteDiseredDriveNoPID extends Command {
   /** Creates a new DriveXfeetYfeet. */
   SwerveDrivetrain sDrivetrain;
 
-  double initialX;
-  double initialY;
 
   double xSetpoint;
   double ySetpoint;
@@ -31,7 +29,7 @@ public class DiseredDriveNoPID extends Command {
     double outputStrafe = 0;
     double outputRotation = 0;
 
-  public DiseredDriveNoPID(double xSetpoint, double ySetpoint, double rotationDegreeSetpoint, SwerveDrivetrain sDrivetrain) {
+  public AbsoluteDiseredDriveNoPID(double xSetpoint, double ySetpoint, double rotationDegreeSetpoint, SwerveDrivetrain sDrivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.sDrivetrain = sDrivetrain;
     addRequirements(sDrivetrain);
@@ -41,7 +39,7 @@ public class DiseredDriveNoPID extends Command {
     rotateBoolean = true;
   }
 
-  public DiseredDriveNoPID(double xSetpoint, double ySetpoint, SwerveDrivetrain sDrivetrain) {
+  public AbsoluteDiseredDriveNoPID(double xSetpoint, double ySetpoint, SwerveDrivetrain sDrivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.sDrivetrain = sDrivetrain;
     addRequirements(sDrivetrain);
@@ -58,12 +56,6 @@ public class DiseredDriveNoPID extends Command {
     }else {
       rotationSetpoint = sDrivetrain.getAngle();
     }
-    double initialX = Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX());
-    double initialY = Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY());
-   
-    xSetpoint = xSetpoint + initialX;
-    ySetpoint = ySetpoint + initialY;
-
     System.out.println("Initialize");
 
   }
@@ -88,12 +80,21 @@ public class DiseredDriveNoPID extends Command {
       outputStrafe = .4;
     }
     
+  
     if(Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < .4){
       outputRotation = 0;
-    }else if((sDrivetrain.getAngle() - rotationSetpoint) > .4){
-      outputRotation = -.4;
+    }else if((sDrivetrain.getAngle() < rotationSetpoint)){
+        if((rotationSetpoint - sDrivetrain.getAngle()) > 180){
+        outputRotation = .4;
+        }else{
+        outputRotation = -.4;
+      }
     }else{
-      outputRotation = .4;
+      if((sDrivetrain.getAngle() - rotationSetpoint) > 180){
+        outputRotation = -.4;
+        }else{
+        outputRotation = .4;
+      }
     }
   // scale up with maxVelo
     sDrivetrain.drive(new Translation2d(outputTranslation, outputStrafe).times(Constants.RobotConstants.driveMaxVelo), outputRotation*Constants.RobotConstants.rotationMaxAngleVelo);

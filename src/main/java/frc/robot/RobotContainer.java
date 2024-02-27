@@ -10,9 +10,10 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
-import frc.robot.commands.ShootCommand;
 import frc.robot.commands.VibrateController;
-import frc.robot.commands.semiauto.DiseredDriveNoPID;
+import frc.robot.commands.semiauto.RelativeDiseredDriveNoPID;
+import frc.robot.commands.shootCommands.AmpShootCommand;
+import frc.robot.commands.shootCommands.SpeakerShootCommand;
 import frc.robot.commands.semiauto.DriveXfeetYfeetDiseredDegreeAngle;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -60,19 +61,26 @@ public class RobotContainer {
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
 
+    Trigger gameOpA = m_gameOperatorController.a();
+    Trigger gameOpB = m_gameOperatorController.b();
+    Trigger gameOpX = m_gameOperatorController.x();
+    Trigger gameOpY = m_gameOperatorController.y();
+    Trigger gameOpLeftBumper = m_gameOperatorController.leftBumper();
+    Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
 
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    m_gameOperatorController.b().whileTrue(new IntakeCommand(intake, -.5));
-    m_gameOperatorController.a().whileTrue(new IntakeCommand(intake,.65));
+    gameOpB.toggleOnTrue(new IntakeCommand(intake, -.5));
+    gameOpA.toggleOnTrue(new IntakeCommand(intake,.65));
 
     //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
     //m_gameOperatorController.povUp().whileTrue(new DiseredDriveNoPID(5,0, 0,swerveDrivetrain));
     
     // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
-    m_gameOperatorController.leftBumper().whileTrue(new ShootCommand(shooter));
-    m_gameOperatorController.y().onTrue(Commands.runOnce(indexer::shoot, indexer));
+    gameOpLeftBumper.toggleOnTrue(new SpeakerShootCommand(shooter));
+    gameOpRightBumper.toggleOnTrue(new AmpShootCommand(shooter));
+    gameOpY.onTrue(Commands.runOnce(indexer::shoot, indexer));
 
     m_gameOperatorController.povDown().onTrue(new VibrateController(m_driverController));
     m_driverController.povDown().onTrue(new VibrateController(m_driverController));
