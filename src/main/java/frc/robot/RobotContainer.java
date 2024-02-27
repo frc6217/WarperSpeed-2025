@@ -11,12 +11,18 @@ import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.VibrateController;
+import frc.robot.commands.auto.AutoCommandFactory;
+import frc.robot.commands.climbCommand.DeployClimber;
+import frc.robot.commands.climbCommand.WinchClimber;
 import frc.robot.commands.semiauto.RelativeDiseredDriveNoPID;
 import frc.robot.commands.shootCommands.AmpShootCommand;
 import frc.robot.commands.shootCommands.SpeakerShootCommand;
+import frc.robot.commands.semiauto.AbsoluteDiseredDriveNoPID;
 import frc.robot.commands.semiauto.DriveXfeetYfeetDiseredDegreeAngle;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj.Joystick;
@@ -47,16 +53,19 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_gameOperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   
-  
+  AutoCommandFactory autoCommandFactory;
   //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
   public final Intake intake = new Intake();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public final Shooter shooter = new Shooter();
   public final Indexer indexer = new Indexer();
+  public final Climber climber = new Climber();
+  public final LimeLightSub limeLightSub = new LimeLightSub();
   
   public RobotContainer() {
     // Configure the trigger bindings
+    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,limeLightSub);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -67,14 +76,20 @@ public class RobotContainer {
     Trigger gameOpY = m_gameOperatorController.y();
     Trigger gameOpLeftBumper = m_gameOperatorController.leftBumper();
     Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
+    Trigger gameOpPOVUp = m_gameOperatorController.povUp();
+    Trigger gameOpPOVRight = m_gameOperatorController.povRight();
 
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
     gameOpB.toggleOnTrue(new IntakeCommand(intake, -.5));
     gameOpA.toggleOnTrue(new IntakeCommand(intake,.65));
 
+     gameOpPOVRight.toggleOnTrue(new WinchClimber(climber));
+     gameOpPOVUp.toggleOnTrue(new DeployClimber(climber));
+
     //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
-    //m_gameOperatorController.povUp().whileTrue(new DiseredDriveNoPID(5,0, 0,swerveDrivetrain));
+    m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(5,0, 0,swerveDrivetrain));
+    m_gameOperatorController.povLeft().whileTrue(new RelativeDiseredDriveNoPID(5, 0,0, swerveDrivetrain));
     
     // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
@@ -116,10 +131,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-   // return Autos.exampleAuto(m_exampleSubsystem);
-  //return null;
-  return  Commands.runOnce(swerveDrivetrain::enableBrakes, swerveDrivetrain);
-  //return new ShootCommand(shooter);
+  return  autoCommandFactory.getAutoCommand();
+  }
+
+  public AutoCommandFactory getAutoCommandFactory() {
+    return autoCommandFactory;
   }
 
 }

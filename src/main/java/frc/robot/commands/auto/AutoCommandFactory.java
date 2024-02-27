@@ -51,7 +51,7 @@ public class AutoCommandFactory {
 
          SmartDashboard.putData(autoChooser);
     }
-    public /*SequentialCommandGroup*/ Command getAutoCommand(){
+    public Command getAutoCommand(){
       return autoChooser.getSelected();
       }
     

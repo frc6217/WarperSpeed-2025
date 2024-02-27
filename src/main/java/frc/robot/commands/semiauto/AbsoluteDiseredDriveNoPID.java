@@ -81,19 +81,19 @@ public class AbsoluteDiseredDriveNoPID extends Command {
     }
     
   
-    if(Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < .4){
+    if(Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 5){
       outputRotation = 0;
     }else if((sDrivetrain.getAngle() < rotationSetpoint)){
-        if((rotationSetpoint - sDrivetrain.getAngle()) > 180){
-        outputRotation = .4;
+        if((rotationSetpoint - sDrivetrain.getAngle()) < 180){
+        outputRotation = .04;
         }else{
-        outputRotation = -.4;
+        outputRotation = -.04;
       }
     }else{
-      if((sDrivetrain.getAngle() - rotationSetpoint) > 180){
-        outputRotation = -.4;
+      if((sDrivetrain.getAngle() - rotationSetpoint) < 180){
+        outputRotation = -.04;
         }else{
-        outputRotation = .4;
+        outputRotation = .04;
       }
     }
   // scale up with maxVelo
@@ -113,7 +113,7 @@ public class AbsoluteDiseredDriveNoPID extends Command {
   public boolean isFinished() {
     boolean val1 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4; 
     boolean val2 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4;
-    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 1;
+    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 5;
     System.out.println("af" + val1 + val2 + val3);
     return val1 && val2 && val3 ;
   }
