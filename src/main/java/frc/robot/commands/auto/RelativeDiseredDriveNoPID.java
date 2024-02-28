@@ -93,15 +93,15 @@ public class RelativeDiseredDriveNoPID extends Command {
       outputRotation = 0;
     }else if((sDrivetrain.getAngle() < rotationSetpoint)){
         if((rotationSetpoint - sDrivetrain.getAngle()) > 180){
-        outputRotation = .04;
+        outputRotation = .07;
         }else{
-        outputRotation = -.04;
+        outputRotation = -.07;
       }
     }else{
       if((sDrivetrain.getAngle() - rotationSetpoint) > 180){
-        outputRotation = -.04;
+        outputRotation = -.07;
         }else{
-        outputRotation = .04;
+        outputRotation = .07;
       }
     }
   // scale up with maxVelo

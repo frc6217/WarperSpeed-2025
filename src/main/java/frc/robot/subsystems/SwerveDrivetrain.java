@@ -163,7 +163,7 @@ public class SwerveDrivetrain extends SubsystemBase {
       }
     }
 
-  public void reset() {
+    public void reset() {
     pigeon2.reset();
     frontLeftModule.driveEncoder.setPosition(0);
     frontRightModule.driveEncoder.setPosition(0);

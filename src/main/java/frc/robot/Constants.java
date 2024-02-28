@@ -30,7 +30,10 @@ public final class Constants {
     public static final double kDefaultSlow = 0.3;
   }
 
-  
+  public static class AutoConstants{
+    public static final double nearNoteXdistance = 6.75;
+    public static final double nearNoteYdistance = 4.75;
+  }
   public static class RobotConstants{
     public static final double trackWidth = Units.inchesToMeters(24.5);
     public static final double trackLength = Units.inchesToMeters(24.5);
