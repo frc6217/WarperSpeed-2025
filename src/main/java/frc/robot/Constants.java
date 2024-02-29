@@ -33,9 +33,9 @@ public final class Constants {
   public static class AutoConstants{
     public static final double nearNoteXdistance = 6.75;
     public static final double nearNoteYdistance = 4.75;
-    public static final double sideSetupXdistance = -1.5;
-    public static final double sideSetupYdistance = 2;
-    public static final double sideSetupAngle = 30;
+    public static final double sideSetupXdistance = -1.48;
+    public static final double sideSetupYdistance = 2.5;
+    public static final double sideSetupAngle = 60;
     public static final double farNoteXdistance = 24.25;
   }
 
