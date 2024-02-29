@@ -163,6 +163,14 @@ public class SwerveDrivetrain extends SubsystemBase {
       }
     }
 
+  public void setOdometry(double xSet, double ySet){
+    Pose2d pose2d = new Pose2d(xSet, ySet, getGyroRotation2d());
+    sOdometry.resetPosition(getGyroRotation2d(), getModulePositions(), pose2d);
+  }
+
+  public void setPigeonAngle(double angle){
+    pigeon2.setYaw(angle);
+  }
     public void reset() {
     pigeon2.reset();
     frontLeftModule.driveEncoder.setPosition(0);

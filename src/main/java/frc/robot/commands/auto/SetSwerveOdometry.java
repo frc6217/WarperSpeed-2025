@@ -28,6 +28,8 @@ public class SetSwerveOdometry extends Command {
   @Override
   public void initialize() {
     //sDrivetrain.sOdometry.resetPosition(null, null, null);
+    sDrivetrain.setOdometry(xSet, ySet);
+    sDrivetrain.setPigeonAngle(rotationSet);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,6 +43,6 @@ public class SetSwerveOdometry extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
