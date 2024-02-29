@@ -36,6 +36,7 @@ public final class Constants {
     public static final double sideSetupXdistance = -1.5;
     public static final double sideSetupYdistance = 2;
     public static final double sideSetupAngle = 30;
+    public static final double farNoteXdistance = 24.25;
   }
 
 
