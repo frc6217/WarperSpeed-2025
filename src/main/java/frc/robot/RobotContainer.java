@@ -10,6 +10,7 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
+import frc.robot.commands.ResetGyro;
 import frc.robot.commands.VibrateController;
 import frc.robot.commands.auto.AbsoluteDiseredDriveNoPID;
 import frc.robot.commands.auto.AutoCommandFactory;
@@ -78,6 +79,7 @@ public class RobotContainer {
     Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
     Trigger gameOpPOVUp = m_gameOperatorController.povUp();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
+    Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
 
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
@@ -88,14 +90,16 @@ public class RobotContainer {
      gameOpPOVUp.toggleOnTrue(new DeployClimber(climber));
 
     //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
-    m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(5,0, 0,swerveDrivetrain));
-    m_gameOperatorController.povLeft().whileTrue(new RelativeDiseredDriveNoPID(5, 0,0, swerveDrivetrain));
+    //m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(5,0, 0,swerveDrivetrain));
+    //m_gameOperatorController.povLeft().whileTrue(new RelativeDiseredDriveNoPID(5, 0,0, swerveDrivetrain));
     
     // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
     gameOpLeftBumper.toggleOnTrue(new SpeakerShootCommand(shooter));
     gameOpRightBumper.toggleOnTrue(new AmpShootCommand(shooter));
     gameOpY.onTrue(Commands.runOnce(indexer::shoot, indexer));
+
+    driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
 
     m_gameOperatorController.povDown().onTrue(new VibrateController(m_driverController));
     m_driverController.povDown().onTrue(new VibrateController(m_driverController));
