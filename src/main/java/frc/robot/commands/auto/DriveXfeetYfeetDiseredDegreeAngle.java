@@ -74,7 +74,7 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     xSetpoint = xSetpoint + initialX;
     ySetpoint = ySetpoint + initialY;
 
-    System.out.println("Initialize");
+ 
 
     xPidController.setSetpoint(xSetpoint);
     yPidController.setSetpoint(ySetpoint);
@@ -90,7 +90,7 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     double outputTranslation = xPidController.calculate(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()));
     double outputStrafe = yPidController.calculate(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()));
     double outputRotation = rotationPidController.calculate(sDrivetrain.getAngle());
-    System.out.println("Executing");
+
 
     outputRotation = MathUtil.clamp(outputRotation, -1, 1);
     outputStrafe = MathUtil.clamp(outputStrafe, -1, 1);
@@ -118,8 +118,7 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     sDrivetrain.drive(new Translation2d(0,0), 0);
-    System.out.println("Ended");
-    System.out.println("" + interrupted);
+    
   }
 
   // Returns true when the command should end.
@@ -128,7 +127,6 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     boolean val1 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4; 
     boolean val2 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4;
     boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 1;
-    System.out.println("af" + val1 + val2 + val3);
     return val1 && val2 && val3 ;
   }
 }

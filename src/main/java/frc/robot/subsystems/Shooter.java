@@ -15,8 +15,8 @@ public class Shooter extends SubsystemBase {
   CANSparkMax topShooter = new CANSparkMax(6, MotorType.kBrushless);
   /** Creates a new Shooter. */
   public Shooter() {
-    SmartDashboard.putNumber("lowShooterspeed", -.7);
-    SmartDashboard.putNumber("highShooterspeed", -.7);
+    SmartDashboard.putNumber("lowShooterspeed", -.75);
+    SmartDashboard.putNumber("highShooterspeed", -.68);
     topShooter.setInverted(true);
   }
 

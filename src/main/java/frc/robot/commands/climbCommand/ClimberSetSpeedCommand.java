@@ -4,17 +4,22 @@
 
 package frc.robot.commands.climbCommand;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 
-public class WinchClimber extends Command {
-  /** Creates a new WinchClimber. */
-  
+public class ClimberSetSpeedCommand extends Command {
+  /** Creates a new ClimberSetSpeedCommand. */
+
   Climber climber;
-  
-  public WinchClimber(Climber climber) {
+  double leftSpeed;
+  double rightSpeed;
+
+  public ClimberSetSpeedCommand(Climber climber, double leftSpeed, double rightSpeed) {
     this.climber = climber;
     addRequirements(climber);
+    this.leftSpeed = leftSpeed;
+    this.rightSpeed = rightSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,16 +30,20 @@ public class WinchClimber extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.winchLeftClimber();
-    climber.winchRightClimber();
+    
+    
+      climber.setLeftClimber(leftSpeed);
+      climber.setrightClimber(rightSpeed);
+      
 
+    //if(0.5 < climber.getLeftClimber())
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.stopLeftClimber();
-    climber.stopRightClimber();
+    climber.setLeftClimber(0);
+    climber.setrightClimber(0);
   }
 
   // Returns true when the command should end.

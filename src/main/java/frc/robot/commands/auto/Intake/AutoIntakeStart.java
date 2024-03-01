@@ -20,13 +20,13 @@ public class AutoIntakeStart extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.setSpeed(-0.65);
+    intake.setSpeed(0.65);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setSpeed(-0.65);
+    intake.setSpeed(0.65);
   }
 
   // Called once the command ends or is interrupted.

@@ -10,7 +10,6 @@ import frc.robot.subsystems.SwerveDrivetrain;
 public class ResetGyro extends Command {
   /** Creates a new ResetGyro. */
   SwerveDrivetrain sDrivetrain;
-
   public ResetGyro(SwerveDrivetrain sDrivetrain) {
     this.sDrivetrain = sDrivetrain;
     addRequirements(sDrivetrain);
@@ -34,6 +33,6 @@ public class ResetGyro extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

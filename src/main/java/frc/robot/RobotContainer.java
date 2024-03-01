@@ -16,6 +16,7 @@ import frc.robot.commands.auto.AbsoluteDiseredDriveNoPID;
 import frc.robot.commands.auto.AutoCommandFactory;
 import frc.robot.commands.auto.DriveXfeetYfeetDiseredDegreeAngle;
 import frc.robot.commands.auto.RelativeDiseredDriveNoPID;
+import frc.robot.commands.climbCommand.ClimberSetSpeedCommand;
 import frc.robot.commands.climbCommand.DeployClimber;
 import frc.robot.commands.climbCommand.WinchClimber;
 import frc.robot.commands.shootCommands.AmpShootCommand;
@@ -78,36 +79,44 @@ public class RobotContainer {
     Trigger gameOpLeftBumper = m_gameOperatorController.leftBumper();
     Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
     Trigger gameOpPOVUp = m_gameOperatorController.povUp();
+      Trigger gameOpPOVDown = m_gameOperatorController.povDown();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
     Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
 
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    gameOpB.toggleOnTrue(new IntakeCommand(intake, -.5));
-    gameOpA.toggleOnTrue(new IntakeCommand(intake,.65));
+    gameOpB.whileTrue(new IntakeCommand(intake, -.5));
+    gameOpA.whileTrue(new IntakeCommand(intake,.65));
 
-     gameOpPOVRight.toggleOnTrue(new WinchClimber(climber));
-     gameOpPOVUp.toggleOnTrue(new DeployClimber(climber));
+     gameOpPOVDown.whileTrue(new WinchClimber(climber));
+     gameOpPOVUp.whileTrue(new DeployClimber(climber));
+
 
     //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
-    //m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(5,0, 0,swerveDrivetrain));
+    m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(2,0, 0,swerveDrivetrain));
     //m_gameOperatorController.povLeft().whileTrue(new RelativeDiseredDriveNoPID(5, 0,0, swerveDrivetrain));
     
     // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
-    gameOpLeftBumper.toggleOnTrue(new SpeakerShootCommand(shooter));
-    gameOpRightBumper.toggleOnTrue(new AmpShootCommand(shooter));
+    gameOpLeftBumper.whileTrue(new SpeakerShootCommand(shooter));
+    gameOpRightBumper.whileTrue(new AmpShootCommand(shooter));
     gameOpY.onTrue(Commands.runOnce(indexer::shoot, indexer));
 
     driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
 
-    m_gameOperatorController.povDown().onTrue(new VibrateController(m_driverController));
+    //m_gameOperatorController.povDown().onTrue(new VibrateController(m_driverController));
     m_driverController.povDown().onTrue(new VibrateController(m_driverController));
+
+    m_gameOperatorController.povDownLeft().whileTrue(new ClimberSetSpeedCommand(climber, .4, 0));
+    m_gameOperatorController.povUpLeft().whileTrue(new ClimberSetSpeedCommand(climber, -.4, 0));
+    m_gameOperatorController.povDownRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, .4));
+    m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -.4));
 
     m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
     m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
     m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
+    
   }
 
   /*

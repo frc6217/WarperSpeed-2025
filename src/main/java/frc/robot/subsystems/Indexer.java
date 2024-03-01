@@ -19,6 +19,7 @@ public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
   CANSparkMax indexer = new CANSparkMax(7, MotorType.kBrushless);
   DutyCycleEncoder absEncoder = new DutyCycleEncoder(0);
+  Shooter shooter;
   double flingDid = 0.145;
   public enum STATE {
     WAIT, FLING, FLINGWAIT, RESET
@@ -54,7 +55,7 @@ public class Indexer extends SubsystemBase {
       }
       case FLINGWAIT:
       {
-        if(timer.hasElapsed(.4)){
+        if(timer.hasElapsed(.1)){
           state = STATE.RESET;
         }
         break;

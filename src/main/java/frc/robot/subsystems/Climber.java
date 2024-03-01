@@ -28,6 +28,14 @@ public class Climber extends SubsystemBase {
     
   }
 
+  public void setLeftClimber(double speed){
+    leftClimber.set(speed);
+  }
+
+  public void setrightClimber(double speed){
+    rightClimber.set(speed);
+  }
+
   public void deployLeftClimber(){
   leftClimber.set(-.4); 
   }

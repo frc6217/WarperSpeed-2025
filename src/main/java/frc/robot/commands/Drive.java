@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -38,7 +40,13 @@ public class Drive extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    for(frc.robot.subsystems.SwerveModule module: swerveDrivetrain.modules){
+      if(module != null)
+      //Brakes not working look here
+      module.toggleBrakes(true);
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

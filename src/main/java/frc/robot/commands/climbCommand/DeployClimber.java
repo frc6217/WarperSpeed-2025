@@ -25,17 +25,8 @@ public class DeployClimber extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(climber.getLeftClimber().getEncoder().getPosition() < 17*16){
-      climber.deployLeftClimber();
-    }else{
-      climber.stopLeftClimber();
-    }
-
-    if(climber.getRightClimber().getEncoder().getPosition() < 17*16){
-      climber.deployRightClimber();
-    }else{
-      climber.stopRightClimber();
-    }
+    climber.deployLeftClimber();
+    climber.deployRightClimber();
 
   }
 
@@ -49,6 +40,6 @@ public class DeployClimber extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (climber.getLeftClimber().getEncoder().getPosition() > 17*16) && (climber.getRightClimber().getEncoder().getPosition() > 17*16);
+    return false;
   }
 }

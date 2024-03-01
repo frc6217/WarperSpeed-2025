@@ -4,6 +4,7 @@
 
 package frc.robot.commands.auto;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -28,6 +29,9 @@ public class SetSwerveOdometry extends Command {
   @Override
   public void initialize() {
     //sDrivetrain.sOdometry.resetPosition(null, null, null);
+    xSet = Units.feetToMeters(xSet);
+    ySet = Units.feetToMeters(ySet);
+    
     sDrivetrain.setPigeonAngle(rotationSet);
     sDrivetrain.setOdometry(xSet, ySet);
   }

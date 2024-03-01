@@ -58,8 +58,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Command unbrake = new UnenableBrakes(m_robotContainer.swerveDrivetrain);
-    unbrake.schedule();
+    //Command unbrake = new UnenableBrakes(m_robotContainer.swerveDrivetrain);
+    //unbrake.schedule();
   }
 
   @Override
@@ -88,9 +88,9 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
-
-    Command brakes = new EnableBrakes(m_robotContainer.swerveDrivetrain);
-    brakes.schedule();
+    new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain));
+    //Command brakes = new EnableBrakes(m_robotContainer.swerveDrivetrain);
+    //brakes.schedule();
     }
 
     

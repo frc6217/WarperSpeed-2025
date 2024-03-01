@@ -58,12 +58,14 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Auto yPID P", 0.1);
     SmartDashboard.putNumber("Auto rotationPID P", 0);
     
+    
 
     frontRightModule = new SwerveModule(Constants.RobotConstants.frontRight);
     backLeftModule = new SwerveModule(Constants.RobotConstants.backLeft);
     backRightModule = new SwerveModule(Constants.RobotConstants.backRight);
     frontLeftModule = new SwerveModule(Constants.RobotConstants.frontLeft);
 
+    
     allianceSelector = new AllianceSelector();
 
     pigeon2.reset();
@@ -114,6 +116,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Desired Y", desiredTranslation.getY());
     SmartDashboard.putNumber("Desired Rotation: (RPS)", desiredRotation);
     SmartDashboard.putNumber("cSpeeds Y", cSpeeds.vyMetersPerSecond);
+    SmartDashboard.putNumber("get Angle Pigeon: ", this.getAngle());
     
     for(SwerveModule module : modules){
       module.setState(states[module.operationOrderID]);
