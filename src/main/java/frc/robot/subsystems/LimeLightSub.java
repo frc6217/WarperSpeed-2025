@@ -13,19 +13,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimeLightSub extends SubsystemBase {
   /** Creates a new limelight. */
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-NetworkTableEntry tx;
-NetworkTableEntry ty;
-NetworkTableEntry ta;
+  NetworkTable table;
+  NetworkTableEntry tx;
+  NetworkTableEntry ty;
+  NetworkTableEntry ta;
+  String name;
 
-  public LimeLightSub() {
-    NetworkTableInstance.getDefault().getTable("limelight");
+  public LimeLightSub(String name) {
+    table = NetworkTableInstance.getDefault().getTable(name);
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
-
+    this.name = name;
     for(int port = 5800; port <= 5807; port++){
-      PortForwarder.add(port, "limelight. local", port);
+      PortForwarder.add(port, name + ".local", port);
     }
   }
 
@@ -41,11 +42,11 @@ NetworkTableEntry ta;
     double area = ta.getDouble(0.0);
 
     //post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
-    SmartDashboard.putNumber("skew", targetSkew.getDouble(0));
-    SmartDashboard.putBoolean("seetarget", (area != 0));
+    SmartDashboard.putNumber(name + " X", x);
+    SmartDashboard.putNumber(name + " Y", y);
+    SmartDashboard.putNumber(name + " Area", area);
+    SmartDashboard.putNumber(name + " skew", targetSkew.getDouble(0));
+    SmartDashboard.putBoolean(name + " seetarget", (area != 0));
   }
 
   public double getArea(){

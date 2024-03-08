@@ -123,6 +123,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
   }
 
+  public void stop(){
+    drive(new Translation2d(0,0), 0);
+  }
+
 
   @Override
   public void periodic() {
