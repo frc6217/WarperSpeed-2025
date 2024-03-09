@@ -45,9 +45,9 @@ public final class Constants {
   }
 
   public static class SemiAutoConstants{
-    public static final PIDParameters translationPIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters translationPIDNotePickUp = new PIDParameters(0.2, 0, 0, -18.42, 0.4);
+    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0.4);
+    public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.2, 0, 0, -1.87, 0.4);
 
     public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
 
@@ -62,6 +62,7 @@ public final class Constants {
     public static final PIDParameters strafePIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
 
     public static final SemiAutoParameters amp = new SemiAutoParameters(TARGET.AMP, translationPIDAmp, rotationPIDAmp, strafePIDAmp, 1);
+
   }
 
 

@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.commands.semiAuto.SemiAutoParameters.TARGET;
@@ -32,6 +33,7 @@ public class CameraDrive extends Command {
     rotationPidController =  new PIDController(parameters.rotationPID.P, parameters.rotationPID.I, parameters.rotationPID.D);
     strafePidController =  new PIDController(parameters.strafePID.P, parameters.strafePID.I, parameters.strafePID.D);
 
+    
     translationPidController.setTolerance(parameters.translationPID.tolerance);
     translationPidController.setSetpoint(parameters.translationPID.setPoint);
 
@@ -68,24 +70,26 @@ public class CameraDrive extends Command {
       default:
         break;
     }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    
     if (ll.isValid()) {
 
-      double translationAmount = translationPidController.calculate(ll.getArea());
+      double translationAmount = translationPidController.calculate(ll.getY());
       translationAmount = MathUtil.clamp(translationAmount, -.3, .3); //todo move constants
 
       double rotationAmount = rotationPidController.calculate(ll.getX());
-      rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
-
+      //rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
+      rotationAmount = 0; 
+      
       double strafeAmount = strafePidController.calculate(ll.getX());//todo test strafe vs rotation for X
       strafeAmount = MathUtil.clamp(strafeAmount, -.3, .3); //todo move constants
 
-      drivetrain.drive(new Translation2d(translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
+      drivetrain.relativeDrive(new Translation2d(-translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
     } else {
       drivetrain.stop();
     }
@@ -101,6 +105,6 @@ public class CameraDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return translationPidController.atSetpoint() && rotationPidController.atSetpoint() && strafePidController.atSetpoint();
+    return translationPidController.atSetpoint() /*&& rotationPidController.atSetpoint()*/ && strafePidController.atSetpoint();
   }
 }

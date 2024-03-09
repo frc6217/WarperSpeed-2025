@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * 
  * AprilTag Camera
  * 
- * 0 - Red Speaker
+ * 0 - Red SpeakerP
  * 1 - Blue Speaker
  * 2 - Red Amp
  * 3 - Blue Amp
