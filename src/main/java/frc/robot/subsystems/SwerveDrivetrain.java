@@ -97,6 +97,14 @@ public class SwerveDrivetrain extends SubsystemBase {
     return sPosition;
   }
 
+ public void relativeDrive(Translation2d desiredTranslation2d, double desiredRotation){
+  cSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(desiredTranslation2d.getX(), desiredTranslation2d.getY(), desiredRotation, getGyroRotation2d());
+  SwerveModuleState[] states = sKinematics.toSwerveModuleStates(cSpeeds);
+      
+    for(SwerveModule module : modules){
+      module.setState(states[module.operationOrderID]);
+    }
+}
 
   public void drive(Translation2d desiredTranslation, double desiredRotation){
     
