@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 
 import au.grapplerobotics.LaserCan;
@@ -103,6 +105,7 @@ public class Intake extends SubsystemBase {
     // return true if note is detected
     return noteDetector.getPeriod() < Constants.RobotConstants.noteDetectorThreshold;
   }
+
 
   public double noteSensorDistance() {
     // return distance in inches from sensor
