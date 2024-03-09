@@ -20,6 +20,7 @@ import frc.robot.commands.climbCommand.ClimberSetSpeedCommand;
 import frc.robot.commands.climbCommand.DeployClimber;
 import frc.robot.commands.climbCommand.WinchClimber;
 import frc.robot.commands.semiAuto.CameraDrive;
+import frc.robot.commands.semiAuto.SemiAutoFactory;
 import frc.robot.commands.shootCommands.AmpShootCommand;
 import frc.robot.commands.shootCommands.SpeakerShootCommand;
 import frc.robot.commands.shootCommands.SpeedShoot;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final CommandXboxController m_gameOperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   
   AutoCommandFactory autoCommandFactory;
+  SemiAutoFactory semiAutoFactory;
   //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
   public final Intake intake = new Intake();
@@ -71,6 +73,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight);
+    semiAutoFactory = new SemiAutoFactory(this);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -119,11 +122,12 @@ public class RobotContainer {
     m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -.4));
 
     
+    m_driverController.a().whileTrue(semiAutoFactory.autoPickupNote());
 
-    //m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
-    driverLeftBumper.whileTrue(new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note));
-    driverRightBumper.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, Constants.SemiAutoConstants.speaker));
-    //m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
+    m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
+    // driverLeftBumper.whileTrue(new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note));
+    // driverRightBumper.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, Constants.SemiAutoConstants.speaker));
+    m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
     m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
     
