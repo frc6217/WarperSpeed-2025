@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -11,12 +13,28 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
+
+/*
+ * Pipelines
+ * 
+ * AprilTag Camera
+ * 
+ * 0 - Red Speaker
+ * 1 - Blue Speaker
+ * 2 - Red Amp
+ * 3 - Blue Amp
+ * 
+ * 
+ */
 public class LimeLightSub extends SubsystemBase {
   /** Creates a new limelight. */
   NetworkTable table;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
   NetworkTableEntry ta;
+  NetworkTableEntry tid;
+  NetworkTableEntry tv;
   String name;
 
   public LimeLightSub(String name) {
@@ -24,6 +42,9 @@ public class LimeLightSub extends SubsystemBase {
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
+    tid = table.getEntry("tid");
+    tv = table.getEntry("tv");
+
     this.name = name;
     for(int port = 5800; port <= 5807; port++){
       PortForwarder.add(port, name + ".local", port);
@@ -36,6 +57,9 @@ public class LimeLightSub extends SubsystemBase {
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
+    tid = table.getEntry("tid");
+    tv = table.getEntry("tv");
+
     NetworkTableEntry targetSkew = table.getEntry("ts");
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
@@ -57,5 +81,21 @@ public class LimeLightSub extends SubsystemBase {
   }
   public double getY(){
     return ty.getDouble(0);
+  }
+
+  public AprilTag getAprilTag() {
+    // return april tag of tid
+    return new AprilTag((int)tid.getInteger(0), new Pose3d());
+  }
+
+  public boolean isValid() {
+    // check and returns tv
+    return (tv.getDouble(0) > .5);
+  }
+
+
+  public void setPipeline(int id) {
+    NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(id);
+
   }
 }

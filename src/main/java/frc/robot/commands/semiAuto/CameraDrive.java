@@ -7,8 +7,10 @@ package frc.robot.commands.semiAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.commands.semiAuto.SemiAutoParameters.TARGET;
 import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -44,22 +46,50 @@ public class CameraDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    //set which pipeline we want
+    switch (parameters.target) {
+      case NOTE:
+        ll.setPipeline(0);
+      break;
+      case AMP:
+        if (drivetrain.allianceSelector.getAllianceColor()  == Alliance.Red) {
+          ll.setPipeline(2);
+        } else {
+          ll.setPipeline(3);
+        }
+        break;
+      case SPEAKER:
+        if (drivetrain.allianceSelector.getAllianceColor()  == Alliance.Red) {
+          ll.setPipeline(0);
+        } else {
+          ll.setPipeline(1);
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double translationAmount = translationPidController.calculate(ll.getArea());
-    translationAmount = MathUtil.clamp(translationAmount, -.3, .3); //todo move constants
 
-    double rotationAmount = rotationPidController.calculate(ll.getX());
-    rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
+    if (ll.isValid()) {
 
-    double strafeAmount = strafePidController.calculate(ll.getX());//todo test strafe vs rotation for X
-    strafeAmount = MathUtil.clamp(strafeAmount, -.3, .3); //todo move constants
+      double translationAmount = translationPidController.calculate(ll.getArea());
+      translationAmount = MathUtil.clamp(translationAmount, -.3, .3); //todo move constants
 
-    drivetrain.drive(new Translation2d(translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
+      double rotationAmount = rotationPidController.calculate(ll.getX());
+      rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
+
+      double strafeAmount = strafePidController.calculate(ll.getX());//todo test strafe vs rotation for X
+      strafeAmount = MathUtil.clamp(strafeAmount, -.3, .3); //todo move constants
+
+      drivetrain.drive(new Translation2d(translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
+    } else {
+      drivetrain.stop();
+    }
+
   }
 
   // Called once the command ends or is interrupted.

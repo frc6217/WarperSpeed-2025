@@ -16,6 +16,10 @@ public class AllianceSelector extends SubsystemBase {
   /** Creates a new AllianceSelector. */
   private Alliance alliance;
   public AllianceSelector() {
+    setAlliance();
+  }
+
+  public void setAlliance(){
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
         if (ally.get() == Alliance.Red) {

@@ -27,13 +27,14 @@ public class Intake extends SubsystemBase {
   //DigitalInput dio = new DigitalInput(1);
 
  // PWM pwm = new PWM(1);
-  DutyCycle dc = new DutyCycle(new DigitalInput(1));
-
+  Counter counter = new Counter(Counter.Mode.kSemiperiod);
   
   //LaserCan laser = new LaserCan(55);
   private double laserInches = 0;
 
   public Intake() {
+    counter.setUpSource(1);
+    counter.setSemiPeriodMode(true);
 
     SmartDashboard.putNumber("intake1speed", .2);
     SmartDashboard.putNumber("intake2speed", .3);
@@ -42,7 +43,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("dectector2: ", dc.getOutput());
+    SmartDashboard.putNumber("dectector2: ", counter.getPeriod());
     // This method will be called once per scheduler run
     //laserInches = getLaserInches();
   }

@@ -11,11 +11,18 @@ public class SemiAutoParameters {
     public PIDParameters strafePID;
     public double direction;
 
-    public SemiAutoParameters(PIDParameters translationPID, PIDParameters rotationPID, PIDParameters strafePID, double direction) {
+    public enum TARGET {
+        SPEAKER, AMP, NOTE;
+    }
+
+    public TARGET target;
+
+    public SemiAutoParameters(TARGET target, PIDParameters translationPID, PIDParameters rotationPID, PIDParameters strafePID, double direction) {
         this.translationPID = translationPID;
         this.rotationPID = rotationPID;
         this.strafePID = strafePID;
         this.direction = direction;
+        this.target = target;
     }
 
     public static class PIDParameters {
