@@ -26,6 +26,7 @@ public class Indexer extends SubsystemBase {
   };
   STATE state = STATE.WAIT;
   Timer timer = new Timer();
+
   public Indexer() {
     absEncoder.setPositionOffset(Constants.RobotConstants.indexerStartOffset);
   }
@@ -36,9 +37,9 @@ public class Indexer extends SubsystemBase {
     SmartDashboard.putNumber("abs value indexer", absEncoder.getDistance());
     SmartDashboard.putNumber("relative value indexer", indexer.getEncoder().getPosition());
     SmartDashboard.putString("Indexer State", state.toString());
+    
     switch (state) {
       case WAIT:
-        
         break;
       case FLING:
       {

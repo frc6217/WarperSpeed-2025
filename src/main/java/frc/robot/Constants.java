@@ -35,7 +35,7 @@ public final class Constants {
 
   public static class AutoConstants{
     public static final double nearNoteXdistance = 5;
-    public static final double nearNoteYdistance = 5;
+    public static final double nearNoteYdistance = 4.9;
     public static final double sideSetupXdistance = -1.48;
     public static final double sideSetupYdistance = 2.5;
     public static final double sideSetupAngle = 60;
@@ -85,7 +85,7 @@ public final class Constants {
 
     //bevel gear on wheel goes right
     public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 16, 15, 60,-0.1062, "Front Left", encoderType.CAN, "CTRSwerve");
-    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59,-0.1799, "Front Right", encoderType.CAN,"CTRSwerve");
+    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59, -0.1799, "Front Right", encoderType.CAN,"CTRSwerve");
     public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 19, 18, 61,-0.8731, "Back Left", encoderType.CAN, "CTRSwerve");
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.596924, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
