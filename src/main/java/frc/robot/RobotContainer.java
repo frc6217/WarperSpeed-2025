@@ -65,8 +65,8 @@ public class RobotContainer {
   public final Shooter shooter = new Shooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
-  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("notefinder");
-  public final LimeLightSub shooterLimeLight = new LimeLightSub("shootercam");
+  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup");
+  public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter");
   
   public RobotContainer() {
     // Configure the trigger bindings
@@ -98,7 +98,6 @@ public class RobotContainer {
      gameOpPOVDown.whileTrue(new WinchClimber(climber));
      gameOpPOVUp.whileTrue(new DeployClimber(climber));
 
-
     //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
     m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(2,0, 0,swerveDrivetrain));
     //m_gameOperatorController.povLeft().whileTrue(new RelativeDiseredDriveNoPID(5, 0,0, swerveDrivetrain));
@@ -118,6 +117,8 @@ public class RobotContainer {
     m_gameOperatorController.povUpLeft().whileTrue(new ClimberSetSpeedCommand(climber, -.4, 0));
     m_gameOperatorController.povDownRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, .4));
     m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -.4));
+
+    
 
     //m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
     driverLeftBumper.whileTrue(new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note));
