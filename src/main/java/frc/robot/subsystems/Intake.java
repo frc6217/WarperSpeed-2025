@@ -12,6 +12,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,11 +26,17 @@ public class Intake extends SubsystemBase {
   CANSparkMax secondIntake = new CANSparkMax(14, MotorType.kBrushless);
 
   private DigitalInput noteSensor = new DigitalInput(1);
+  //DigitalInput dio = new DigitalInput(1);
+
+ // PWM pwm = new PWM(1);
+  DutyCycle dc = new DutyCycle(new DigitalInput(1));
+
   
   //LaserCan laser = new LaserCan(55);
   private double laserInches = 0;
 
   public Intake() {
+
     SmartDashboard.putNumber("intake1speed", .2);
     SmartDashboard.putNumber("intake2speed", .3);
 
@@ -34,6 +44,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("dectector2: ", dc.getOutput());
     // This method will be called once per scheduler run
     //laserInches = getLaserInches();
     SmartDashboard.putBoolean("Note Sensor: ", noteSensor.get());

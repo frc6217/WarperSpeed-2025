@@ -64,11 +64,12 @@ public class RobotContainer {
   public final Shooter shooter = new Shooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
-  public final LimeLightSub limeLightSub = new LimeLightSub();
+  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("notefinder");
+  public final LimeLightSub shooterLimeLight = new LimeLightSub("shootercam");
   
   public RobotContainer() {
     // Configure the trigger bindings
-    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,limeLightSub);
+    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());

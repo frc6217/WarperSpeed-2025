@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.commands.semiAuto.SemiAutoParameters;
+import frc.robot.commands.semiAuto.SemiAutoParameters.PIDParameters;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveModule.Constants.encoderType;
 
@@ -39,6 +41,26 @@ public final class Constants {
     public static final double farNoteXdistance = 24.25;
     public static final double farNoteYDistance = 15.75;
     public static final double farNote2YDistance = 10.25;
+  }
+
+  public static class SemiAutoConstants{
+    public static final PIDParameters translationPIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0);
+
+    public static final SemiAutoParameters note = new SemiAutoParameters(translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
+
+    public static final PIDParameters translationPIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
+
+    public static final SemiAutoParameters speaker = new SemiAutoParameters(translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, 1);
+
+    public static final PIDParameters translationPIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters rotationPIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters strafePIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
+
+    public static final SemiAutoParameters amp = new SemiAutoParameters(translationPIDAmp, rotationPIDAmp, strafePIDAmp, 1);
   }
 
 
