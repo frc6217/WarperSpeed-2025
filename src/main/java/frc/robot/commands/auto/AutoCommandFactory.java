@@ -60,16 +60,27 @@ public class AutoCommandFactory {
         andThen(GoToNearLeftNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()).
         andThen(GoToNearRightNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()));
 
-        autoChooser.addOption("Left Amp, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(leftSideAmpLeave()));
-        autoChooser.addOption("Left Source, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(leftSideSourceLeave()));
+        autoChooser.addOption("Middle, Three Shot, Not Right Near Note", 
+        AlwaysDo().andThen(doSimpleReturnHome()).andThen(doAutoFirstShot()).
+        andThen(GoToNearMiddleNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()).
+        andThen(GoToNearLeftNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()));
+
+        autoChooser.addOption("Middle, Three Shot, Not left Near Note", 
+        AlwaysDo().andThen(doSimpleReturnHome()).andThen(doAutoFirstShot()).
+        andThen(GoToNearMiddleNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()).
+        andThen(GoToNearRightNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()));
+
+        autoChooser.addOption("Left Amp, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()));
+        autoChooser.addOption("Left Source, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()));
         autoChooser.addOption("Left Source, Two Shot, get far Note", AlwaysDo().andThen(leftSideStart()).
         andThen(GoToFarLeftFirstNote()).andThen(doAutoShot()));
         autoChooser.addOption("Left Source, Three Shot, get far Note", AlwaysDo().andThen(leftSideStart()).
         andThen(GoToFarLeftFirstNote()).andThen(doAutoShot()).
         andThen(GoToFarLeftSecondNote()).andThen(doAutoShot()));
 
+
         autoChooser.addOption("Right Amp, One Shot, leave to right", AlwaysDo().andThen(rightSideStart()).andThen(doAutoFirstShot()).andThen(rightSideAmpLeave()));
-        autoChooser.addOption("Right Source, One Shot, leave to right", AlwaysDo().andThen(rightSideStart()).andThen(doAutoFirstShot()).andThen(rightSideSourceLeave()));
+        autoChooser.addOption("Right Source, One Shot, leave to right", AlwaysDo().andThen(rightSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()));
         autoChooser.addOption("RIght Source, Two Shot, get far Note", AlwaysDo().andThen(rightSideStart()).
         andThen(GoToFarRightFirstNote()).andThen(doAutoShot()));
         autoChooser.addOption("Left Source, Three Shot, get far Note", AlwaysDo().andThen(leftSideStart()).
@@ -162,13 +173,13 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup doSimpleBackUp(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-        pCommandGroup.addCommands(new RelativeDiseredDriveNoPID(5, 0,0, sDrivetrain));
+        pCommandGroup.addCommands(new RelativeDiseredDriveNoPID(10, 10,0, sDrivetrain));
         return pCommandGroup;
       }
     
     public ParallelDeadlineGroup doSimpleReturnHome(){
         ParallelDeadlineGroup pCommandGroup = new ParallelDeadlineGroup(
-        new AbsoluteDiseredDriveNoPID(0, 0.5,0, sDrivetrain), 
+        new AbsoluteDiseredDriveNoPID(0.5, 0,0, sDrivetrain), 
         new AutoShootStart(shooter));
         return pCommandGroup;
       }
@@ -177,7 +188,7 @@ public class AutoCommandFactory {
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(AutoConstants.nearNoteXdistance - 2.5, AutoConstants.nearNoteYdistance,0, sDrivetrain));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(new AbsoluteDiseredDriveNoPID(AutoConstants.nearNoteXdistance , AutoConstants.nearNoteYdistance, sDrivetrain), new AutoIntakeStart(intake)));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.6), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4), new AutoIntakeStart(intake)));
         return pCommandGroup;
       }
 
@@ -185,7 +196,7 @@ public class AutoCommandFactory {
     public SequentialCommandGroup GoToNearMiddleNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new ParallelDeadlineGroup( new AbsoluteDiseredDriveNoPID(AutoConstants.nearNoteXdistance, 0,0, sDrivetrain), new AutoIntakeStart(intake)));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.6), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new AutoIntakeEnd(intake));
         return pCommandGroup;
       }
@@ -193,17 +204,17 @@ public class AutoCommandFactory {
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(AutoConstants.nearNoteXdistance - 2.5, -AutoConstants.nearNoteYdistance,0, sDrivetrain));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(new AbsoluteDiseredDriveNoPID(AutoConstants.nearNoteXdistance , -AutoConstants.nearNoteYdistance, sDrivetrain), new AutoIntakeStart(intake)));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.6), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4), new AutoIntakeStart(intake)));
         return pCommandGroup;
       }
 
       public SequentialCommandGroup GoToFarLeftFirstNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(2, AutoConstants.farNoteYDistance,0, sDrivetrain));
+        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(6, AutoConstants.farNoteYDistance,0, sDrivetrain));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(new AbsoluteDiseredDriveNoPID(AutoConstants.farNoteXdistance, AutoConstants.farNoteYDistance,0, sDrivetrain), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new AutoIntakeEnd(intake));
-        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(2, AutoConstants.farNoteYDistance,0, sDrivetrain));
+        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(6, AutoConstants.farNoteYDistance,0, sDrivetrain));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(new AbsoluteDiseredDriveNoPID(AutoConstants.sideSetupXdistance, AutoConstants.sideSetupYdistance, 60 ,sDrivetrain), new AutoShootStart(shooter)));
         return pCommandGroup;
       }
@@ -224,10 +235,10 @@ public class AutoCommandFactory {
 
       public SequentialCommandGroup GoToFarRightFirstNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(2, -AutoConstants.farNoteYDistance,0, sDrivetrain));
+        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(5, -AutoConstants.farNoteYDistance,0, sDrivetrain));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(new AbsoluteDiseredDriveNoPID(AutoConstants.farNoteXdistance, -AutoConstants.farNoteYDistance,0, sDrivetrain), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3), new AutoIntakeStart(intake)));
-        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(2, -AutoConstants.farNoteYDistance,0, sDrivetrain));
+        pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(5, -AutoConstants.farNoteYDistance,0, sDrivetrain));
         pCommandGroup.addCommands(new AbsoluteDiseredDriveNoPID(AutoConstants.sideSetupXdistance, -AutoConstants.sideSetupYdistance, 60 ,sDrivetrain));
         return pCommandGroup;
       }

@@ -21,6 +21,7 @@ import frc.robot.commands.climbCommand.DeployClimber;
 import frc.robot.commands.climbCommand.WinchClimber;
 import frc.robot.commands.shootCommands.AmpShootCommand;
 import frc.robot.commands.shootCommands.SpeakerShootCommand;
+import frc.robot.commands.shootCommands.SpeedShoot;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -81,6 +82,7 @@ public class RobotContainer {
     Trigger gameOpPOVUp = m_gameOperatorController.povUp();
       Trigger gameOpPOVDown = m_gameOperatorController.povDown();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
+    Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
     Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
 
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
@@ -88,6 +90,7 @@ public class RobotContainer {
     gameOpB.whileTrue(new IntakeCommand(intake, -.5));
     gameOpA.whileTrue(new IntakeCommand(intake,.65));
 
+    gameOpleftTrigger.whileTrue(new SpeedShoot(.65, .75, shooter));
      gameOpPOVDown.whileTrue(new WinchClimber(climber));
      gameOpPOVUp.whileTrue(new DeployClimber(climber));
 
@@ -100,7 +103,7 @@ public class RobotContainer {
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
     gameOpLeftBumper.whileTrue(new SpeakerShootCommand(shooter));
     gameOpRightBumper.whileTrue(new AmpShootCommand(shooter));
-    gameOpY.onTrue(Commands.runOnce(indexer::shoot, indexer));
+    gameOpY.and(gameOpLeftBumper.or(gameOpRightBumper)).onTrue(Commands.runOnce(indexer::shoot, indexer));
 
     driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
 

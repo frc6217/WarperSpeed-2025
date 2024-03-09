@@ -11,6 +11,7 @@ import au.grapplerobotics.LaserCan;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,6 +20,8 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   CANSparkMax firstIntake = new CANSparkMax(17, MotorType.kBrushless);
   CANSparkMax secondIntake = new CANSparkMax(14, MotorType.kBrushless);
+
+  private DigitalInput noteSensor = new DigitalInput(1);
   
   //LaserCan laser = new LaserCan(55);
   private double laserInches = 0;
@@ -33,6 +36,7 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //laserInches = getLaserInches();
+    SmartDashboard.putBoolean("Note Sensor: ", noteSensor.get());
   }
 /* 
   private double getLaserInches(){
