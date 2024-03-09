@@ -25,18 +25,17 @@ public class Intake extends SubsystemBase {
   CANSparkMax firstIntake = new CANSparkMax(17, MotorType.kBrushless);
   CANSparkMax secondIntake = new CANSparkMax(14, MotorType.kBrushless);
 
-  private DigitalInput noteSensor = new DigitalInput(1);
   //DigitalInput dio = new DigitalInput(1);
 
  // PWM pwm = new PWM(1);
-  Counter counter = new Counter(Counter.Mode.kSemiperiod);
+  Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
   
   //LaserCan laser = new LaserCan(55);
   private double laserInches = 0;
 
   public Intake() {
-    counter.setUpSource(1);
-    counter.setSemiPeriodMode(true);
+    noteDetector.setUpSource(1);
+    noteDetector.setSemiPeriodMode(true);
 
     SmartDashboard.putNumber("intake1speed", .2);
     SmartDashboard.putNumber("intake2speed", .3);
@@ -45,10 +44,9 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("dectector2: ", counter.getPeriod());
+    SmartDashboard.putBoolean("dectector3: ", haveNote());
     // This method will be called once per scheduler run
     //laserInches = getLaserInches();
-    SmartDashboard.putBoolean("Note Sensor: ", noteSensor.get());
   }
 /* 
   private double getLaserInches(){
@@ -100,4 +98,16 @@ public class Intake extends SubsystemBase {
     firstIntake.set(speed);
     secondIntake.set(-speed);
   }
-}
+
+  public boolean haveNote() {
+    // return true if note is detected
+    return noteDetector.getPeriod() < Constants.RobotConstants.noteDetectorThreshold;
+  }
+
+  public double noteSensorDistance() {
+    // return distance in inches from sensor
+    double timeMeasurement = noteDetector.getPeriod() * 1000000;
+    double mm = 0.75 * ((timeMeasurement) - 1000);
+    return mm/25.4;
+    }
+  }

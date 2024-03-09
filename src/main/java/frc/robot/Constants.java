@@ -90,6 +90,7 @@ public final class Constants {
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.596924, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
     public static final double indexerStartOffset = .0887;
+    public static double noteDetectorThreshold = 0.001126;
   
   }
 
