@@ -60,7 +60,7 @@ public class RobotContainer {
   AutoCommandFactory autoCommandFactory;
   //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
-  public final Intake intake = new Intake();
+  public final Intake intake = new Intake(swerveDrivetrain);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public final Shooter shooter = new Shooter();
   public final Indexer indexer = new Indexer();

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.SetLedDisabled;
 import frc.robot.commands.brakeCommands.EnableBrakes;
 import frc.robot.commands.brakeCommands.UnenableBrakes;
 
@@ -36,6 +37,9 @@ public class Robot extends TimedRobot {
      //new Trigger(this::isEnabled).negate().debounce(3).onTrue(new UnenableBrakes(m_robotContainer.swerveDrivetrain));
      
     // Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain).schedule();
+
+    new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.intake::ledNoNote, m_robotContainer.intake));
+    new Trigger(this::isEnabled).negate().onTrue(new SetLedDisabled(m_robotContainer.intake));
   
   }
 
@@ -63,7 +67,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_robotContainer.swerveDrivetrain.allianceSelector.setAlliance();
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override

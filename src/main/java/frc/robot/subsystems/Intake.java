@@ -6,6 +6,12 @@ package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.RgbFadeAnimation;
+import com.ctre.phoenix.led.SingleFadeAnimation;
+import com.ctre.phoenix.led.TwinkleAnimation;
 import com.revrobotics.CANSparkMax;
 
 import au.grapplerobotics.LaserCan;
@@ -18,8 +24,11 @@ import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
@@ -27,20 +36,29 @@ public class Intake extends SubsystemBase {
   CANSparkMax firstIntake = new CANSparkMax(17, MotorType.kBrushless);
   CANSparkMax secondIntake = new CANSparkMax(14, MotorType.kBrushless);
 
-  //DigitalInput dio = new DigitalInput(1);
-
- // PWM pwm = new PWM(1);
   Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
-  
-  //LaserCan laser = new LaserCan(55);
-  private double laserInches = 0;
 
-  public Intake() {
+  CANdle candle = new CANdle(51);
+  int numLeds = 68;
+
+  AllianceSelector allianceSelector;
+  
+  public Intake(SwerveDrivetrain drivetrain) {
     noteDetector.setUpSource(1);
     noteDetector.setSemiPeriodMode(true);
 
     SmartDashboard.putNumber("intake1speed", .2);
     SmartDashboard.putNumber("intake2speed", .3);
+
+    this.allianceSelector = drivetrain.allianceSelector;
+
+    new Trigger(this::haveNote).onFalse(Commands.runOnce(this::intakeOn, this));
+    new Trigger(this::haveNote).onTrue(Commands.runOnce(this::intakeOff, this));
+
+    new Trigger(this::haveNote).onTrue(Commands.runOnce(this::ledRainbow, this));
+    new Trigger(this::haveNote).onFalse(Commands.runOnce(this::ledNoNote, this));
+
+    this.ledrgbFade();
 
   }
 
@@ -48,16 +66,9 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("dectector3: ", haveNote());
     // This method will be called once per scheduler run
-    //laserInches = getLaserInches();
+
   }
-/* 
-  private double getLaserInches(){
-    return Units.metersToInches((double)(laser.getMeasurement().distance_mm)/1000);
-  }
-  
-  public boolean hasNote(){
-    return laserInches < Constants.RobotConstants.laserNoteThresholdInches;
-  } */
+
   public void on1Intake(){
     firstIntake.set(SmartDashboard.getNumber("intake1speed", 0));
   }
@@ -84,7 +95,7 @@ public class Intake extends SubsystemBase {
 
   public void intakeOn(){
     firstIntake.set(.65);
-    secondIntake.set(.65);
+    secondIntake.set(-.65);
   }
   
   public void intakeReverse(){
@@ -104,6 +115,36 @@ public class Intake extends SubsystemBase {
   public boolean haveNote() {
     // return true if note is detected
     return noteDetector.getPeriod() < Constants.RobotConstants.noteDetectorThreshold;
+  }
+
+  public void ledRainbow(){
+    RainbowAnimation rainbow = new RainbowAnimation();
+    candle.animate(rainbow);
+  }
+  public void ledBlue(){
+    //TwinkleAnimation animate = new TwinkleAnimation(0, 0, 255);
+    SingleFadeAnimation animate = new SingleFadeAnimation(0, 0, 255, 0, .5, numLeds);
+    candle.animate(animate);
+  }
+
+  public void ledNoNote() {
+    if (allianceSelector.getAllianceColor() == Alliance.Red) {
+      ledRed();
+    } else {
+      ledBlue();
+    }
+  }
+
+    public void ledRed(){
+    //TwinkleAnimation animate = new TwinkleAnimation(0, 0, 255);
+    SingleFadeAnimation animate = new SingleFadeAnimation(255, 0, 0, 0, .5, numLeds);
+    candle.animate(animate);
+  }
+
+
+  public void ledrgbFade() {
+    RgbFadeAnimation animate = new RgbFadeAnimation(1, .5, numLeds);
+    candle.animate(animate);
   }
 
 
