@@ -33,12 +33,12 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  CANSparkMax firstIntake = new CANSparkMax(17, MotorType.kBrushless);
-  CANSparkMax secondIntake = new CANSparkMax(14, MotorType.kBrushless);
+  CANSparkMax firstIntake = new CANSparkMax(Constants.RobotConstants.firstIntakeCanId, MotorType.kBrushless);
+  CANSparkMax secondIntake = new CANSparkMax(Constants.RobotConstants.secondIntakeCanId, MotorType.kBrushless);
 
   Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
 
-  CANdle candle = new CANdle(51);
+  CANdle candle = new CANdle(Constants.RobotConstants.candleCanId);
   int numLeds = 68;
 
   AllianceSelector allianceSelector;

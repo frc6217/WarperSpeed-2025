@@ -4,6 +4,8 @@
 
 package frc.robot.commands.semiAuto;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,6 +24,10 @@ public class CameraDrive extends Command {
   PIDController translationPidController;
   PIDController rotationPidController;
   PIDController strafePidController;
+
+  DoubleSupplier translationErrorSupplier;
+  DoubleSupplier rotationErrorSupplier;
+  DoubleSupplier strafeErrorsSupplier;
 
   /** Creates a new CameraDrive. */
   public CameraDrive(SwerveDrivetrain drivetrain, LimeLightSub ll, SemiAutoParameters parameters) {
@@ -52,20 +58,49 @@ public class CameraDrive extends Command {
     switch (parameters.target) {
       case NOTE:
         ll.setPipeline(0);
+        translationErrorSupplier = ll::getY;
+        rotationErrorSupplier = ll::getX;
+        strafeErrorsSupplier = ll::getX;
       break;
       case AMP:
-        if (drivetrain.allianceSelector.getAllianceColor()  == Alliance.Red) {
+      if (drivetrain.allianceSelector.getAllianceColor() == Alliance.Red) {
           ll.setPipeline(2);
         } else {
           ll.setPipeline(3);
         }
+        translationErrorSupplier = ll::getY;
+        rotationErrorSupplier = ll::getX;
+        strafeErrorsSupplier = ll::getX;
         break;
       case SPEAKER:
-        if (drivetrain.allianceSelector.getAllianceColor()  == Alliance.Red) {
+        if (drivetrain.allianceSelector.getAllianceColor() == Alliance.Red) {
           ll.setPipeline(0);
         } else {
           ll.setPipeline(1);
         }
+        translationErrorSupplier = ll::getY;
+        rotationErrorSupplier = ll::getX;
+        strafeErrorsSupplier = ll::getX;
+        break;
+      case TRAP:
+        if (drivetrain.allianceSelector.getAllianceColor() == Alliance.Red) {
+          ll.setPipeline(4);
+        } else {
+          ll.setPipeline(5);
+        }
+        translationErrorSupplier = ll::getY;
+        rotationErrorSupplier = ll::getX;
+        strafeErrorsSupplier = ll::getX;
+        break;
+      case SOURCE:
+        if (drivetrain.allianceSelector.getAllianceColor() == Alliance.Red) {
+          ll.setPipeline(6);
+        } else {
+          ll.setPipeline(7);
+        }
+        translationErrorSupplier = ll::getY;
+        rotationErrorSupplier = ll::getX;
+        strafeErrorsSupplier = ll::getX;
         break;
       default:
         break;
@@ -79,14 +114,14 @@ public class CameraDrive extends Command {
     
     if (ll.isValid()) {
 
-      double translationAmount = translationPidController.calculate(ll.getY());
+      double translationAmount = translationPidController.calculate(translationErrorSupplier.getAsDouble());
       translationAmount = MathUtil.clamp(translationAmount, -.3, .3); //todo move constants
 
-      double rotationAmount = rotationPidController.calculate(ll.getX());
-      //rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
+      double rotationAmount = rotationPidController.calculate(rotationErrorSupplier.getAsDouble());
+      rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
       rotationAmount = 0; 
       
-      double strafeAmount = strafePidController.calculate(ll.getX());//todo test strafe vs rotation for X
+      double strafeAmount = strafePidController.calculate(strafeErrorsSupplier.getAsDouble());//todo test strafe vs rotation for X
       strafeAmount = MathUtil.clamp(strafeAmount, -.3, .3); //todo move constants
 
       drivetrain.relativeDrive(new Translation2d(-translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
@@ -105,6 +140,6 @@ public class CameraDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return translationPidController.atSetpoint() /*&& rotationPidController.atSetpoint()*/ && strafePidController.atSetpoint();
+    return translationPidController.atSetpoint() && rotationPidController.atSetpoint() && strafePidController.atSetpoint();
   }
 }

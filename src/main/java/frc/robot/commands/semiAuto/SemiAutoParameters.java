@@ -12,7 +12,7 @@ public class SemiAutoParameters {
     public double direction;
 
     public enum TARGET {
-        SPEAKER, AMP, NOTE;
+        SPEAKER, AMP, NOTE, TRAP, SOURCE;
     }
 
     public TARGET target;

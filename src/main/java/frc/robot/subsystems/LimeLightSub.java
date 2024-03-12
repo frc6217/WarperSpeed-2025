@@ -20,11 +20,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * 
  * AprilTag Camera
  * 
- * 0 - Red SpeakerP
+ * 0 - Red Speaker
  * 1 - Blue Speaker
  * 2 - Red Amp
  * 3 - Blue Amp
- * 
+ * 4 - Red Trap
+ * 5 - Blue Trap
+ * 6 - Red Source
+ * 7 - Blue Source
  * 
  */
 public class LimeLightSub extends SubsystemBase {

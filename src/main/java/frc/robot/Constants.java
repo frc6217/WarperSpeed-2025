@@ -67,6 +67,12 @@ public final class Constants {
 
 
   public static class RobotConstants{
+    public static final int firstIntakeCanId = 17;
+    public static final int secondIntakeCanId =  14;
+    public static final int candleCanId = 51;
+    public static final int indexerCanId = 7;
+    public static final int lowShooterCanId = 5;
+    public static final int highShooterCanId = 6;
     public static final double trackWidth = Units.inchesToMeters(24.5);
     public static final double trackLength = Units.inchesToMeters(24.5);
     public static final double driveGearRatio = 6.67;
@@ -92,6 +98,14 @@ public final class Constants {
     public static final double laserNoteThresholdInches = 7.3;
     public static final double indexerStartOffset = .0887;
     public static double noteDetectorThreshold = 0.001126;
+    public static double highRpmSpeaker;
+    public static double lowRpmSpeaker;
+    public static double highRpmAmp;
+    public static double lowRpmAmp;
+    public static double highRpmTrap;
+    public static double lowRpmTrap;
+    public static double highRpmIdle;
+    public static double lowRpmIdle;
   
   }
 

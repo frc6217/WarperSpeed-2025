@@ -17,7 +17,7 @@ import frc.robot.Constants;
 
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
-  CANSparkMax indexer = new CANSparkMax(7, MotorType.kBrushless);
+  CANSparkMax indexer = new CANSparkMax(Constants.RobotConstants.indexerCanId, MotorType.kBrushless);
   DutyCycleEncoder absEncoder = new DutyCycleEncoder(0);
   Shooter shooter;
   double flingDid = 0.145;

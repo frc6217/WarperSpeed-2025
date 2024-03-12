@@ -9,10 +9,11 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  CANSparkMax lowShooter = new CANSparkMax(5, MotorType.kBrushless);
-  CANSparkMax topShooter = new CANSparkMax(6, MotorType.kBrushless);
+  CANSparkMax lowShooter = new CANSparkMax(Constants.RobotConstants.lowShooterCanId, MotorType.kBrushless);
+  CANSparkMax topShooter = new CANSparkMax(Constants.RobotConstants.highShooterCanId, MotorType.kBrushless);
   /** Creates a new Shooter. */
   public Shooter() {
     SmartDashboard.putNumber("lowShooterspeed", -.96);
