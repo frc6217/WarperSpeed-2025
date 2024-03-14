@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.RobotConstants;
 
 public class PIDShooter extends SubsystemBase {
   /** Creates a new PIDShooter. */
@@ -33,6 +34,8 @@ public class PIDShooter extends SubsystemBase {
     SmartDashboard.putNumber("high I", 0);
     SmartDashboard.putNumber("high D", 0);
     topShooter.setInverted(true);
+    topShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
+    lowShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
   }
   /*
   public void on(){

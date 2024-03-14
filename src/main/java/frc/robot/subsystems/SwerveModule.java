@@ -71,7 +71,7 @@ public class SwerveModule extends SubsystemBase{
     steerPID.setPositionPIDWrappingMaxInput(2 * Math.PI);
     steerPID.setPositionPIDWrappingMinInput(0);
     steerPID.setPositionPIDWrappingEnabled(true);
-
+    steerMotor.setSmartCurrentLimit(RobotConstants.steerMotorCurrentLimit);
 
     //new swerve
   
@@ -100,7 +100,7 @@ public class SwerveModule extends SubsystemBase{
     operationOrderID = constants.position;
 
     //driveMotor.setSmartCurrentLimit(0, 40);
-    driveMotor.setSmartCurrentLimit(40);
+    driveMotor.setSmartCurrentLimit(RobotConstants.driveMotorCurrentLimit);
 
     steerMotor.burnFlash();
     driveMotor.burnFlash();

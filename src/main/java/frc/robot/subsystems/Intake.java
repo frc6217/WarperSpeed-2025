@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.Constants.RobotConstants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
@@ -60,6 +61,8 @@ public class Intake extends SubsystemBase {
 
     this.ledrgbFade();
 
+    firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
+    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
   }
 
   @Override
@@ -109,7 +112,7 @@ public class Intake extends SubsystemBase {
   }
   public void setSpeed(double speed) {
     firstIntake.set(speed);
-    secondIntake.set(-speed);
+    secondIntake.set(-(speed-.2));
   }
 
   public boolean haveNote() {
