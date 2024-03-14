@@ -36,6 +36,8 @@ public class PIDShooter extends SubsystemBase {
     topShooter.setInverted(true);
     topShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
     lowShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
+    topShooter.enableVoltageCompensation(RobotConstants.shooterVoltageCompensation);
+    lowShooter.enableVoltageCompensation(RobotConstants.shooterVoltageCompensation);
   }
   /*
   public void on(){

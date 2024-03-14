@@ -102,15 +102,16 @@ public final class Constants {
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.596924, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
     public static final double indexerStartOffset = .0887;
-    public static double noteDetectorThreshold = 0.001126;
-    public static double highRpmSpeaker;
-    public static double lowRpmSpeaker;
-    public static double highRpmAmp;
-    public static double lowRpmAmp;
-    public static double highRpmTrap;
-    public static double lowRpmTrap;
-    public static double highRpmIdle;
-    public static double lowRpmIdle;
+    public static final double noteDetectorThreshold = 0.001126;
+    public static final double highRpmSpeaker = 0;
+    public static final double lowRpmSpeaker = 0;
+    public static final double highRpmAmp = 0;
+    public static final double lowRpmAmp = 0;
+    public static final double highRpmTrap = 0;
+    public static final double lowRpmTrap = 0;
+    public static final double highRpmIdle = 0;
+    public static final double lowRpmIdle = 0;
+    public static final double shooterVoltageCompensation = 10;
   
   }
 
