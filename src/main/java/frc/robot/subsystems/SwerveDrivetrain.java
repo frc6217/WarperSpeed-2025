@@ -82,6 +82,13 @@ public class SwerveDrivetrain extends SubsystemBase {
     modules[backRightModule.operationOrderID] = backRightModule;
     sOdometry = new SwerveDriveOdometry(sKinematics, getGyroRotation2d(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
   }
+  public void initialize(){
+    for(SwerveModule module : modules){
+      module.initializeEncoder();
+    }
+    pigeon2.reset();
+    sOdometry.resetPosition(getGyroRotation2d(), getModulePositions(), new Pose2d());
+  }
 
   private Rotation2d getGyroRotation2d(){
     return Rotation2d.fromDegrees(getAngle()); 
