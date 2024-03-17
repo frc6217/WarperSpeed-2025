@@ -38,8 +38,8 @@ public class Robot extends TimedRobot {
      
     // Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain).schedule();
 
-    //new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.intake::ledNoNote, m_robotContainer.intake));
-    //new Trigger(this::isEnabled).negate().onTrue(new SetLedDisabled(m_robotContainer.intake));
+     new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.intake::ledNoNote, m_robotContainer.intake));
+      new Trigger(this::isEnabled).negate().onTrue(new SetLedDisabled(m_robotContainer.intake));
   
   }
 

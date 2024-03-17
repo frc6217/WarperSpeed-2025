@@ -48,6 +48,7 @@ public class PIDShooter extends SubsystemBase {
 */
   @Override
   public void periodic() {
+    /* 
    if (SmartDashboard.getNumber("low P", 0) != lowPidController.getP()){
     lowPidController.setP(SmartDashboard.getNumber("low P", 0));
    }
@@ -66,6 +67,8 @@ public class PIDShooter extends SubsystemBase {
    if (SmartDashboard.getNumber("high D", 0) != highPidController.getD()){
     highPidController.setD(SmartDashboard.getNumber("high D", 0));
    }
+
+   */
    
    SmartDashboard.putNumber("High Shooter Current RPM:", topShooter.getEncoder().getVelocity());
    SmartDashboard.putNumber("Low Shooter Current RPM:", lowShooter.getEncoder().getVelocity());

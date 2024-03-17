@@ -37,7 +37,11 @@ public class Intake extends SubsystemBase {
   CANSparkMax firstIntake = new CANSparkMax(Constants.RobotConstants.firstIntakeCanId, MotorType.kBrushless);
   CANSparkMax secondIntake = new CANSparkMax(Constants.RobotConstants.secondIntakeCanId, MotorType.kBrushless);
 
-  Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
+    //pulse distance sesnor
+  //Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
+
+  DigitalInput beamNoteDetector =  new DigitalInput(1);
+  boolean hasNote = true;
 
   CANdle candle = new CANdle(Constants.RobotConstants.candleCanId, "CTRSwerve");
   int numLeds = 168;
@@ -56,13 +60,13 @@ public class Intake extends SubsystemBase {
     //new Trigger(this::haveNote).onFalse(Commands.runOnce(this::intakeOn, this));
     //new Trigger(this::haveNote).onTrue(Commands.runOnce(this::intakeOff, this));
 
-   // new Trigger(this::haveNote).onTrue(Commands.runOnce(this::ledRainbow, this));
-    //new Trigger(this::haveNote).onFalse(Commands.runOnce(this::ledNoNote, this));
+    new Trigger(this::haveNote).onTrue(Commands.runOnce(this::ledRainbow, this));
+    new Trigger(this::haveNote).onFalse(Commands.runOnce(this::ledNoNote, this));
 
     this.ledrgbFade();
 
-     firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
-     secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
+    firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
+    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
   }
 
   @Override
@@ -70,6 +74,7 @@ public class Intake extends SubsystemBase {
     // SmartDashboard.putBoolean("dectector3: ", haveNote());
     // SmartDashboard.putNumber("whatever", noteDetector.getPeriod());
     // // This method will be called once per scheduler run
+    hasNote = !beamNoteDetector.get();
 
   }
 
@@ -119,7 +124,7 @@ public class Intake extends SubsystemBase {
   public boolean haveNote() {
     // return true if note is detected
     //return noteDetector.getPeriod() < Constants.RobotConstants.noteDetectorThreshold;
-    return false;
+    return hasNote;
   }
 
   public void ledRainbow(){
@@ -152,6 +157,7 @@ public class Intake extends SubsystemBase {
     candle.animate(animate);
   }
 
+  /* 
 
   public double noteSensorDistance() {
     // return distance in inches from sensor
@@ -159,4 +165,5 @@ public class Intake extends SubsystemBase {
     double mm = 0.75 * ((timeMeasurement) - 1000);
     return mm/25.4;
     }
+    */
   }
