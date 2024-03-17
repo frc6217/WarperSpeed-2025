@@ -22,10 +22,13 @@ public class Shooter extends SubsystemBase {
     topShooter.setInverted(true);
     topShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
     lowShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
+    
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("lowShooterRPM",lowShooter.getEncoder().getVelocity());
+    SmartDashboard.putNumber("topShooterRPM",topShooter.getEncoder().getVelocity());
     // This method will be called once per scheduler run
   }
   public void on() {

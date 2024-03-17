@@ -9,6 +9,7 @@ import frc.robot.commands.semiAuto.SemiAutoParameters;
 import frc.robot.commands.semiAuto.SemiAutoParameters.PIDParameters;
 import frc.robot.commands.semiAuto.SemiAutoParameters.TARGET;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.PIDShooter.ShooterSetPoints;
 import frc.robot.subsystems.SwerveModule.Constants.encoderType;
 
 /**
@@ -46,14 +47,14 @@ public final class Constants {
 
   public static class SemiAutoConstants{
     public static final PIDParameters translationPIDNotePickUp = new PIDParameters(0.2, 0, 0, -18.42, .4);
-    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.0, 0, 0, 0, 0.4);
-    public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.1, 0, 0, -1.87, 1);
+    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.04, 0, 0, 0, 0.4);
+    public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.01, 0, 0, 0, 1);
 
     public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
 
     public static final PIDParameters translationPIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
     public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
+    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.3, 0, 0, 4.9, .1);
 
     public static final SemiAutoParameters speaker = new SemiAutoParameters(TARGET.SPEAKER, translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, 1);
 
@@ -63,6 +64,13 @@ public final class Constants {
 
     public static final SemiAutoParameters amp = new SemiAutoParameters(TARGET.AMP, translationPIDAmp, rotationPIDAmp, strafePIDAmp, 1);
 
+
+    public static final ShooterSetPoints speakerSetPoints = new ShooterSetPoints(-4920,-4580);
+    public static final ShooterSetPoints ampSetPoints = new ShooterSetPoints(-450,-900);
+    public static final ShooterSetPoints trapSetPoints = new ShooterSetPoints(0,0);
+    public static final ShooterSetPoints sourceSetPoints = new ShooterSetPoints(0,0);
+    public static final ShooterSetPoints idleSetPoints = new ShooterSetPoints(0,0);
+    public static final ShooterSetPoints offSetPoints = new ShooterSetPoints(0,0);
   }
 
 
@@ -82,9 +90,9 @@ public final class Constants {
     public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
     public static final int driveMotorCurrentLimit = 60;
-    public static final int shooterMotorCurrentLimit = 40;
-    public static final int intakeMotorCurrentLimit = 30;
-    public static final int indexerMotorCurrentLimit = 30;
+    public static final int shooterMotorCurrentLimit = 60;
+    public static final int intakeMotorCurrentLimit = 40;
+    public static final int indexerMotorCurrentLimit = 40;
     //Random numberdecided make actually number that the angle velo max actually is. 
 /*
     // Practice Robot
@@ -102,7 +110,7 @@ public final class Constants {
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.596924, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
     public static final double indexerStartOffset = .0887;
-    public static final double noteDetectorThreshold = 0.001126;
+    public static final double noteDetectorThreshold = 0.000326;
     public static final double highRpmSpeaker = 0;
     public static final double lowRpmSpeaker = 0;
     public static final double highRpmAmp = 0;

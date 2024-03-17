@@ -54,6 +54,7 @@ public class CameraDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putString("cameraDriveState", "init");
     //set which pipeline we want
     switch (parameters.target) {
       case NOTE:
@@ -111,7 +112,8 @@ public class CameraDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+        SmartDashboard.putString("cameraDriveState", "init");
+
     if (ll.isValid()) {
 
       double translationAmount = translationPidController.calculate(translationErrorSupplier.getAsDouble());
@@ -122,6 +124,7 @@ public class CameraDrive extends Command {
       rotationAmount = 0; 
       
       double strafeAmount = strafePidController.calculate(strafeErrorsSupplier.getAsDouble());//todo test strafe vs rotation for X
+      SmartDashboard.putNumber("SOMETHING", strafeAmount);
       strafeAmount = MathUtil.clamp(strafeAmount, -.3, .3); //todo move constants
 
       drivetrain.relativeDrive(new Translation2d(-translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
@@ -134,12 +137,15 @@ public class CameraDrive extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+        SmartDashboard.putString("cameraDriveState", "end");
+
     drivetrain.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    SmartDashboard.putString("cameraDriveState", "isFinished");
     return translationPidController.atSetpoint() && rotationPidController.atSetpoint() && strafePidController.atSetpoint();
   }
 }

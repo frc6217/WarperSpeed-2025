@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.SemiAutoConstants;
 
 public class PIDShooter extends SubsystemBase {
   /** Creates a new PIDShooter. */
@@ -21,17 +22,17 @@ public class PIDShooter extends SubsystemBase {
   SparkPIDController highPidController = topShooter.getPIDController();
   SparkPIDController lowPidController = lowShooter.getPIDController();
 
-  double highShooterSpeed = 0;
-  double lowShooterSpeed = 0;
+
+  ShooterSetPoints setPointsToUse = new ShooterSetPoints(0, 0);
 
   public PIDShooter() {
-    SmartDashboard.putNumber("lowShooter RPM", 1000);
-    SmartDashboard.putNumber("highShooter RPM", 1000);
-    SmartDashboard.putNumber("low P", 0);
-    SmartDashboard.putNumber("low I", 0);
+    SmartDashboard.putNumber("lowShooter RPM", -4980);
+    SmartDashboard.putNumber("highShooter RPM", -4570);
+    SmartDashboard.putNumber("low P", .00030);
+    SmartDashboard.putNumber("low I", 0.000001);
     SmartDashboard.putNumber("low D", 0);
-    SmartDashboard.putNumber("high P", 0);
-    SmartDashboard.putNumber("high I", 0);
+    SmartDashboard.putNumber("high P", .0003);
+    SmartDashboard.putNumber("high I", 0.000001);
     SmartDashboard.putNumber("high D", 0);
     topShooter.setInverted(true);
     topShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
@@ -45,10 +46,6 @@ public class PIDShooter extends SubsystemBase {
     highPidController.setReference(SmartDashboard.getNumber("highShooter RPM", 0), ControlType.kVelocity);
   }
 */
-  public void off(){
-    lowPidController.setReference(0, ControlType.kVelocity);
-    highPidController.setReference(0, ControlType.kVelocity);
-  }
   @Override
   public void periodic() {
    if (SmartDashboard.getNumber("low P", 0) != lowPidController.getP()){
@@ -64,49 +61,73 @@ public class PIDShooter extends SubsystemBase {
     highPidController.setP(SmartDashboard.getNumber("high P", 0));
    }
    if (SmartDashboard.getNumber("high I", 0) != highPidController.getI()){
-    highPidController.setI(SmartDashboard.getNumber("high I", 0));
+    highPidController.setI(SmartDashboard.getNumber("high I", 0.000001));
    }
    if (SmartDashboard.getNumber("high D", 0) != highPidController.getD()){
     highPidController.setD(SmartDashboard.getNumber("high D", 0));
    }
+   
+   SmartDashboard.putNumber("High Shooter Current RPM:", topShooter.getEncoder().getVelocity());
+   SmartDashboard.putNumber("Low Shooter Current RPM:", lowShooter.getEncoder().getVelocity());
+
+  // highPidController.setReference(-4920, ControlType.kVelocity);
+  //lowPidController.setReference(-4580, ControlType.kVelocity);
+  highPidController.setReference(setPointsToUse.topShooterSetPoint, ControlType.kVelocity);
+  lowPidController.setReference(setPointsToUse.bottomShooterSetPoint, ControlType.kVelocity);
+
   }
 
 
   public boolean isReady() {
-    // return true if shooter is at speed
-    
-    // velocity 
-    boolean isTopSpeedReady =  (Math.abs(topShooter.getEncoder().getVelocity() - highShooterSpeed)/highShooterSpeed) < .05;
-    boolean isLowSpeedReady =  (Math.abs(lowShooter.getEncoder().getVelocity() - lowShooterSpeed)/lowShooterSpeed) < .05;
+    boolean isTopSpeedReady =  (Math.abs(topShooter.getEncoder().getVelocity() - setPointsToUse.topShooterSetPoint)/setPointsToUse.topShooterSetPoint) < .05;
+    boolean isLowSpeedReady =  (Math.abs(lowShooter.getEncoder().getVelocity() - setPointsToUse.bottomShooterSetPoint)/setPointsToUse.bottomShooterSetPoint) < .05;
     return isLowSpeedReady && isTopSpeedReady;
   }
 
   public void prepareForSpeaker() {
-    // go the right speed to shoot into speaker
-    highShooterSpeed = SmartDashboard.getNumber( "high shooter rpm for speaker", Constants.RobotConstants.highRpmSpeaker);
-    highPidController.setReference(highShooterSpeed, ControlType.kVelocity);
-    lowShooterSpeed = SmartDashboard.getNumber( "low shooter rpm for speaker", Constants.RobotConstants.lowRpmSpeaker);
-    lowPidController.setReference(lowShooterSpeed, ControlType.kVelocity);
+    setPointsToUse = SemiAutoConstants.speakerSetPoints;
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
   }
 
   public void prepareForAmp() {
-    highShooterSpeed = SmartDashboard.getNumber( "high shooter rpm for Amp", Constants.RobotConstants.highRpmAmp);
-    highPidController.setReference(highShooterSpeed, ControlType.kVelocity);
-    lowShooterSpeed = SmartDashboard.getNumber( "low shooter rpm for Amp", Constants.RobotConstants.lowRpmAmp);
-    lowPidController.setReference(lowShooterSpeed, ControlType.kVelocity);
+    setPointsToUse = SemiAutoConstants.ampSetPoints;
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
   }
 
   public void prepareForTrap() {
-    highShooterSpeed = SmartDashboard.getNumber( "high shooter rpm for trap", Constants.RobotConstants.highRpmTrap);
-    highPidController.setReference(highShooterSpeed, ControlType.kVelocity);
-    lowShooterSpeed = SmartDashboard.getNumber( "low shooter rpm for trap", Constants.RobotConstants.lowRpmTrap);
-    lowPidController.setReference(lowShooterSpeed, ControlType.kVelocity);
+    setPointsToUse = SemiAutoConstants.trapSetPoints;
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
   }
 
   public void enterIdleMotor() {
-    highShooterSpeed = SmartDashboard.getNumber( "high shooter rpm for idle", Constants.RobotConstants.highRpmIdle);
-    highPidController.setReference(highShooterSpeed, ControlType.kVelocity);
-    lowShooterSpeed = SmartDashboard.getNumber( "low shooter rpm for idle", Constants.RobotConstants.lowRpmIdle);
-    lowPidController.setReference(lowShooterSpeed, ControlType.kVelocity);
+    setPointsToUse = SemiAutoConstants.idleSetPoints;
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
   }
+
+  public void off() {
+    setPointsToUse = SemiAutoConstants.offSetPoints;
+    lowShooter.set(0);
+    topShooter.set(0);
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
+  }
+
+
+  public static class ShooterSetPoints {
+    public double topShooterSetPoint;
+    public double bottomShooterSetPoint;
+
+    public ShooterSetPoints(double topShooterSetPoint, double bottomShooterSetPoint) {
+      this.topShooterSetPoint = topShooterSetPoint;
+      this.bottomShooterSetPoint = bottomShooterSetPoint;
+    }
+  }
+
+
 }
+
+

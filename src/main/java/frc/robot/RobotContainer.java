@@ -11,7 +11,6 @@ import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ResetGyro;
-import frc.robot.commands.VibrateController;
 import frc.robot.commands.auto.AbsoluteDiseredDriveNoPID;
 import frc.robot.commands.auto.AutoCommandFactory;
 import frc.robot.commands.auto.DriveXfeetYfeetDiseredDegreeAngle;
@@ -24,10 +23,12 @@ import frc.robot.commands.semiAuto.SemiAutoFactory;
 import frc.robot.commands.shootCommands.AmpShootCommand;
 import frc.robot.commands.shootCommands.SpeakerShootCommand;
 import frc.robot.commands.shootCommands.SpeedShoot;
+import frc.robot.commands.userNotify.VibrateController;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimeLightSub;
+import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.wpilibj.Joystick;
@@ -64,7 +65,8 @@ public class RobotContainer {
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
   public final Intake intake = new Intake(swerveDrivetrain);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public final Shooter shooter = new Shooter();
+ // public final Shooter shooter = new Shooter();
+ public final PIDShooter shooter = new PIDShooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
   public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup");
@@ -72,7 +74,7 @@ public class RobotContainer {
   
   public RobotContainer() {
     // Configure the trigger bindings
-    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight);
+    //autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight);
     semiAutoFactory = new SemiAutoFactory(this);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
@@ -91,15 +93,17 @@ public class RobotContainer {
     Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
     Trigger driverLeftBumper = m_driverController.leftBumper();
     Trigger driverRightBumper = m_driverController.rightBumper();
-
+    driverRightBumper.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, Constants.SemiAutoConstants.speaker));
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
     gameOpB.whileTrue(new IntakeCommand(intake, -.5));
     gameOpA.whileTrue(new IntakeCommand(intake,.65));
+    //m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton).whileTrue(new SpeedShoot(-.15, -.10, shooter));
 
-    gameOpleftTrigger.whileTrue(new SpeedShoot(.65, .75, shooter));
+    //gameOpleftTrigger.whileTrue(new SpeedShoot(.65, .75, shooter));
      gameOpPOVDown.whileTrue(new WinchClimber(climber));
      gameOpPOVUp.whileTrue(new DeployClimber(climber));
+
 
     //m_gameOperatorController.x().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(5,0, 0,swerveDrivetrain));
     m_gameOperatorController.x().whileTrue(new AbsoluteDiseredDriveNoPID(2,0, 0,swerveDrivetrain));
@@ -107,8 +111,14 @@ public class RobotContainer {
     
     // m_gameOperatorController.x().whileTrue(Commands.runOnce(intake::on2Intake, intake));
     // m_gameOperatorController.y().whileTrue(Commands.runOnce(intake::off2Intake, intake));
-    gameOpLeftBumper.whileTrue(new SpeakerShootCommand(shooter));
-    gameOpRightBumper.whileTrue(new AmpShootCommand(shooter));
+    gameOpLeftBumper.whileTrue(Commands.runOnce(shooter::prepareForSpeaker, shooter));
+    gameOpRightBumper.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
+    gameOpLeftBumper.or(gameOpRightBumper).whileFalse(Commands.runOnce(shooter::off, shooter));
+    //gameOpRightBumper.whileTrue(new AmpShootCommand(shooter));
+
+
+    //gameOpLeftBumper.whileTrue(Commands.runOnce(shooter::prepareForSpeaker,shooter));
+
     gameOpY.and(gameOpLeftBumper.or(gameOpRightBumper)).onTrue(Commands.runOnce(indexer::shoot, indexer));
 
     driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));

@@ -39,36 +39,37 @@ public class Intake extends SubsystemBase {
 
   Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
 
-  CANdle candle = new CANdle(Constants.RobotConstants.candleCanId);
-  int numLeds = 68;
+  CANdle candle = new CANdle(Constants.RobotConstants.candleCanId, "CTRSwerve");
+  int numLeds = 168;
 
   AllianceSelector allianceSelector;
   
   public Intake(SwerveDrivetrain drivetrain) {
-    noteDetector.setUpSource(1);
-    noteDetector.setSemiPeriodMode(true);
+    // noteDetector.setUpSource(1);
+    // noteDetector.setSemiPeriodMode(true);
 
     SmartDashboard.putNumber("intake1speed", .2);
     SmartDashboard.putNumber("intake2speed", .3);
 
     this.allianceSelector = drivetrain.allianceSelector;
 
-    new Trigger(this::haveNote).onFalse(Commands.runOnce(this::intakeOn, this));
-    new Trigger(this::haveNote).onTrue(Commands.runOnce(this::intakeOff, this));
+    //new Trigger(this::haveNote).onFalse(Commands.runOnce(this::intakeOn, this));
+    //new Trigger(this::haveNote).onTrue(Commands.runOnce(this::intakeOff, this));
 
-    new Trigger(this::haveNote).onTrue(Commands.runOnce(this::ledRainbow, this));
-    new Trigger(this::haveNote).onFalse(Commands.runOnce(this::ledNoNote, this));
+   // new Trigger(this::haveNote).onTrue(Commands.runOnce(this::ledRainbow, this));
+    //new Trigger(this::haveNote).onFalse(Commands.runOnce(this::ledNoNote, this));
 
     this.ledrgbFade();
 
-    firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
-    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
+     firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
+     secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("dectector3: ", haveNote());
-    // This method will be called once per scheduler run
+    // SmartDashboard.putBoolean("dectector3: ", haveNote());
+    // SmartDashboard.putNumber("whatever", noteDetector.getPeriod());
+    // // This method will be called once per scheduler run
 
   }
 
@@ -103,7 +104,7 @@ public class Intake extends SubsystemBase {
   
   public void intakeReverse(){
     firstIntake.set(-.5);
-    secondIntake.set(-.5);
+    secondIntake.set(.5);
   }
 
   public void intakeOff(){
@@ -112,12 +113,13 @@ public class Intake extends SubsystemBase {
   }
   public void setSpeed(double speed) {
     firstIntake.set(speed);
-    secondIntake.set(-(speed-.2));
+    secondIntake.set(-speed);
   }
 
   public boolean haveNote() {
     // return true if note is detected
-    return noteDetector.getPeriod() < Constants.RobotConstants.noteDetectorThreshold;
+    //return noteDetector.getPeriod() < Constants.RobotConstants.noteDetectorThreshold;
+    return false;
   }
 
   public void ledRainbow(){
