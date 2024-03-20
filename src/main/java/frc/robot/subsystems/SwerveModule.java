@@ -101,11 +101,12 @@ public class SwerveModule extends SubsystemBase{
     //driveMotor.setSmartCurrentLimit(0, 40);
     driveMotor.setSmartCurrentLimit(RobotConstants.driveMotorCurrentLimit);
 
-    steerMotor.burnFlash();
-    driveMotor.burnFlash();
+    
 
     driveEncoder.setPositionConversionFactor(0.044458);
 
+    steerMotor.burnFlash();
+    driveMotor.burnFlash();
   }
   public void initializeEncoder(){
     steerEncoder.setPosition(absEncoder.getAngle().getRadians());

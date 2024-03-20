@@ -13,8 +13,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class VibrateController extends Command {
   CommandXboxController driverController;
   Timer timer = new Timer();
+  double rumble;
   /** Creates a new VibrateController. */
-  public VibrateController(CommandXboxController m_driverController) {
+  public VibrateController(CommandXboxController m_driverController, double rumble) {
     this.driverController = m_driverController;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -22,7 +23,7 @@ public class VibrateController extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driverController.getHID().setRumble(RumbleType.kBothRumble,1);
+    driverController.getHID().setRumble(RumbleType.kBothRumble, rumble);
     timer.reset();
     timer.start();
   }

@@ -38,6 +38,7 @@ public class LimeLightSub extends SubsystemBase {
   NetworkTableEntry ta;
   NetworkTableEntry tid;
   NetworkTableEntry tv;
+  NetworkTableEntry targetSkew;
   String name;
 
   public LimeLightSub(String name) {
@@ -63,7 +64,7 @@ public class LimeLightSub extends SubsystemBase {
     tid = table.getEntry("tid");
     tv = table.getEntry("tv");
 
-    NetworkTableEntry targetSkew = table.getEntry("ts");
+    targetSkew = table.getEntry("ts");
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
@@ -96,6 +97,9 @@ public class LimeLightSub extends SubsystemBase {
     return (tv.getDouble(0) > .5);
   }
 
+  public double getSkew(){
+    return targetSkew.getDouble(0);
+  }
 
   public void setPipeline(int id) {
     NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(id);

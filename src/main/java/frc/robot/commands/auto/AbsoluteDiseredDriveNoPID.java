@@ -56,7 +56,7 @@ public class AbsoluteDiseredDriveNoPID extends Command {
     if(rotateBoolean){
       rotationSetpoint = rotationSetpoint;
     }else {
-      rotationSetpoint = sDrivetrain.getAngle();
+      rotationSetpoint = sDrivetrain.getWrapedAngle();
     
     }
 
@@ -65,50 +65,40 @@ public class AbsoluteDiseredDriveNoPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    currentAngle = sDrivetrain.getAngle() - n*(360);
-    if(currentAngle > 360){
-      currentAngle = currentAngle-360;
-      n = n+1;
-    }else if(currentAngle < 0){
-      currentAngle = currentAngle + 360;
-      n = n-1;
-    }else{
-      currentAngle = currentAngle;
-    }
 
     SmartDashboard.putNumber("Current Angle Wrapping", currentAngle);
+    currentAngle = sDrivetrain.getWrapedAngle();
 
-    if(Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .2){
+    if(Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4){
       outputTranslation = 0;
     }else if((Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) > .2){
-      outputTranslation = -.3;
+      outputTranslation = -.6;
     }else{
-      outputTranslation = .3;
+      outputTranslation = .6;
     }
 
-    if(Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .2){
+    if(Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4){
       outputStrafe = 0;
     }else if((Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) > .2){
-      outputStrafe = -.3;
+      outputStrafe = -.6;
     }else{
-      outputStrafe = .3;
+      outputStrafe = .6;
     }
     
   
-    if(Math.abs(currentAngle - rotationSetpoint) < 5){
+    if(Math.abs(currentAngle - rotationSetpoint) < 8){
       outputRotation = 0;
     }else if((currentAngle < rotationSetpoint)){
         if((rotationSetpoint - currentAngle) < 180){
-        outputRotation = .04;
+        outputRotation = .07;
         }else{
-        outputRotation = -.04;
+        outputRotation = -.07;
       }
     }else{
       if((currentAngle - rotationSetpoint) < 180){
-        outputRotation = -.04;
+        outputRotation = -.06;
         }else{
-        outputRotation = .04;
+        outputRotation = .06;
       }
     }
   // scale up with maxVelo

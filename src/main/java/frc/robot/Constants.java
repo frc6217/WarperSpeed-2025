@@ -35,8 +35,8 @@ public final class Constants {
   }
 
   public static class AutoConstants{
-    public static final double nearNoteXdistance = 5;
-    public static final double nearNoteYdistance = 4.9;
+    public static final double nearNoteXdistance = 4;
+    public static final double nearNoteYdistance = 2;
     public static final double sideSetupXdistance = -1.48;
     public static final double sideSetupYdistance = 2.5;
     public static final double sideSetupAngle = 60;
@@ -47,16 +47,16 @@ public final class Constants {
 
   public static class SemiAutoConstants{
     public static final PIDParameters translationPIDNotePickUp = new PIDParameters(0.2, 0, 0, -18.42, .4);
-    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.04, 0, 0, 0, 0.4);
+    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.0005, 0, 0, 0, 0.4);
     public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.01, 0, 0, 0, 1);
 
     public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
 
-    public static final PIDParameters translationPIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.3, 0, 0, 4.9, .1);
+    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.08, 0, 0, -3.5587, 0.4);
+    public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0001, 0, 0, 0, 4);
+    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.03, 0, 0, 0, .4);
 
-    public static final SemiAutoParameters speaker = new SemiAutoParameters(TARGET.SPEAKER, translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, 1);
+    public static final SemiAutoParameters speaker = new SemiAutoParameters(TARGET.SPEAKER, translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, -1);
 
     public static final PIDParameters translationPIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
     public static final PIDParameters rotationPIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
@@ -91,7 +91,7 @@ public final class Constants {
     public static final int steerMotorCurrentLimit = 40;
     public static final int driveMotorCurrentLimit = 60;
     public static final int shooterMotorCurrentLimit = 60;
-    public static final int intakeMotorCurrentLimit = 40;
+    public static final int intakeMotorCurrentLimit = 50;
     public static final int indexerMotorCurrentLimit = 40;
     //Random numberdecided make actually number that the angle velo max actually is. 
 /*

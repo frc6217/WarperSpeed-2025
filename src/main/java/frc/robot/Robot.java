@@ -38,8 +38,8 @@ public class Robot extends TimedRobot {
      
     // Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain).schedule();
 
-     new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.intake::ledNoNote, m_robotContainer.intake));
-      new Trigger(this::isEnabled).negate().onTrue(new SetLedDisabled(m_robotContainer.intake));
+    // new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.intake::ledNoNote, m_robotContainer.intake));
+     new Trigger(this::isEnabled).negate().onTrue(new SetLedDisabled(m_robotContainer.intake));
   
   }
 
@@ -94,9 +94,10 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    //CommandScheduler.getInstance().cancelAll();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
-    new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain));
+   // new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain));
     //Command brakes = new EnableBrakes(m_robotContainer.swerveDrivetrain);
     //brakes.schedule();
     }

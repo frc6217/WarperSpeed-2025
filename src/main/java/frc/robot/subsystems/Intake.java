@@ -57,16 +57,12 @@ public class Intake extends SubsystemBase {
 
     this.allianceSelector = drivetrain.allianceSelector;
 
-    //new Trigger(this::haveNote).onFalse(Commands.runOnce(this::intakeOn, this));
-    //new Trigger(this::haveNote).onTrue(Commands.runOnce(this::intakeOff, this));
-
-    new Trigger(this::haveNote).onTrue(Commands.runOnce(this::ledRainbow, this));
-    new Trigger(this::haveNote).onFalse(Commands.runOnce(this::ledNoNote, this));
+    
 
     this.ledrgbFade();
 
     firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
-    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
+    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit-10);
   }
 
   @Override
@@ -76,6 +72,11 @@ public class Intake extends SubsystemBase {
     // // This method will be called once per scheduler run
     hasNote = !beamNoteDetector.get();
 
+    if(hasNote){
+      ledRainbow();
+    }else{
+      ledNoNote();
+    }
   }
 
   public void on1Intake(){

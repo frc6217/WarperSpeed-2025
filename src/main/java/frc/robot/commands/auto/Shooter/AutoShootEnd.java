@@ -5,14 +5,15 @@
 package frc.robot.commands.auto.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.Shooter;
 
 public class AutoShootEnd extends Command {
   /** Creates a new AutoShootEnd. */
 
-  Shooter shooter;
+  PIDShooter shooter;
   
-  public AutoShootEnd(Shooter shooter) {
+  public AutoShootEnd(PIDShooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     addRequirements(shooter);

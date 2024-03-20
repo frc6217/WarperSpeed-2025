@@ -80,18 +80,33 @@ public class SwerveDrivetrain extends SubsystemBase {
     modules[frontRightModule.operationOrderID] = frontRightModule;
     modules[backLeftModule.operationOrderID] = backLeftModule;
     modules[backRightModule.operationOrderID] = backRightModule;
-    sOdometry = new SwerveDriveOdometry(sKinematics, getGyroRotation2d(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
+    sOdometry = new SwerveDriveOdometry(sKinematics, getGyroRotation2d(), getModulePositions(), new Pose2d(0, 0, new Rotation2d(0)));
+    frontLeftModule.driveEncoder.setPosition(0);
+    frontRightModule.driveEncoder.setPosition(0);
+    backLeftModule.driveEncoder.setPosition(0);
+    backRightModule.driveEncoder.setPosition(0);
+    cSpeeds.omegaRadiansPerSecond = 0;
+    cSpeeds.vxMetersPerSecond = 0;
+    cSpeeds.vyMetersPerSecond = 0;
   }
   public void initialize(){
     for(SwerveModule module : modules){
       module.initializeEncoder();
     }
-    pigeon2.reset();
-    sOdometry.resetPosition(getGyroRotation2d(), getModulePositions(), new Pose2d());
+    //pigeon2.reset();
+    sOdometry.resetPosition(getGyroRotation2d(), getModulePositions(), new Pose2d(0, 0, getGyroRotation2d()));
   }
 
   private Rotation2d getGyroRotation2d(){
     return Rotation2d.fromDegrees(getAngle()); 
+  }
+
+  public double getWrapedAngle(){
+    if(getAngle() < 0){
+      return (360 - Math.abs(getAngle()) % 360);
+    }else{
+      return getAngle() % 360;
+    }
   }
 
   private SwerveModulePosition[] getModulePositions(){

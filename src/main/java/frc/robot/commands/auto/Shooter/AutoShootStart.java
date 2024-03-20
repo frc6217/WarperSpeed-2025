@@ -5,14 +5,16 @@
 package frc.robot.commands.auto.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.Shooter;
 
 public class AutoShootStart extends Command {
   /** Creates a new AutoShootStart. */
 
-  Shooter shooter;
+ PIDShooter shooter;
 
-  public AutoShootStart(Shooter shooter) {
+  public AutoShootStart(PIDShooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     addRequirements(shooter);
@@ -20,13 +22,13 @@ public class AutoShootStart extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    shooter.prepareForSpeaker();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    shooter.on();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -35,6 +37,6 @@ public class AutoShootStart extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

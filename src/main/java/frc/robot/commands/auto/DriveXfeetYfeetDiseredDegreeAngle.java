@@ -39,6 +39,15 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     this.ySetpoint = ySetpoint;
     this.rotationSetpoint = rotationDegreeSetpoint;
     rotateBoolean = true;
+     SmartDashboard.putNumber("Auto xPID P", 0.1);
+    SmartDashboard.putNumber("Auto yPID P", 0.1);
+    SmartDashboard.putNumber("Auto xPID I", 0.02);
+    SmartDashboard.putNumber("Auto yPID I", 0.02);
+    SmartDashboard.putNumber("Auto xPID D", 0.02);
+    SmartDashboard.putNumber("Auto yPID D", 0.02);
+    SmartDashboard.putNumber("Auto rotationPID I", 0);
+    SmartDashboard.putNumber("Auto rotationPID D", 0);
+    SmartDashboard.putNumber("Auto rotationPID P", 0.0036);
   }
 
   public DriveXfeetYfeetDiseredDegreeAngle(double xSetpoint, double ySetpoint, SwerveDrivetrain sDrivetrain) {
@@ -48,9 +57,15 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     this.xSetpoint = xSetpoint;
     this.ySetpoint = ySetpoint;
     rotateBoolean = false;
-    SmartDashboard.putNumber("Auto xPID P", 0.1);
-    SmartDashboard.putNumber("Auto yPID P", 0.1);
-    SmartDashboard.putNumber("Auto rotationPID P", 0.1);
+    SmartDashboard.putNumber("Auto xPID P", 0.5);
+    SmartDashboard.putNumber("Auto yPID P", 0.5);
+    SmartDashboard.putNumber("Auto xPID I", 0.02);
+    SmartDashboard.putNumber("Auto yPID I", 0.02);
+    SmartDashboard.putNumber("Auto xPID D", 0.02);
+    SmartDashboard.putNumber("Auto yPID D", 0.02);
+    SmartDashboard.putNumber("Auto rotationPID I", 0);
+    SmartDashboard.putNumber("Auto rotationPID D", 0);
+    SmartDashboard.putNumber("Auto rotationPID P", 0.0036);
   }
 
   // Called when the command is initially scheduled.
@@ -64,22 +79,23 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     
     xPidController.setP(SmartDashboard.getNumber("Auto xPID P", 0));
     yPidController.setP(SmartDashboard.getNumber("Auto yPID P", 0));
+    xPidController.setI(SmartDashboard.getNumber("Auto xPID I", 0));
+    yPidController.setI(SmartDashboard.getNumber("Auto yPID I", 0));
+    xPidController.setD(SmartDashboard.getNumber("Auto xPID D", 0));
+    yPidController.setD(SmartDashboard.getNumber("Auto yPID D", 0));
     rotationPidController.setP(SmartDashboard.getNumber("Auto rotationPID P", 0));
-
-    
-
-    double initialX = Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX());
-    double initialY = Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY());
-   
-    xSetpoint = xSetpoint + initialX;
-    ySetpoint = ySetpoint + initialY;
-
+    rotationPidController.setI(SmartDashboard.getNumber("Auto rotationPID I", 0));
+    rotationPidController.setD(SmartDashboard.getNumber("Auto rotationPID D", 0));
  
+    xPidController.reset();
+    yPidController.reset();
+    rotationPidController.reset();
 
     xPidController.setSetpoint(xSetpoint);
     yPidController.setSetpoint(ySetpoint);
-
     rotationPidController.setSetpoint(rotationSetpoint);
+
+    rotationPidController.enableContinuousInput(0, 360);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -126,7 +142,7 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
   public boolean isFinished() {
     boolean val1 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4; 
     boolean val2 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4;
-    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 1;
+    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 4;
     return val1 && val2 && val3 ;
   }
 }

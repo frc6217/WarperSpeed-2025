@@ -39,6 +39,14 @@ public class PIDShooter extends SubsystemBase {
     lowShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
     topShooter.enableVoltageCompensation(RobotConstants.shooterVoltageCompensation);
     lowShooter.enableVoltageCompensation(RobotConstants.shooterVoltageCompensation);
+    
+    lowPidController.setP(SmartDashboard.getNumber("low P", 0));
+    lowPidController.setI(SmartDashboard.getNumber("low I", 0));
+    lowPidController.setD(SmartDashboard.getNumber("low D", 0));
+    highPidController.setP(SmartDashboard.getNumber("high P", 0));
+    highPidController.setI(SmartDashboard.getNumber("high I", 0.00000));
+    highPidController.setD(SmartDashboard.getNumber("high D", 0));
+
   }
   /*
   public void on(){
@@ -48,7 +56,7 @@ public class PIDShooter extends SubsystemBase {
 */
   @Override
   public void periodic() {
-    /* 
+   /*
    if (SmartDashboard.getNumber("low P", 0) != lowPidController.getP()){
     lowPidController.setP(SmartDashboard.getNumber("low P", 0));
    }
@@ -66,10 +74,7 @@ public class PIDShooter extends SubsystemBase {
    }
    if (SmartDashboard.getNumber("high D", 0) != highPidController.getD()){
     highPidController.setD(SmartDashboard.getNumber("high D", 0));
-   }
-
-   */
-   
+   } */
    SmartDashboard.putNumber("High Shooter Current RPM:", topShooter.getEncoder().getVelocity());
    SmartDashboard.putNumber("Low Shooter Current RPM:", lowShooter.getEncoder().getVelocity());
 

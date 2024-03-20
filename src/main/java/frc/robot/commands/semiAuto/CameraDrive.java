@@ -8,18 +8,21 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.commands.semiAuto.SemiAutoParameters.TARGET;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.SwerveDrivetrain;
 
 public class CameraDrive extends Command {
   SwerveDrivetrain drivetrain;
   LimeLightSub ll;
+  Intake intake;
   SemiAutoParameters parameters;
   PIDController translationPidController;
   PIDController rotationPidController;
@@ -29,10 +32,13 @@ public class CameraDrive extends Command {
   DoubleSupplier rotationErrorSupplier;
   DoubleSupplier strafeErrorsSupplier;
 
+  Debouncer debouncer = new Debouncer(.3);
+
   /** Creates a new CameraDrive. */
-  public CameraDrive(SwerveDrivetrain drivetrain, LimeLightSub ll, SemiAutoParameters parameters) {
+  public CameraDrive(SwerveDrivetrain drivetrain, LimeLightSub ll, SemiAutoParameters parameters, Intake intake) {
     this.drivetrain = drivetrain;
     this.ll = ll;
+    this.intake = intake;
     this.parameters = parameters;
     addRequirements(drivetrain);
     translationPidController =  new PIDController(parameters.translationPID.P, parameters.translationPID.I, parameters.translationPID.D);
@@ -80,7 +86,7 @@ public class CameraDrive extends Command {
           ll.setPipeline(1);
         }
         translationErrorSupplier = ll::getY;
-        rotationErrorSupplier = ll::getX;
+        rotationErrorSupplier = ll::getSkew;
         strafeErrorsSupplier = ll::getX;
         break;
       case TRAP:
@@ -117,17 +123,17 @@ public class CameraDrive extends Command {
     if (ll.isValid()) {
 
       double translationAmount = translationPidController.calculate(translationErrorSupplier.getAsDouble());
-      translationAmount = MathUtil.clamp(translationAmount, -.3, .3); //todo move constants
+      translationAmount = MathUtil.clamp(translationAmount, -.5, .5); //todo move constants
 
       double rotationAmount = rotationPidController.calculate(rotationErrorSupplier.getAsDouble());
-      rotationAmount = MathUtil.clamp(rotationAmount, -.3, .3); //todo move constants
-      rotationAmount = 0; 
+      rotationAmount = MathUtil.clamp(rotationAmount, -.5, .5); //todo move constants
+       
       
       double strafeAmount = strafePidController.calculate(strafeErrorsSupplier.getAsDouble());//todo test strafe vs rotation for X
       SmartDashboard.putNumber("SOMETHING", strafeAmount);
-      strafeAmount = MathUtil.clamp(strafeAmount, -.3, .3); //todo move constants
+      strafeAmount = MathUtil.clamp(strafeAmount, -.5, .5); //todo move constants
 
-      drivetrain.relativeDrive(new Translation2d(-translationAmount, strafeAmount).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
+      drivetrain.relativeDrive(new Translation2d(-translationAmount, strafeAmount*parameters.direction).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
     } else {
       drivetrain.stop();
     }
@@ -146,6 +152,9 @@ public class CameraDrive extends Command {
   @Override
   public boolean isFinished() {
     SmartDashboard.putString("cameraDriveState", "isFinished");
+    if(parameters.target == TARGET.NOTE){
+      return debouncer.calculate(intake.haveNote());
+    }
     return translationPidController.atSetpoint() && rotationPidController.atSetpoint() && strafePidController.atSetpoint();
   }
 }
