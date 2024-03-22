@@ -47,6 +47,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   public CommandXboxController cx;
   public USER_CONTROLLER controller = USER_CONTROLLER.JOYSTICK;
   public AllianceSelector allianceSelector;
+  public boolean isAbsolute = true;
 
   public Governor governor = new Governor();
  
@@ -119,17 +120,16 @@ public class SwerveDrivetrain extends SubsystemBase {
     return sPosition;
   }
 
- public void relativeDrive(Translation2d desiredTranslation2d, double desiredRotation){
+  public void relativeDrive(Translation2d desiredTranslation2d, double desiredRotation){
   cSpeeds = new ChassisSpeeds(desiredTranslation2d.getX(), desiredTranslation2d.getY(), desiredRotation);
   SwerveModuleState[] states = sKinematics.toSwerveModuleStates(cSpeeds);
       
     for(SwerveModule module : modules){
       module.setState(states[module.operationOrderID]);
     }
-}
+  }
 
-  public void drive(Translation2d desiredTranslation, double desiredRotation){
-    
+  public void absoluteDrive(Translation2d desiredTranslation, double desiredRotation){
     cSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredTranslation.getX(), desiredTranslation.getY(), desiredRotation, getGyroRotation2d());
     //SwerveModuleState[] states = sKinematics.toSwerveModuleStates(cSpeeds);
   
@@ -151,6 +151,21 @@ public class SwerveDrivetrain extends SubsystemBase {
     for(SwerveModule module : modules){
       module.setState(states[module.operationOrderID]);
     }
+  }
+
+  public void drive(Translation2d desiredTranslation, double desiredRotation){
+    if (isAbsolute){
+      absoluteDrive(desiredTranslation, desiredRotation);
+    } else{
+      relativeDrive(desiredTranslation, desiredRotation);
+    }
+    
+  }
+  public void doAbsolute(){
+    isAbsolute = true;
+  }
+  public void doRelative(){
+    isAbsolute = false;
   }
 
   public void stop(){

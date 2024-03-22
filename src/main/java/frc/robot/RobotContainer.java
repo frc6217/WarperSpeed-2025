@@ -90,7 +90,7 @@ public class RobotContainer {
     Trigger gameOpLeftBumper = m_gameOperatorController.leftBumper();
     Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
     Trigger gameOpPOVUp = m_gameOperatorController.povUp();
-      Trigger gameOpPOVDown = m_gameOperatorController.povDown();
+    Trigger gameOpPOVDown = m_gameOperatorController.povDown();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
     Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
     Trigger gameOpRightTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
@@ -98,6 +98,7 @@ public class RobotContainer {
     Trigger driverBackRight = m_driverController.button(Constants.OperatorConstants.kRightBackButton);
     Trigger driverLeftBumper = m_driverController.leftBumper();
     Trigger driverRightBumper = m_driverController.rightBumper();
+    Trigger driverY = m_driverController.y();
    
    
     Trigger driverComtrollerAutoPickupButton = m_driverController.a();
@@ -139,6 +140,8 @@ public class RobotContainer {
     gameOpPOVUp.whileTrue(new DeployClimber(climber));
 
     //Driver controls
+    driverY.onTrue(Commands.runOnce(swerveDrivetrain::doRelative));
+    driverY.onFalse(Commands.runOnce(swerveDrivetrain::doAbsolute));
     driverComtrollerAutoPickupButton.whileTrue(semiAutoFactory.autoPickupNote());
     driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
     m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));

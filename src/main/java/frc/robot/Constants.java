@@ -90,7 +90,7 @@ public final class Constants {
     public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
     public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
-    public static final int driveMotorCurrentLimit = 60;
+    public static final int driveMotorCurrentLimit = 55;
     public static final int shooterMotorCurrentLimit = 60;
     public static final int intakeMotorCurrentLimit = 50;
     public static final int indexerMotorCurrentLimit = 40;

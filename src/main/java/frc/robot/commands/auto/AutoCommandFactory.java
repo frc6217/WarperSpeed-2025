@@ -172,7 +172,7 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup doAutoShot(){
       SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-      pCommandGroup.addCommands(new AutoShootStart(shooter).andThen(Commands.waitSeconds(.1)).andThen(Commands.runOnce(indexer::shoot, intake)).andThen(Commands.waitSeconds(.4)));
+      pCommandGroup.addCommands(new AutoShootStart(shooter).andThen(Commands.waitSeconds(.2)).andThen(Commands.runOnce(indexer::shoot, intake)).andThen(Commands.waitSeconds(.4)));
       // pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.7), new AutoShootStart(shooter), Commands.runOnce(indexer::shoot, indexer)));
       pCommandGroup.addCommands(new AutoShootEnd(shooter));
       return pCommandGroup;
@@ -194,10 +194,10 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup GoToNearLeftNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(1, 0,30, sDrivetrain));
+        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(2, 1.5,30, sDrivetrain));
         //pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.nearNoteXdistance , AutoConstants.nearNoteYdistance, sDrivetrain), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3),new IntakeCommand(intake, .75)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4),new IntakeCommand(intake, .8)));
       //  pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4), new AutoIntakeStart(intake)));
         return pCommandGroup;
       }
@@ -207,17 +207,17 @@ public class AutoCommandFactory {
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new ParallelDeadlineGroup( new DriveXfeetYfeetDiseredDegreeAngle(.5, 0,0, sDrivetrain), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3),new IntakeCommand(intake, .75)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4),new IntakeCommand(intake, .8)));
       //  pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(0), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new AutoIntakeEnd(intake));
         return pCommandGroup;
       }
     public SequentialCommandGroup GoToNearRightNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-       pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(1.5, -1,330, sDrivetrain).withTimeout(.5));
+       pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(2, -1.5,330, sDrivetrain).withTimeout(.5));
        // pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.nearNoteXdistance , -AutoConstants.nearNoteYdistance, sDrivetrain), new AutoIntakeStart(intake)));
        pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
-       pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3),new IntakeCommand(intake, .75))); 
+       pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.4),new IntakeCommand(intake, .8))); 
        //pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(0), new AutoIntakeStart(intake)));
         return pCommandGroup;
       }
