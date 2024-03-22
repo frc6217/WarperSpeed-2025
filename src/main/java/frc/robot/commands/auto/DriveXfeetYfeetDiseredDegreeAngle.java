@@ -39,12 +39,12 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     this.ySetpoint = ySetpoint;
     this.rotationSetpoint = rotationDegreeSetpoint;
     rotateBoolean = true;
-     SmartDashboard.putNumber("Auto xPID P", 0.1);
-    SmartDashboard.putNumber("Auto yPID P", 0.1);
+     SmartDashboard.putNumber("Auto xPID P", 0.3);
+    SmartDashboard.putNumber("Auto yPID P", 0.3);
     SmartDashboard.putNumber("Auto xPID I", 0.02);
     SmartDashboard.putNumber("Auto yPID I", 0.02);
-    SmartDashboard.putNumber("Auto xPID D", 0.02);
-    SmartDashboard.putNumber("Auto yPID D", 0.02);
+    SmartDashboard.putNumber("Auto xPID D", 0.03);
+    SmartDashboard.putNumber("Auto yPID D", 0.03);
     SmartDashboard.putNumber("Auto rotationPID I", 0);
     SmartDashboard.putNumber("Auto rotationPID D", 0);
     SmartDashboard.putNumber("Auto rotationPID P", 0.0036);
@@ -57,12 +57,12 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     this.xSetpoint = xSetpoint;
     this.ySetpoint = ySetpoint;
     rotateBoolean = false;
-    SmartDashboard.putNumber("Auto xPID P", 0.5);
-    SmartDashboard.putNumber("Auto yPID P", 0.5);
+    SmartDashboard.putNumber("Auto xPID P", 0.3);
+    SmartDashboard.putNumber("Auto yPID P", 0.3);
     SmartDashboard.putNumber("Auto xPID I", 0.02);
     SmartDashboard.putNumber("Auto yPID I", 0.02);
-    SmartDashboard.putNumber("Auto xPID D", 0.02);
-    SmartDashboard.putNumber("Auto yPID D", 0.02);
+    SmartDashboard.putNumber("Auto xPID D", 0.03);
+    SmartDashboard.putNumber("Auto yPID D", 0.03);
     SmartDashboard.putNumber("Auto rotationPID I", 0);
     SmartDashboard.putNumber("Auto rotationPID D", 0);
     SmartDashboard.putNumber("Auto rotationPID P", 0.0036);
@@ -142,7 +142,7 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
   public boolean isFinished() {
     boolean val1 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4; 
     boolean val2 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4;
-    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 4;
+    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 6;
     return val1 && val2 && val3 ;
   }
 }

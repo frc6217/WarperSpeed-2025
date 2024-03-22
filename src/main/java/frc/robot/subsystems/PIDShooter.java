@@ -24,7 +24,7 @@ public class PIDShooter extends SubsystemBase {
 
 
   ShooterSetPoints setPointsToUse = new ShooterSetPoints(0, 0);
-
+  ShooterSetPoints setPointsShooterTune = new ShooterSetPoints(RobotConstants.highRpmSpeaker, RobotConstants.lowRpmSpeaker);
   public PIDShooter() {
     SmartDashboard.putNumber("lowShooter RPM", -4980);
     SmartDashboard.putNumber("highShooter RPM", -4570);
@@ -47,7 +47,12 @@ public class PIDShooter extends SubsystemBase {
     highPidController.setI(SmartDashboard.getNumber("high I", 0.00000));
     highPidController.setD(SmartDashboard.getNumber("high D", 0));
 
+    setPointsShooterTune.bottomShooterSetPoint = SmartDashboard.getNumber("bottom shooter setpoint", RobotConstants.lowRpmSpeaker);
+    setPointsShooterTune.topShooterSetPoint = SmartDashboard.getNumber("top shooter setpoint", RobotConstants.highRpmSpeaker);
+    SmartDashboard.putNumber("bottom shooter setpoint", setPointsShooterTune.bottomShooterSetPoint);
+    SmartDashboard.putNumber("top shooter setpoint", setPointsShooterTune.topShooterSetPoint);
   }
+
   /*
   public void on(){
     lowPidController.setReference(SmartDashboard.getNumber("lowShooter RPM", 0), ControlType.kVelocity);
@@ -56,6 +61,8 @@ public class PIDShooter extends SubsystemBase {
 */
   @Override
   public void periodic() {
+    setPointsShooterTune.bottomShooterSetPoint = SmartDashboard.getNumber("bottom shooter setpoint", RobotConstants.lowRpmSpeaker);
+    setPointsShooterTune.topShooterSetPoint = SmartDashboard.getNumber("top shooter setpoint", RobotConstants.highRpmSpeaker);
    /*
    if (SmartDashboard.getNumber("low P", 0) != lowPidController.getP()){
     lowPidController.setP(SmartDashboard.getNumber("low P", 0));
@@ -92,10 +99,17 @@ public class PIDShooter extends SubsystemBase {
     return isLowSpeedReady && isTopSpeedReady;
   }
 
-  public void prepareForSpeaker() {
-    setPointsToUse = SemiAutoConstants.speakerSetPoints;
+  public void prepareForTune(){
+    setPointsToUse = setPointsShooterTune;
     lowPidController.setIAccum(0);
     highPidController.setIAccum(0);
+  }
+  public void prepareForSpeaker() {
+    setPointsToUse = SemiAutoConstants.speakerSetPoints;
+
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
+
   }
 
   public void prepareForAmp() {

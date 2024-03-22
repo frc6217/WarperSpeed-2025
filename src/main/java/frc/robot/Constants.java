@@ -105,15 +105,15 @@ public final class Constants {
 
     //bevel gear on wheel goes right
     public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 16, 15, 60,-0.1062, "Front Left", encoderType.CAN, "CTRSwerve");
-    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59, -0.1799, "Front Right", encoderType.CAN,"CTRSwerve");
+    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59, -0.1699, "Front Right", encoderType.CAN,"CTRSwerve");
     public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 19, 18, 61,-0.8731, "Back Left", encoderType.CAN, "CTRSwerve");
     public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.596924, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
     public static final double indexerStartOffset = .0887;
     public static final double noteDetectorThreshold = 0.000326;
     public static final double highRpmSpeaker = 0;
-    public static final double lowRpmSpeaker = 0;
-    public static final double highRpmAmp = 0;
+    public static final double lowRpmSpeaker = 200;
+    public static final double highRpmAmp = 400;
     public static final double lowRpmAmp = 0;
     public static final double highRpmTrap = 0;
     public static final double lowRpmTrap = 0;
@@ -125,3 +125,4 @@ public final class Constants {
 
 
 }
+                                       

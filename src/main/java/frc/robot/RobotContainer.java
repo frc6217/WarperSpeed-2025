@@ -31,6 +31,9 @@ import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -90,39 +93,41 @@ public class RobotContainer {
       Trigger gameOpPOVDown = m_gameOperatorController.povDown();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
     Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
+    Trigger gameOpRightTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
     Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
+    Trigger driverBackRight = m_driverController.button(Constants.OperatorConstants.kRightBackButton);
     Trigger driverLeftBumper = m_driverController.leftBumper();
     Trigger driverRightBumper = m_driverController.rightBumper();
    
    
+    Trigger driverComtrollerAutoPickupButton = m_driverController.a();
 
-    m_driverController.b().whileTrue(Commands.print("start").andThen(new CameraDrive(swerveDrivetrain, shooterLimeLight, Constants.SemiAutoConstants.speaker, intake)).andThen(Commands.print("End")));
+    //m_driverController.b().whileTrue(Commands.print("start").andThen(new CameraDrive(swerveDrivetrain, shooterLimeLight, Constants.SemiAutoConstants.speaker, intake)).andThen(Commands.print("End")));
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
+    driverBackRight.whileTrue(Commands.runOnce(swerveDrivetrain::initialize, swerveDrivetrain));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    gameOpB.whileTrue(new IntakeCommand(intake, -.5));
-    gameOpA.whileTrue(new IntakeCommand(intake,.75));
+    gameOpB.and(driverComtrollerAutoPickupButton.negate()).whileTrue(new IntakeCommand(intake, -.5));
+    gameOpA.and(driverComtrollerAutoPickupButton.negate()).whileTrue(new IntakeCommand(intake,.8));
+   
     //m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton).whileTrue(new SpeedShoot(-.15, -.10, shooter));
     new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, .4));
     
-    m_driverController.y().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(0, 0, 25, swerveDrivetrain));
+    //m_driverController.y().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(0, 0, 25, swerveDrivetrain));
     //gameOpleftTrigger.whileTrue(new SpeedShoot(.65, .75, shooter));
-     gameOpPOVDown.whileTrue(new WinchClimber(climber));
-     gameOpPOVUp.whileTrue(new DeployClimber(climber));
+
 
 
     gameOpLeftBumper.whileTrue(Commands.runOnce(shooter::prepareForSpeaker, shooter));
     gameOpRightBumper.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
-    gameOpLeftBumper.or(gameOpRightBumper).whileFalse(Commands.runOnce(shooter::off, shooter));
-    //gameOpRightBumper.whileTrue(new AmpShootCommand(shooter));
+    gameOpRightTrigger.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
+    gameOpLeftBumper.or(gameOpRightBumper).or(gameOpRightTrigger).whileFalse(Commands.runOnce(shooter::off, shooter));
 
 
-    //gameOpLeftBumper.whileTrue(Commands.runOnce(shooter::prepareForSpeaker,shooter));
 
     gameOpY.and(gameOpLeftBumper.or(gameOpRightBumper)).onTrue(Commands.runOnce(indexer::shoot, indexer));
 
-    driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
 
-    //m_gameOperatorController.povDown().onTrue(new VibrateController(m_driverController));
+    //Climber
     m_driverController.povDown().onTrue(new VibrateController(m_driverController, 1));
 
     m_gameOperatorController.povDownLeft().whileTrue(new ClimberSetSpeedCommand(climber, .4, 0));
@@ -130,9 +135,12 @@ public class RobotContainer {
     m_gameOperatorController.povDownRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, .4));
     m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -.4));
 
-    
-    m_driverController.a().whileTrue(semiAutoFactory.autoPickupNote());
+    gameOpPOVDown.whileTrue(new WinchClimber(climber));
+    gameOpPOVUp.whileTrue(new DeployClimber(climber));
 
+    //Driver controls
+    driverComtrollerAutoPickupButton.whileTrue(semiAutoFactory.autoPickupNote());
+    driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
     m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
     m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
     m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));

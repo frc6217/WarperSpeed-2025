@@ -32,7 +32,7 @@ public class CameraDrive extends Command {
   DoubleSupplier rotationErrorSupplier;
   DoubleSupplier strafeErrorsSupplier;
 
-  Debouncer debouncer = new Debouncer(.3);
+  Debouncer debouncer = new Debouncer(0);
 
   /** Creates a new CameraDrive. */
   public CameraDrive(SwerveDrivetrain drivetrain, LimeLightSub ll, SemiAutoParameters parameters, Intake intake) {

@@ -35,6 +35,7 @@ public class BBCANEncoder implements IEncoder{
     public double getRawValue() {
         // TODO Auto-generated method stub
         StatusSignal<Double> value = encoder.getAbsolutePosition();
+        //System.out.println("raw incoder value "+value);
         return value.getValueAsDouble();
     }
 
