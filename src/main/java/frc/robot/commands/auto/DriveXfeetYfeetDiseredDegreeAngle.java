@@ -39,8 +39,8 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     this.ySetpoint = ySetpoint;
     this.rotationSetpoint = rotationDegreeSetpoint;
     rotateBoolean = true;
-     SmartDashboard.putNumber("Auto xPID P", 0.3);
-    SmartDashboard.putNumber("Auto yPID P", 0.3);
+     SmartDashboard.putNumber("Auto xPID P", 0.28);
+    SmartDashboard.putNumber("Auto yPID P", 0.28);
     SmartDashboard.putNumber("Auto xPID I", 0.02);
     SmartDashboard.putNumber("Auto yPID I", 0.02);
     SmartDashboard.putNumber("Auto xPID D", 0.03);
@@ -57,8 +57,8 @@ public class DriveXfeetYfeetDiseredDegreeAngle extends Command {
     this.xSetpoint = xSetpoint;
     this.ySetpoint = ySetpoint;
     rotateBoolean = false;
-    SmartDashboard.putNumber("Auto xPID P", 0.3);
-    SmartDashboard.putNumber("Auto yPID P", 0.3);
+    SmartDashboard.putNumber("Auto xPID P", 0.28);
+    SmartDashboard.putNumber("Auto yPID P", 0.28);
     SmartDashboard.putNumber("Auto xPID I", 0.02);
     SmartDashboard.putNumber("Auto yPID I", 0.02);
     SmartDashboard.putNumber("Auto xPID D", 0.03);

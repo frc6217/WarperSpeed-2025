@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.auto.Intake.AutoIntakeEnd;
@@ -77,7 +78,7 @@ public class AutoCommandFactory {
 
         autoChooser.addOption("Left Amp, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()).andThen(DoEnd()));
         autoChooser.addOption("Left Source, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()).andThen(DoEnd()));
-        autoChooser.addOption("Left Source, Two Shot, get far Note", AlwaysDo().andThen(leftSideStart()).
+        autoChooser.addOption("Left Source, Two Shot, get far Note", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).
         andThen(GoToFarLeftFirstNote()).andThen(doAutoShot()).andThen(DoEnd()));
         autoChooser.addOption("Left Source, Three Shot, get far Note", AlwaysDo().andThen(leftSideStart()).
         andThen(GoToFarLeftFirstNote()).andThen(doAutoShot()).
@@ -134,7 +135,7 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup rightSideStart(){
       SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-      pCommandGroup.addCommands(new SetSwerveOdometry(sDrivetrain, AutoConstants.sideSetupXdistance, -AutoConstants.sideSetupYdistance, -AutoConstants.sideSetupAngle));
+      pCommandGroup.addCommands(new SetSwerveOdometry(sDrivetrain, AutoConstants.sideSetupXdistance, -AutoConstants.sideSetupYdistance, AutoConstants.sideRightSetupAngle));
       return pCommandGroup;
     }
 
@@ -176,6 +177,7 @@ public class AutoCommandFactory {
       pCommandGroup.addCommands(new AutoShootEnd(shooter));
       return pCommandGroup;
     }
+    
 
     public SequentialCommandGroup doSimpleBackUp(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
@@ -223,10 +225,11 @@ public class AutoCommandFactory {
       public SequentialCommandGroup GoToFarLeftFirstNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(6, AutoConstants.farNoteYDistance,0, sDrivetrain));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance, AutoConstants.farNoteYDistance,0, sDrivetrain), new AutoIntakeStart(intake)));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance - 6, AutoConstants.farNoteYDistance,0, sDrivetrain), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.5), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new AutoIntakeEnd(intake));
-        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(6, AutoConstants.farNoteYDistance,0, sDrivetrain));
+        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(6, AutoConstants.farNoteYDistance-4,0, sDrivetrain));
         pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.sideSetupXdistance, AutoConstants.sideSetupYdistance, 60 ,sDrivetrain), new AutoShootStart(shooter)));
         return pCommandGroup;
       }
@@ -248,10 +251,11 @@ public class AutoCommandFactory {
       public SequentialCommandGroup GoToFarRightFirstNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(5, -AutoConstants.farNoteYDistance,0, sDrivetrain));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance, -AutoConstants.farNoteYDistance,0, sDrivetrain), new AutoIntakeStart(intake)));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance-4, -AutoConstants.farNoteYDistance,0, sDrivetrain), new AutoIntakeStart(intake)));
+        pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.5), new AutoIntakeStart(intake)));
         pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(5, -AutoConstants.farNoteYDistance,0, sDrivetrain));
-        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.sideSetupXdistance, -AutoConstants.sideSetupYdistance, 60 ,sDrivetrain));
+        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.sideSetupXdistance, -AutoConstants.sideSetupYdistance, Constants.AutoConstants.sideRightSetupAngle ,sDrivetrain));
         return pCommandGroup;
       }
       
