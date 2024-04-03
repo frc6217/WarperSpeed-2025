@@ -120,6 +120,17 @@ public class SwerveDrivetrain extends SubsystemBase {
     return sPosition;
   }
 
+  // make back of robot front
+  public void relativeDriveFlippedOrientation(Translation2d desiredTranslation2d, double desiredRotation){
+  cSpeeds = new ChassisSpeeds(-desiredTranslation2d.getX(), -desiredTranslation2d.getY(), desiredRotation);
+  SwerveModuleState[] states = sKinematics.toSwerveModuleStates(cSpeeds);
+      
+    for(SwerveModule module : modules){
+      module.setState(states[module.operationOrderID]);
+    }
+  }
+
+
   public void relativeDrive(Translation2d desiredTranslation2d, double desiredRotation){
   cSpeeds = new ChassisSpeeds(desiredTranslation2d.getX(), desiredTranslation2d.getY(), desiredRotation);
   SwerveModuleState[] states = sKinematics.toSwerveModuleStates(cSpeeds);
@@ -128,6 +139,7 @@ public class SwerveDrivetrain extends SubsystemBase {
       module.setState(states[module.operationOrderID]);
     }
   }
+
 
   public void absoluteDrive(Translation2d desiredTranslation, double desiredRotation){
     cSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredTranslation.getX(), desiredTranslation.getY(), desiredRotation, getGyroRotation2d());
@@ -157,7 +169,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     if (isAbsolute){
       absoluteDrive(desiredTranslation, desiredRotation);
     } else{
-      relativeDrive(desiredTranslation, desiredRotation);
+      relativeDriveFlippedOrientation(desiredTranslation, desiredRotation);
     }
     
   }

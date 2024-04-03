@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.FindKS;
@@ -29,8 +30,11 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.PIDShooter;
+import frc.robot.subsystems.ServoTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
+
+import java.util.Map;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 
@@ -42,6 +46,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -75,6 +81,8 @@ public class RobotContainer {
   public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup");
   public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter");
   
+  //ServoTest servoTest = new ServoTest();
+
   public RobotContainer() {
     // Configure the trigger bindings
         semiAutoFactory = new SemiAutoFactory(this);
@@ -93,7 +101,7 @@ public class RobotContainer {
     Trigger gameOpPOVDown = m_gameOperatorController.povDown();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
     Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
-    Trigger gameOpRightTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
+    Trigger gameOpRightTrigger = m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton);//m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
     Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
     Trigger driverBackRight = m_driverController.button(Constants.OperatorConstants.kRightBackButton);
     Trigger driverLeftBumper = m_driverController.leftBumper();
@@ -111,7 +119,7 @@ public class RobotContainer {
     gameOpA.and(driverComtrollerAutoPickupButton.negate()).whileTrue(new IntakeCommand(intake,.8));
    
     //m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton).whileTrue(new SpeedShoot(-.15, -.10, shooter));
-    new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, .4));
+    new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, 1));
     
     //m_driverController.y().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(0, 0, 25, swerveDrivetrain));
     //gameOpleftTrigger.whileTrue(new SpeedShoot(.65, .75, shooter));
@@ -125,20 +133,36 @@ public class RobotContainer {
 
 
 
-    gameOpY.and(gameOpLeftBumper.or(gameOpRightBumper)).onTrue(Commands.runOnce(indexer::shoot, indexer));
+    gameOpY.and(gameOpLeftBumper.or(gameOpRightBumper).or(gameOpRightTrigger)).onTrue(Commands.runOnce(indexer::shoot, indexer));
 
 
     //Climber
-    m_driverController.povDown().onTrue(new VibrateController(m_driverController, 1));
+   // m_driverController.povDown().onTrue(new VibrateController(m_driverController, 1));
 
-    m_gameOperatorController.povDownLeft().whileTrue(new ClimberSetSpeedCommand(climber, .4, 0));
-    m_gameOperatorController.povUpLeft().whileTrue(new ClimberSetSpeedCommand(climber, -.4, 0));
-    m_gameOperatorController.povDownRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, .4));
-    m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -.4));
+    //m_gameOperatorController.povDownLeft().whileTrue(new ClimberSetSpeedCommand(climber, RobotConstants.climberSpeed, 0));
+   // m_gameOperatorController.povUpLeft().whileTrue(new ClimberSetSpeedCommand(climber, -RobotConstants.climberSpeed, 0));
+    //m_gameOperatorController.povDownRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, RobotConstants.climberSpeed));
+    //m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -RobotConstants.climberSpeed));
 
-    gameOpPOVDown.whileTrue(new WinchClimber(climber));
-    gameOpPOVUp.whileTrue(new DeployClimber(climber));
+    //gameOpPOVDown.whileTrue(new WinchClimber(climber);
+    gameOpPOVDown.whileTrue( 
+        new SelectCommand<>(
+          Map.ofEntries(
+            Map.entry(CommandSelector.BOTH, new WinchClimber(climber)),
+            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, RobotConstants.climberSpeed, 0)),
+            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, RobotConstants.climberSpeed))),
+            this::selectClimberCommand));
 
+    gameOpPOVUp.whileTrue( 
+        new SelectCommand<>(
+          Map.ofEntries(
+            Map.entry(CommandSelector.BOTH, new DeployClimber(climber)),
+            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, -RobotConstants.climberSpeed, 0)),
+            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, -RobotConstants.climberSpeed))),
+            this::selectClimberCommand));
+
+   // gameOpPOVUp.whileTrue(new DeployClimber(climber));
+   
     //Driver controls
     driverY.onTrue(Commands.runOnce(swerveDrivetrain::doRelative));
     driverY.onFalse(Commands.runOnce(swerveDrivetrain::doAbsolute));
@@ -149,6 +173,37 @@ public class RobotContainer {
     m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
     
+  }
+
+  private enum CommandSelector {
+    BOTH,
+    LEFT,
+    RIGHT
+  };
+
+  private CommandSelector selectClimberCommand() {
+
+    //boolean isLeftPulled = m_gameOperatorController.axisGreaterThan(2, .6).getAsBoolean();
+    //boolean isRightPulled = m_gameOperatorController.axisGreaterThan(3, 0.6).getAsBoolean();
+
+    boolean isLeftPulled = (m_gameOperatorController.getHID().getLeftTriggerAxis()> .6 );
+    boolean isRightPulled = (m_gameOperatorController.getHID().getRightTriggerAxis() > .6);
+
+    System.out.println("state: left: " + isLeftPulled + " right: " + isRightPulled);
+
+    if ((isLeftPulled && isRightPulled) || (!isLeftPulled && !isRightPulled)) {
+      System.out.println("run both");
+      return  CommandSelector.BOTH;
+    }
+    if (isLeftPulled) {
+      return CommandSelector.LEFT;
+    }
+    if (isRightPulled) {
+      return CommandSelector.RIGHT;
+    }
+
+      System.out.println("are we here?");
+    return CommandSelector.BOTH;
   }
 
   /*

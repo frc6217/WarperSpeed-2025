@@ -25,7 +25,7 @@ public class SemiAutoFactory {
 
 
     public Command autoPickupNote(){
-        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake), new IntakeCommand(robot.intake,.75));
+        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake), new IntakeCommand(robot.intake,.8));
         return group;
     }
 
@@ -35,7 +35,7 @@ public class SemiAutoFactory {
     }
 
     public Command autoPickupUntilSignal(){
-        ParallelRaceGroup group = new ParallelRaceGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake), new IntakeCommand(robot.intake,.75));
+        ParallelRaceGroup group = new ParallelRaceGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake), new IntakeCommand(robot.intake,.8));
         group.until(robot.intake::haveNote);
         return group;
     }

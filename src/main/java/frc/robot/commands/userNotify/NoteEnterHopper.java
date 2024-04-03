@@ -18,7 +18,7 @@ public class NoteEnterHopper extends Command {
   public NoteEnterHopper(Intake intake, CommandXboxController controllerToVibrate) {
     this.controllerToVibrate = controllerToVibrate;
     this.intake = intake;
-    addRequirements(intake);
+    //addRequirements(intake);
     timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -27,7 +27,7 @@ public class NoteEnterHopper extends Command {
   @Override
   public void initialize() {
     //intake.intakeOff();
-    intake.ledRainbow();
+   // intake.ledRainbow();
     timer.start();
   }
 

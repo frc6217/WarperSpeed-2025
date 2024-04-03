@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
   DigitalInput beamNoteDetector =  new DigitalInput(1);
   boolean hasNote = true;
 
-  CANdle candle = new CANdle(Constants.RobotConstants.candleCanId, "CTRSwerve");
+  //CANdle candle = new CANdle(Constants.RobotConstants.candleCanId, "CTRSwerve");
   int numLeds = 168;
 
   AllianceSelector allianceSelector;
@@ -130,12 +130,12 @@ public class Intake extends SubsystemBase {
 
   public void ledRainbow(){
     RainbowAnimation rainbow = new RainbowAnimation();
-    candle.animate(rainbow);
+   // candle.animate(rainbow);
   }
   public void ledBlue(){
     //TwinkleAnimation animate = new TwinkleAnimation(0, 0, 255);
     SingleFadeAnimation animate = new SingleFadeAnimation(0, 0, 255, 0, .5, numLeds);
-    candle.animate(animate);
+    //candle.animate(animate);
   }
 
   public void ledNoNote() {
@@ -149,13 +149,13 @@ public class Intake extends SubsystemBase {
     public void ledRed(){
     //TwinkleAnimation animate = new TwinkleAnimation(0, 0, 255);
     SingleFadeAnimation animate = new SingleFadeAnimation(255, 0, 0, 0, .5, numLeds);
-    candle.animate(animate);
+   // candle.animate(animate);
   }
 
 
   public void ledrgbFade() {
     RgbFadeAnimation animate = new RgbFadeAnimation(1, .5, numLeds);
-    candle.animate(animate);
+    //candle.animate(animate);
   }
 
   /* 

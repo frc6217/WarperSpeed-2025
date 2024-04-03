@@ -40,7 +40,7 @@ public final class Constants {
     public static final double sideSetupXdistance = -1.48;
     public static final double sideSetupYdistance = 2.5;
     public static final double sideSetupAngle = 60;
-    public static final double farNoteXdistance = 24.25;
+    public static final double farNoteXdistance = 22.25;
     public static final double farNoteYDistance = 15.25;
     public static final double farNote2YDistance = 10.25;
     public static final double sideRightSetupAngle = 300;
@@ -82,6 +82,9 @@ public final class Constants {
     public static final int indexerCanId = 7;
     public static final int lowShooterCanId = 5;
     public static final int highShooterCanId = 6;
+    public static final int servoChannel = 2;
+    public static final double servoCloseAngle = 0;
+    public static final double servoOpenAngle = 180;
     public static final double trackWidth = Units.inchesToMeters(24.5);
     public static final double trackLength = Units.inchesToMeters(24.5);
     public static final double driveGearRatio = 6.67;
@@ -94,6 +97,7 @@ public final class Constants {
     public static final int shooterMotorCurrentLimit = 60;
     public static final int intakeMotorCurrentLimit = 50;
     public static final int indexerMotorCurrentLimit = 40;
+    public static final boolean useServoEnabled = true;
     //Random numberdecided make actually number that the angle velo max actually is. 
 /*
     // Practice Robot
@@ -121,6 +125,7 @@ public final class Constants {
     public static final double highRpmIdle = 0;
     public static final double lowRpmIdle = 0;
     public static final double shooterVoltageCompensation = 10;
+    public static final double climberSpeed = 0.8;
   
   }
 

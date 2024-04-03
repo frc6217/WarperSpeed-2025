@@ -17,6 +17,7 @@ public class VibrateController extends Command {
   /** Creates a new VibrateController. */
   public VibrateController(CommandXboxController m_driverController, double rumble) {
     this.driverController = m_driverController;
+    this.rumble = rumble;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,6 +27,7 @@ public class VibrateController extends Command {
     driverController.getHID().setRumble(RumbleType.kBothRumble, rumble);
     timer.reset();
     timer.start();
+    System.out.println("stqat");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
