@@ -32,8 +32,8 @@ public class ClimberSetSpeedCommand extends Command {
   public void execute() {
     
     
-      climber.setLeftClimber(leftSpeed);
-      climber.setrightClimber(rightSpeed);
+      climber.setLeftClimberSpeed(leftSpeed);
+      climber.setRightClimberSpeed(rightSpeed);
       
 
     //if(0.5 < climber.getLeftClimber())
@@ -42,8 +42,8 @@ public class ClimberSetSpeedCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setLeftClimber(0);
-    climber.setrightClimber(0);
+    climber.setLeftClimberSpeed(0);
+    climber.setRightClimberSpeed(0);
   }
 
   // Returns true when the command should end.
