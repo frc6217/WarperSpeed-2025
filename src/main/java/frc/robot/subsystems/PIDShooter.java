@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,6 +40,8 @@ public class PIDShooter extends SubsystemBase {
     lowShooter.setSmartCurrentLimit(RobotConstants.shooterMotorCurrentLimit);
     topShooter.enableVoltageCompensation(RobotConstants.shooterVoltageCompensation);
     lowShooter.enableVoltageCompensation(RobotConstants.shooterVoltageCompensation);
+    topShooter.setIdleMode(IdleMode.kCoast);
+    lowShooter.setIdleMode(IdleMode.kCoast);
     
     lowPidController.setP(SmartDashboard.getNumber("low P", 0));
     lowPidController.setI(SmartDashboard.getNumber("low I", 0));

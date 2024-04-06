@@ -30,6 +30,9 @@ public class Climber extends SubsystemBase {
     
     leftClimber.setIdleMode(IdleMode.kBrake);
     rightClimber.setIdleMode(IdleMode.kBrake);
+
+    leftClimber.setSmartCurrentLimit(60);
+    rightClimber.setSmartCurrentLimit(60);
     //todo scale encoder
   }
 

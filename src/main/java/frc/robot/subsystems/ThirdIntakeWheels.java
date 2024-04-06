@@ -17,6 +17,8 @@ CANSparkMax thirdIntakeWheels = new CANSparkMax(RobotConstants.thirdIntakeWheels
 
   public ThirdIntakeWheels() {
     thirdIntakeWheels.setIdleMode(IdleMode.kCoast);
+
+    thirdIntakeWheels.setSmartCurrentLimit(40);
   }
 
   @Override

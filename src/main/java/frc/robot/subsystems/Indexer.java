@@ -34,6 +34,7 @@ public class Indexer extends SubsystemBase {
   public Indexer() {
     absEncoder.setPositionOffset(RobotConstants.indexerStartOffset);
     indexer.setSmartCurrentLimit(RobotConstants.indexerMotorCurrentLimit);
+    
     indexer.setIdleMode(IdleMode.kBrake);
   }
 
