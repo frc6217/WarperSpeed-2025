@@ -16,6 +16,7 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -42,7 +43,7 @@ public class SwerveModule extends SubsystemBase{
   String name;
   int operationOrderID;
   double absEncoderOffset;
-
+  SlewRateLimiter slewRate = new SlewRateLimiter(1/RobotConstants.driveSlewTimeInSecond);
   public SwerveModule(Constants constants){
     name = new String(constants.name);
 
@@ -161,7 +162,8 @@ public class SwerveModule extends SubsystemBase{
     //SmartDashboard.putNumber(name+" Drive Setpoint ", driveSetpoint);
     if(Math.abs(driveSetpoint) > .03){
      //System.out.println(name  + ": " + MathUtil.clamp(driveSetpoint, -1, 1));
-      driveMotor.set(MathUtil.clamp(driveSetpoint, -.9, .9));
+     driveSetpoint = slewRate.calculate(driveSetpoint);
+      driveMotor.set(MathUtil.clamp(driveSetpoint, -1, 1));
       //drivePID.setReference(driveSetpoint, ControlType.kVelocity);
     } else{
       driveMotor.set(0);

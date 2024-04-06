@@ -91,6 +91,7 @@ public final class Constants {
     public static final double driveGearRatio = 6.67;
     public static final double steerGearRatio = 1.2;
     public static final double wheelDiameter = Units.inchesToMeters(4);
+    public static final double driveSlewTimeInSecond = 0.1;
     public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
     public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
