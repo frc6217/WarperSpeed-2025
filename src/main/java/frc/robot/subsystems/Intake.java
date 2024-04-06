@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMax;
 
 import au.grapplerobotics.LaserCan;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
@@ -63,6 +64,9 @@ public class Intake extends SubsystemBase {
 
     firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
     secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit-10);
+
+    firstIntake.setIdleMode(IdleMode.kCoast);
+    secondIntake.setIdleMode(IdleMode.kCoast);
   }
 
   @Override

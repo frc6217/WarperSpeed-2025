@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
@@ -33,6 +34,7 @@ public class Indexer extends SubsystemBase {
   public Indexer() {
     absEncoder.setPositionOffset(RobotConstants.indexerStartOffset);
     indexer.setSmartCurrentLimit(RobotConstants.indexerMotorCurrentLimit);
+    indexer.setIdleMode(IdleMode.kBrake);
   }
 
   @Override
