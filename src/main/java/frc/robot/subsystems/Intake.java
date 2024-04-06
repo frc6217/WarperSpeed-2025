@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   CANSparkMax firstIntake = new CANSparkMax(Constants.RobotConstants.firstIntakeCanId, MotorType.kBrushless);
   CANSparkMax secondIntake = new CANSparkMax(Constants.RobotConstants.secondIntakeCanId, MotorType.kBrushless);
-
+  CANSparkMax fourthInTake =  new CANSparkMax(Constants.RobotConstants.fourthIntakeCanId, MotorType.kBrushless);
     //pulse distance sesnor
   //Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
 
@@ -64,9 +64,11 @@ public class Intake extends SubsystemBase {
 
     firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
     secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit-10);
+    fourthInTake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
 
     firstIntake.setIdleMode(IdleMode.kCoast);
     secondIntake.setIdleMode(IdleMode.kCoast);
+    fourthInTake.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
@@ -83,47 +85,50 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public void on1Intake(){
-    firstIntake.set(SmartDashboard.getNumber("intake1speed", 0));
-  }
+  // public void on1Intake(){
+  //   firstIntake.set(SmartDashboard.getNumber("intake1speed", 0));
+  // }
 
-  public void reverse1Intake(){
-    firstIntake.set(-SmartDashboard.getNumber("intake1speed", 0));
-  }
+  // public void reverse1Intake(){
+  //   firstIntake.set(-SmartDashboard.getNumber("intake1speed", 0));
+  // }
 
-  public void off1Intake(){
-    firstIntake.set(0);
-  }
+  // public void off1Intake(){
+  //   firstIntake.set(0);
+  // }
 
-  public void on2Intake(){
-    secondIntake.set(SmartDashboard.getNumber("intake2speed", 0));
-  }
+  // public void on2Intake(){
+  //   secondIntake.set(SmartDashboard.getNumber("intake2speed", 0));
+  // }
 
-   public void reverse2Intake(){
-    secondIntake.set(-SmartDashboard.getNumber("intake2speed", 0));
-  }
+  //  public void reverse2Intake(){
+  //   secondIntake.set(-SmartDashboard.getNumber("intake2speed", 0));
+  // }
 
-  public void off2Intake(){
-    secondIntake.set(0);
-  }
+  // public void off2Intake(){
+  //   secondIntake.set(0);
+  // }
 
-  public void intakeOn(){
-    firstIntake.set(.65);
-    secondIntake.set(-.65);
-  }
+  // public void intakeOn(){
+  //   firstIntake.set(.65);
+  //   secondIntake.set(-.65);
+
+  // }
   
-  public void intakeReverse(){
-    firstIntake.set(-.5);
-    secondIntake.set(.5);
-  }
+  // public void intakeReverse(){
+  //   firstIntake.set(-.5);
+  //   secondIntake.set(.5);
+  // }
 
   public void intakeOff(){
     firstIntake.set(0);
     secondIntake.set(0);
+    fourthInTake.set(0);
   }
   public void setSpeed(double speed) {
     firstIntake.set(speed);
     secondIntake.set(-speed);
+    fourthInTake.set(speed);
   }
 
   public boolean haveNote() {

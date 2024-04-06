@@ -80,6 +80,7 @@ public final class Constants {
     public static final int secondIntakeCanId =  14;
     public static final int candleCanId = 51;
     public static final int indexerCanId = 7;
+    public static final int fourthIntakeCanId = 10;
     public static final int lowShooterCanId = 5;
     public static final int highShooterCanId = 6;
     public static final int servoChannel = 2;
