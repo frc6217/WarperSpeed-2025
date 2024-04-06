@@ -83,6 +83,8 @@ public class SwerveModule extends SubsystemBase{
     //steerEncoder.setPosition(0);
     steerEncoder.setPositionConversionFactor(2*Math.PI / 21.4285714286);
 
+    //todo set drive Encoder velocity scale
+
 
 //todo make drive pid work
     drivePID.setP(0);
@@ -151,6 +153,10 @@ public class SwerveModule extends SubsystemBase{
   public SwerveModulePosition getModulePosition(){
    // return new SwerveModulePosition(getDistance(), absEncoder.getAngle());
   return new SwerveModulePosition(getDistance(), getCurrentAngle());
+  }
+
+  public SwerveModuleState getModuleState() {
+    return new SwerveModuleState(driveEncoder.getVelocity(), getCurrentAngle());
   }
 
   private double getDistance() {
