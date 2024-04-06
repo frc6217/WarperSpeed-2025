@@ -62,121 +62,35 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
- // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-// private final CommandJoystick mJoystick = new CommandJoystick(0);
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_gameOperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   
   AutoCommandFactory autoCommandFactory;
   SemiAutoFactory semiAutoFactory;
-  //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
+
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
   public final Intake intake = new Intake(swerveDrivetrain);
   public final ThirdIntakeWheels thirdIntakeWheels = new ThirdIntakeWheels();
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
- // public final Shooter shooter = new Shooter();
- public final PIDShooter shooter = new PIDShooter();
+  public final PIDShooter shooter = new PIDShooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
   public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 10);
   public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 0);
   
-  //ServoTest servoTest = new ServoTest();
 
   public RobotContainer() {
     // Configure the trigger bindings
-        semiAutoFactory = new SemiAutoFactory(this);
+    semiAutoFactory = new SemiAutoFactory(this);
     autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight, semiAutoFactory);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
 
-    Trigger gameOpA = m_gameOperatorController.a();
-    Trigger gameOpB = m_gameOperatorController.b();
-    Trigger gameOpX = m_gameOperatorController.x();
-    Trigger gameOpY = m_gameOperatorController.y();
-    Trigger gameOpLeftBumper = m_gameOperatorController.leftBumper();
-    Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
-    Trigger gameOpPOVUp = m_gameOperatorController.povUp();
-    Trigger gameOpPOVDown = m_gameOperatorController.povDown();
-    Trigger gameOpPOVRight = m_gameOperatorController.povRight();
-    Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
-    Trigger gameOpRightTrigger = m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton);//m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
-    Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
-    Trigger driverBackRight = m_driverController.button(Constants.OperatorConstants.kRightBackButton);
-    Trigger driverLeftBumper = m_driverController.leftBumper();
-    Trigger driverRightBumper = m_driverController.rightBumper();
-    Trigger driverY = m_driverController.y();
-   
-   
-    Trigger driverComtrollerAutoPickupButton = m_driverController.a();
-
-    //m_driverController.b().whileTrue(Commands.print("start").andThen(new CameraDrive(swerveDrivetrain, shooterLimeLight, Constants.SemiAutoConstants.speaker, intake)).andThen(Commands.print("End")));
-    swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
-    driverBackRight.whileTrue(Commands.runOnce(swerveDrivetrain::initialize, swerveDrivetrain));
-    //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    gameOpB.and(driverComtrollerAutoPickupButton.negate()).whileTrue(backwardIntakeCommand());
-    gameOpA.and(driverComtrollerAutoPickupButton.negate()).whileTrue(forwardIntakeCommand());
-   
-    //m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton).whileTrue(new SpeedShoot(-.15, -.10, shooter));
     new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, 1));
-    
-    //m_driverController.y().whileTrue(new DriveXfeetYfeetDiseredDegreeAngle(0, 0, 25, swerveDrivetrain));
-    //gameOpleftTrigger.whileTrue(new SpeedShoot(.65, .75, shooter));
+    swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
 
 
-
-    gameOpLeftBumper.whileTrue(Commands.runOnce(shooter::prepareForSpeaker, shooter));
-    gameOpRightBumper.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
-    gameOpRightTrigger.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
-    gameOpLeftBumper.or(gameOpRightBumper).or(gameOpRightTrigger).whileFalse(Commands.runOnce(shooter::off, shooter));
-
-
-
-    gameOpY.and(gameOpLeftBumper.or(gameOpRightBumper).or(gameOpRightTrigger)).onTrue(Commands.runOnce(indexer::shoot, indexer));
-
-
-    //Climber
-   // m_driverController.povDown().onTrue(new VibrateController(m_driverController, 1));
-
-    //m_gameOperatorController.povDownLeft().whileTrue(new ClimberSetSpeedCommand(climber, RobotConstants.climberSpeed, 0));
-   // m_gameOperatorController.povUpLeft().whileTrue(new ClimberSetSpeedCommand(climber, -RobotConstants.climberSpeed, 0));
-    //m_gameOperatorController.povDownRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, RobotConstants.climberSpeed));
-    //m_gameOperatorController.povUpRight().whileTrue(new ClimberSetSpeedCommand(climber, 0, -RobotConstants.climberSpeed));
-
-    //gameOpPOVDown.whileTrue(new WinchClimber(climber);
-    gameOpPOVDown.whileTrue( 
-        new SelectCommand<>(
-          Map.ofEntries(
-            Map.entry(CommandSelector.BOTH, new WinchClimber(climber)),
-            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, RobotConstants.climberSpeed, 0)),
-            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, RobotConstants.climberSpeed))),
-            this::selectClimberCommand));
-
-    gameOpPOVUp.whileTrue( 
-        new SelectCommand<>(
-          Map.ofEntries(
-            Map.entry(CommandSelector.BOTH, new DeployClimber(climber)),
-            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, -RobotConstants.climberSpeed, 0)),
-            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, -RobotConstants.climberSpeed))),
-            this::selectClimberCommand));
-
-   // gameOpPOVUp.whileTrue(new DeployClimber(climber));
-   
-    //Driver controls
-    driverY.onTrue(Commands.runOnce(swerveDrivetrain::doRelative));
-    driverY.onFalse(Commands.runOnce(swerveDrivetrain::doAbsolute));
-    driverComtrollerAutoPickupButton.whileTrue(semiAutoFactory.autoPickupNote());
-    driverBackLeft.whileTrue(new ResetGyro(swerveDrivetrain));
-    m_driverController.leftBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
-    m_driverController.rightBumper().onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
-    m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
-    m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6).onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
-    
   }
 
   private enum CommandSelector {
@@ -220,12 +134,92 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-   
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-   // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    Trigger gameOpA = m_gameOperatorController.a();
+    Trigger gameOpB = m_gameOperatorController.b();
+    Trigger gameOpX = m_gameOperatorController.x();
+    Trigger gameOpY = m_gameOperatorController.y();
+    Trigger gameOpLeftBumper = m_gameOperatorController.leftBumper();
+    Trigger gameOpRightBumper = m_gameOperatorController.rightBumper();
+    Trigger gameOpPOVUp = m_gameOperatorController.povUp();
+    Trigger gameOpPOVDown = m_gameOperatorController.povDown();
+    Trigger gameOpPOVRight = m_gameOperatorController.povRight();
+    Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
+    Trigger gameOpRightTrigger = m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton);//m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
+    Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
+    Trigger driverBackRight = m_driverController.button(Constants.OperatorConstants.kRightBackButton);
+    Trigger driverLeftBumper = m_driverController.leftBumper();
+    Trigger driverRightBumper = m_driverController.rightBumper();
+    Trigger driverY = m_driverController.y();
+
+    // Driver mapping
+
+    Trigger driverComtrollerAutoPickupButton = m_driverController.a();
+    Trigger driverToggleFieldOriented = driverY;
+    Trigger resetDriverEncoder = driverBackRight;
+    Trigger resetDriverGyro = driverBackLeft;
+    Trigger slowMode = m_driverController.leftBumper();
+    Trigger fastMode = m_driverController.rightBumper();
+    Trigger reduceSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
+    Trigger increaseSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
+
+    Trigger unused0 = gameOpX;
+    Trigger unused1 = gameOpPOVRight;
+    Trigger unused2 = gameOpleftTrigger;
+    Trigger unused3 = driverLeftBumper;
+    Trigger unused4 = driverRightBumper;
+
+    // Operator mapping
+    Trigger reverseIntake = gameOpB;
+    Trigger intake = gameOpA;
+    Trigger speakerShooter = gameOpLeftBumper;
+    Trigger ampShooter = gameOpRightBumper;
+    Trigger tuneShooter = gameOpRightTrigger;
+    Trigger shootButton = gameOpY;
+    Trigger climberDown = gameOpPOVDown;
+    Trigger climberUp = gameOpPOVUp;
+
+    // todo add unused buttons for driver
+
+    // Operator Commands
+    reverseIntake.and(driverComtrollerAutoPickupButton.negate()).whileTrue(backwardIntakeCommand());
+    intake.and(driverComtrollerAutoPickupButton.negate()).whileTrue(forwardIntakeCommand());
+
+    speakerShooter.whileTrue(Commands.runOnce(shooter::prepareForSpeaker, shooter));
+    ampShooter.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
+    tuneShooter.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
+    speakerShooter.or(ampShooter).or(tuneShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
+    shootButton.and(speakerShooter.or(ampShooter).or(tuneShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
+
+    climberDown.whileTrue( 
+        new SelectCommand<>(
+          Map.ofEntries(
+            Map.entry(CommandSelector.BOTH, new WinchClimber(climber)),
+            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, RobotConstants.climberSpeed, 0)),
+            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, RobotConstants.climberSpeed))),
+            this::selectClimberCommand));
+
+    climberUp.whileTrue( 
+        new SelectCommand<>(
+          Map.ofEntries(
+            Map.entry(CommandSelector.BOTH, new DeployClimber(climber)),
+            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, -RobotConstants.climberSpeed, 0)),
+            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, -RobotConstants.climberSpeed))),
+            this::selectClimberCommand));
+
+   
+    //Driver Commands
+    resetDriverEncoder.whileTrue(Commands.runOnce(swerveDrivetrain::initialize, swerveDrivetrain));
+
+    driverToggleFieldOriented.onTrue(Commands.runOnce(swerveDrivetrain::doRelative));
+    driverToggleFieldOriented.onFalse(Commands.runOnce(swerveDrivetrain::doAbsolute));
+    driverComtrollerAutoPickupButton.whileTrue(semiAutoFactory.autoPickupNote());
+    resetDriverGyro.whileTrue(new ResetGyro(swerveDrivetrain));
+    slowMode.onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
+    fastMode.onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
+    reduceSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
+    increaseSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
+    
   }
 
   /**
