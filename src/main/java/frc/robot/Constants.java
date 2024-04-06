@@ -129,6 +129,8 @@ public final class Constants {
     public static final double shooterVoltageCompensation = 10;
     public static final double climberSpeed = 0.8;
     public static double thridIntakeSpeed = 0.3;
+    public static int leftLimitSwitchChannel;
+    public static int rightLimitSwitchChannel;
   
   }
 

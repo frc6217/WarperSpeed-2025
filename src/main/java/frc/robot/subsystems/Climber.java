@@ -8,18 +8,26 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.RobotConstants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  CANSparkMax leftClimber = new CANSparkMax(41, MotorType.kBrushless);
-  CANSparkMax rightClimber = new CANSparkMax(42, MotorType.kBrushless); 
+  private CANSparkMax leftClimber = new CANSparkMax(41, MotorType.kBrushless);
+  private CANSparkMax rightClimber = new CANSparkMax(42, MotorType.kBrushless); 
 
   RelativeEncoder leftEncoder = leftClimber.getEncoder();
   RelativeEncoder rightEncoder = rightClimber.getEncoder();
-  // add right
+
+  //add new limit switch
+  DigitalInput leftLimitSwitch = new DigitalInput(RobotConstants.leftLimitSwitchChannel);
+  DigitalInput rightLimitSwitch = new DigitalInput(RobotConstants.rightLimitSwitchChannel);
+  
+
   public Climber() {  
   
     leftClimber.restoreFactoryDefaults();
@@ -28,12 +36,17 @@ public class Climber extends SubsystemBase {
     leftClimber.getEncoder().setPosition(0);
     rightClimber.getEncoder().setPosition(0);
     
+    
+    //todo scale encoder if so set softlimit
+    
     leftClimber.setIdleMode(IdleMode.kBrake);
     rightClimber.setIdleMode(IdleMode.kBrake);
 
     leftClimber.setSmartCurrentLimit(60);
     rightClimber.setSmartCurrentLimit(60);
-    //todo scale encoder
+
+   // leftClimber.setSoftLimit(SoftLimitDirection.kReverse, 0)
+
   }
 
   @Override
@@ -53,42 +66,49 @@ public class Climber extends SubsystemBase {
   }
 
   public void setLeftClimberSpeed(double speed){
-    leftClimber.set(speed);
+    setLeftClimberSpeedWithLimit(speed);
   }
 
   public void setRightClimberSpeed(double speed){
-    rightClimber.set(speed);
+    setRightClimberSpeedWithLimit(speed);
   }
 
   public void deployLeftClimber(){
-  leftClimber.set(-.4); 
+  setLeftClimberSpeedWithLimit(-.4); 
   }
 
   public void deployRightClimber(){
-  rightClimber.set(-.4); 
+  setRightClimberSpeedWithLimit(-.4); 
   }
 
   public void winchLeftClimber(){
-    leftClimber.set(.4);
+    setLeftClimberSpeedWithLimit(.4);
   }
 
   public void winchRightClimber(){
-    rightClimber.set(.4);
+    setRightClimberSpeedWithLimit(.4);
   }
 
   public void stopLeftClimber(){
-    leftClimber.set(0);
+    setLeftClimberSpeedWithLimit(0);
   }
 
   public void stopRightClimber(){
-    rightClimber.set(0);
-  }
+    setRightClimberSpeedWithLimit(0);
+  } 
 
-  public CANSparkMax getLeftClimber(){
-    return leftClimber;
+  private void setLeftClimberSpeedWithLimit(double speed) {
+    if(leftLimitSwitch.get() && speed > 0){
+      leftClimber.set(0);
+    } else {
+      leftClimber.set(speed);
+    }
   }
-
-  public CANSparkMax getRightClimber(){
-    return rightClimber;
-  }  
+  private void setRightClimberSpeedWithLimit(double speed) {
+    if(rightLimitSwitch.get() && speed > 0){
+      rightClimber.set(0);
+    } else {
+      rightClimber.set(speed);
+    }
+  }
 }
