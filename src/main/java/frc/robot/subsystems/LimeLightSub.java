@@ -41,7 +41,7 @@ public class LimeLightSub extends SubsystemBase {
   NetworkTableEntry targetSkew;
   String name;
 
-  public LimeLightSub(String name) {
+  public LimeLightSub(String name, int portOffset) {
     table = NetworkTableInstance.getDefault().getTable(name);
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -50,9 +50,12 @@ public class LimeLightSub extends SubsystemBase {
     tv = table.getEntry("tv");
 
     this.name = name;
+
     for(int port = 5800; port <= 5807; port++){
-      PortForwarder.add(port, name + ".local", port);
+      PortForwarder.add(port+ portOffset, name + ".local", port);
     }
+
+
   }
 
   @Override

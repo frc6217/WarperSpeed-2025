@@ -12,6 +12,7 @@ import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.ThirdIntakeCommand;
 import frc.robot.commands.auto.AbsoluteDiseredDriveNoPID;
 import frc.robot.commands.auto.AutoCommandFactory;
 import frc.robot.commands.auto.DriveXfeetYfeetDiseredDegreeAngle;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.ServoTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
+import frc.robot.subsystems.ThirdIntakeWheels;
 
 import java.util.Map;
 
@@ -45,6 +47,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -73,13 +76,14 @@ public class RobotContainer {
   //public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(mJoystick,m_driverController);
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
   public final Intake intake = new Intake(swerveDrivetrain);
+  public final ThirdIntakeWheels thirdIntakeWheels = new ThirdIntakeWheels();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
  // public final Shooter shooter = new Shooter();
  public final PIDShooter shooter = new PIDShooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
-  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup");
-  public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter");
+  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 10);
+  public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 0);
   
   //ServoTest servoTest = new ServoTest();
 
@@ -115,8 +119,8 @@ public class RobotContainer {
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
     driverBackRight.whileTrue(Commands.runOnce(swerveDrivetrain::initialize, swerveDrivetrain));
     //SmartDashboard.putData("Reset Drive System", new ResetDriveTrain(swerveDrivetrain));
-    gameOpB.and(driverComtrollerAutoPickupButton.negate()).whileTrue(new IntakeCommand(intake, -.5));
-    gameOpA.and(driverComtrollerAutoPickupButton.negate()).whileTrue(new IntakeCommand(intake,.8));
+    gameOpB.and(driverComtrollerAutoPickupButton.negate()).whileTrue(backwardIntakeCommand());
+    gameOpA.and(driverComtrollerAutoPickupButton.negate()).whileTrue(forwardIntakeCommand());
    
     //m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton).whileTrue(new SpeedShoot(-.15, -.10, shooter));
     new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, 1));
@@ -238,4 +242,13 @@ public class RobotContainer {
     return autoCommandFactory;
   }
 
+
+  public Command forwardIntakeCommand() {
+    ParallelCommandGroup commandGroup = new ParallelCommandGroup(new IntakeCommand(intake,.8), new ThirdIntakeCommand(thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
+    return commandGroup;
+  }
+  public Command backwardIntakeCommand() {
+    ParallelCommandGroup commandGroup = new ParallelCommandGroup(new IntakeCommand(intake,-.5), new ThirdIntakeCommand(thirdIntakeWheels, -RobotConstants.thridIntakeSpeed));
+    return commandGroup;
+  }
 }

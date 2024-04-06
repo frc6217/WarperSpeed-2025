@@ -83,6 +83,7 @@ public final class Constants {
     public static final int lowShooterCanId = 5;
     public static final int highShooterCanId = 6;
     public static final int servoChannel = 2;
+    public static final int thirdIntakeWheelsCanid = 11;
     public static final double servoCloseAngle = 0;
     public static final double servoOpenAngle = 180;
     public static final double trackWidth = Units.inchesToMeters(24.5);
@@ -126,6 +127,7 @@ public final class Constants {
     public static final double lowRpmIdle = 0;
     public static final double shooterVoltageCompensation = 10;
     public static final double climberSpeed = 0.8;
+    public static double thridIntakeSpeed = 0.3;
   
   }
 
