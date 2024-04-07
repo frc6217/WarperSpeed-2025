@@ -6,17 +6,19 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.commands.Autos;
+import frc.robot.Constants.SemiAutoConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.FindKS;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ThirdIntakeCommand;
-import frc.robot.commands.auto.AbsoluteDiseredDriveNoPID;
-import frc.robot.commands.auto.AutoCommandFactory;
-import frc.robot.commands.auto.DriveXfeetYfeetDiseredDegreeAngle;
-import frc.robot.commands.auto.RelativeDiseredDriveNoPID;
+import frc.robot.commands.auto.Autos;
+import frc.robot.commands.auto.CameraFindNote;
+import frc.robot.commands.auto.oldDrive.AbsoluteDiseredDriveNoPID;
+import frc.robot.commands.auto.oldDrive.AutoCommandFactory;
+import frc.robot.commands.auto.oldDrive.DriveXfeetYfeetDiseredDegreeAngle;
+import frc.robot.commands.auto.oldDrive.RelativeDiseredDriveNoPID;
 import frc.robot.commands.climbCommand.ClimberSetSpeedCommand;
 import frc.robot.commands.climbCommand.DeployClimber;
 import frc.robot.commands.climbCommand.WinchClimber;
@@ -26,6 +28,8 @@ import frc.robot.commands.shootCommands.AmpShootCommand;
 import frc.robot.commands.shootCommands.SpeakerShootCommand;
 import frc.robot.commands.shootCommands.SpeedShoot;
 import frc.robot.commands.userNotify.VibrateController;
+import frc.robot.sensors.FirstBeamBreak;
+import frc.robot.sensors.HopperBeamBreak;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -39,6 +43,9 @@ import frc.robot.subsystems.ThirdIntakeWheels;
 import java.util.Map;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -69,15 +76,25 @@ public class RobotContainer {
   AutoCommandFactory autoCommandFactory;
   SemiAutoFactory semiAutoFactory;
 
+  public final HopperBeamBreak hopperBeamBreak = new HopperBeamBreak();
+  public final FirstBeamBreak firstBeamBreak = new FirstBeamBreak();
+
+
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
-  public final Intake intake = new Intake(swerveDrivetrain);
+  public final Intake intake = new Intake(swerveDrivetrain, hopperBeamBreak);
   public final ThirdIntakeWheels thirdIntakeWheels = new ThirdIntakeWheels();
   public final PIDShooter shooter = new PIDShooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
   public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 10);
   public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 0);
-  
+
+
+
+  public CameraDrive autoCameraDriveToNoteCommand = new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note, intake);
+  public IntakeCommand autoIntakeCommand = new IntakeCommand(intake, 0.8);
+  public Command autoFindNoteClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1);
+  public Command autoFindNoteCounterClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -87,8 +104,21 @@ public class RobotContainer {
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
 
-    new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, 1));
+    new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, 1, .5));
+    new Trigger(intake::haveNote).onTrue(new VibrateController(m_gameOperatorController, 1, .5));
+    new Trigger(firstBeamBreak::get).onTrue(new VibrateController(m_driverController, 1, 1));
+
+
+
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
+
+
+    // path planner named commands
+    NamedCommands.registerCommand("autoCameraDriveToNote", autoCameraDriveToNoteCommand);
+    NamedCommands.registerCommand("autoShot", autoCommandFactory.doAutoShot());
+    NamedCommands.registerCommand("autoIntake", autoIntakeCommand);
+    NamedCommands.registerCommand("autoFindNoteClockWise", autoFindNoteClockWiseCommand);
+    NamedCommands.registerCommand("autoFindNoteCounterClockWise", autoFindNoteCounterClockWiseCommand);
 
 
   }
@@ -166,7 +196,7 @@ public class RobotContainer {
     Trigger unused0 = gameOpX;
     Trigger unused1 = gameOpPOVRight;
     Trigger unused2 = gameOpleftTrigger;
-    Trigger unused3 = driverLeftBumper;
+    Trigger testSemiAutoShot = driverY;
     Trigger unused4 = driverRightBumper;
 
     // Operator mapping
@@ -189,7 +219,7 @@ public class RobotContainer {
     ampShooter.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
     tuneShooter.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
     speakerShooter.or(ampShooter).or(tuneShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
-    shootButton.and(speakerShooter.or(ampShooter).or(tuneShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
+    shootButton.debounce(.1).and(speakerShooter.or(ampShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
 
     climberDown.whileTrue( 
         new SelectCommand<>(
@@ -219,7 +249,14 @@ public class RobotContainer {
     fastMode.onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
     reduceSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     increaseSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
+
+    testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake).andThen(autoCommandFactory.doAutoShot()));
     
+  }
+  public Command getTestAuto(){
+    Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake);
+   // command.andThen(autoCommandFactory.doAutoShot());
+    return command;
   }
 
   /**
@@ -228,8 +265,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path"); //todo change to do multiple auto
+    return AutoBuilder.followPath(path);
     // An example command will be run in autonomous
-  return  autoCommandFactory.getAutoCommand();
+  //return  autoCommandFactory.getAutoCommand();
   }
 
   public AutoCommandFactory getAutoCommandFactory() {

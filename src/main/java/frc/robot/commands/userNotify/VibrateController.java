@@ -14,10 +14,12 @@ public class VibrateController extends Command {
   CommandXboxController driverController;
   Timer timer = new Timer();
   double rumble;
+  double time;
   /** Creates a new VibrateController. */
-  public VibrateController(CommandXboxController m_driverController, double rumble) {
+  public VibrateController(CommandXboxController m_driverController, double rumble, double time) {
     this.driverController = m_driverController;
     this.rumble = rumble;
+    this.time = time;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -43,7 +45,7 @@ public class VibrateController extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(1);
+    return timer.hasElapsed(time);
   }
 
   @Override

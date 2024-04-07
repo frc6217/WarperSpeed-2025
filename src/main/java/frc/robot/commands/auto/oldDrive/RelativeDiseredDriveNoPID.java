@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.auto;
+package frc.robot.commands.auto.oldDrive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrivetrain;
 
-public class AbsoluteDiseredDriveNoPID extends Command {
+public class RelativeDiseredDriveNoPID extends Command {
   /** Creates a new DriveXfeetYfeet. */
   SwerveDrivetrain sDrivetrain;
 
+  double initialX;
+  double initialY;
 
   double xSetpoint;
   double ySetpoint;
@@ -26,12 +28,10 @@ public class AbsoluteDiseredDriveNoPID extends Command {
   boolean rotateBoolean;
 
   double outputTranslation = 0;
-  double outputStrafe = 0;
-  double outputRotation = 0;
-  double n = 0;
-  double currentAngle;
+    double outputStrafe = 0;
+    double outputRotation = 0;
 
-  public AbsoluteDiseredDriveNoPID(double xSetpoint, double ySetpoint, double rotationDegreeSetpoint, SwerveDrivetrain sDrivetrain) {
+  public RelativeDiseredDriveNoPID(double xSetpoint, double ySetpoint, double rotationDegreeSetpoint, SwerveDrivetrain sDrivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.sDrivetrain = sDrivetrain;
     addRequirements(sDrivetrain);
@@ -41,7 +41,7 @@ public class AbsoluteDiseredDriveNoPID extends Command {
     rotateBoolean = true;
   }
 
-  public AbsoluteDiseredDriveNoPID(double xSetpoint, double ySetpoint, SwerveDrivetrain sDrivetrain) {
+  public RelativeDiseredDriveNoPID(double xSetpoint, double ySetpoint, SwerveDrivetrain sDrivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.sDrivetrain = sDrivetrain;
     addRequirements(sDrivetrain);
@@ -56,9 +56,15 @@ public class AbsoluteDiseredDriveNoPID extends Command {
     if(rotateBoolean){
       rotationSetpoint = rotationSetpoint;
     }else {
-      rotationSetpoint = sDrivetrain.getWrapedAngle();
-    
+      rotationSetpoint = sDrivetrain.getAngle();
     }
+    double initialX = Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX());
+    double initialY = Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY());
+   
+    xSetpoint = xSetpoint + initialX;
+    ySetpoint = ySetpoint + initialY;
+
+    System.out.println("Initialize");
 
   }
 
@@ -66,39 +72,36 @@ public class AbsoluteDiseredDriveNoPID extends Command {
   @Override
   public void execute() {
 
-    SmartDashboard.putNumber("Current Angle Wrapping", currentAngle);
-    currentAngle = sDrivetrain.getWrapedAngle();
-
     if(Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4){
       outputTranslation = 0;
-    }else if((Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) > .2){
-      outputTranslation = -.6;
+    }else if((Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) > .4){
+      outputTranslation = -.4;
     }else{
-      outputTranslation = .6;
+      outputTranslation = .4;
     }
 
     if(Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4){
       outputStrafe = 0;
-    }else if((Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) > .2){
-      outputStrafe = -.6;
+    }else if((Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) > .4){
+      outputStrafe = -.4;
     }else{
-      outputStrafe = .6;
+      outputStrafe = .4;
     }
     
   
-    if(Math.abs(currentAngle - rotationSetpoint) < 8){
+    if(Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 5){
       outputRotation = 0;
-    }else if((currentAngle < rotationSetpoint)){
-        if((rotationSetpoint - currentAngle) < 180){
-        outputRotation = .07;
+    }else if((sDrivetrain.getAngle() < rotationSetpoint)){
+        if((rotationSetpoint - sDrivetrain.getAngle()) > 180){
+        outputRotation = .04;
         }else{
-        outputRotation = -.07;
+        outputRotation = -.04;
       }
     }else{
-      if((currentAngle - rotationSetpoint) < 180){
-        outputRotation = -.06;
+      if((sDrivetrain.getAngle() - rotationSetpoint) > 180){
+        outputRotation = -.04;
         }else{
-        outputRotation = .06;
+        outputRotation = .04;
       }
     }
   // scale up with maxVelo
@@ -109,15 +112,16 @@ public class AbsoluteDiseredDriveNoPID extends Command {
   @Override
   public void end(boolean interrupted) {
     sDrivetrain.drive(new Translation2d(0,0), 0);
-   
+    System.out.println("Ended");
+    System.out.println("" + interrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean val1 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .2; 
-    boolean val2 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .2;
-    boolean val3 = Math.abs(currentAngle - rotationSetpoint) < 5;
+    boolean val1 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getX()) - xSetpoint) < .4; 
+    boolean val2 = Math.abs(Units.metersToFeet(sDrivetrain.sOdometry.getPoseMeters().getY()) - ySetpoint) < .4;
+    boolean val3 = Math.abs(sDrivetrain.getAngle() - rotationSetpoint) < 5;
     return val1 && val2 && val3 ;
   }
 }

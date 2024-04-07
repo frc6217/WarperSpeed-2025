@@ -53,9 +53,9 @@ public final class Constants {
 
     public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
 
-    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.08, 0, 0, -3.5587, 0.4);
-    public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0001, 0, 0, 0, 4);
-    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.03, 0, 0, 0, .4);
+    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.025, 0, 0, 13.01, 2);
+    public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0001, 0, 0, 88.2, 4);
+    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.0175, 0.001, 0, 0.2, 1.5);
 
     public static final SemiAutoParameters speaker = new SemiAutoParameters(TARGET.SPEAKER, translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, -1);
 
@@ -83,7 +83,9 @@ public final class Constants {
     public static final int fourthIntakeCanId = 10;
     public static final int lowShooterCanId = 5;
     public static final int highShooterCanId = 6;
+    public static final int beamNoteDetectorChannel = 1;
     public static final int servoChannel = 2;
+    public static final int firstBeamBreakChannel = 3;
     public static final int thirdIntakeWheelsCanid = 11;
     public static final double servoCloseAngle = 0;
     public static final double servoOpenAngle = 180;
@@ -92,7 +94,7 @@ public final class Constants {
     public static final double driveGearRatio = 6.67;
     public static final double steerGearRatio = 1.2;
     public static final double wheelDiameter = Units.inchesToMeters(4);
-    public static final double driveSlewTimeInSecond = 0.1;
+    public static final double driveSlewTimeInSecond = 0.06;
     public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
     public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
@@ -100,7 +102,8 @@ public final class Constants {
     public static final int shooterMotorCurrentLimit = 60;
     public static final int intakeMotorCurrentLimit = 50;
     public static final int indexerMotorCurrentLimit = 40;
-    public static final boolean useServoEnabled = true;
+
+    public static final boolean useServoEnabled = false;
     //Random numberdecided make actually number that the angle velo max actually is. 
 /*
     // Practice Robot
@@ -129,9 +132,9 @@ public final class Constants {
     public static final double lowRpmIdle = 0;
     public static final double shooterVoltageCompensation = 10;
     public static final double climberSpeed = 0.8;
-    public static double thridIntakeSpeed = 0.3;
-    public static int leftLimitSwitchChannel;
-    public static int rightLimitSwitchChannel;
+    public static double thridIntakeSpeed = 0.8;
+    public static int leftLimitSwitchChannel = 4;
+    public static int rightLimitSwitchChannel = 5;
   
   }
 

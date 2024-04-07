@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ThirdIntakeCommand;
 import frc.robot.commands.auto.Intake.AutoIntakeEnd;
 import frc.robot.subsystems.Intake;
 
@@ -25,7 +27,8 @@ public class SemiAutoFactory {
 
 
     public Command autoPickupNote(){
-        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake), new IntakeCommand(robot.intake,.8));
+        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake),
+             new IntakeCommand(robot.intake,.8), new ThirdIntakeCommand(robot.thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
         return group;
     }
 

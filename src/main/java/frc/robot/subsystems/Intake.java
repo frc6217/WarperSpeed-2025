@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.sensors.HopperBeamBreak;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
@@ -41,22 +42,25 @@ public class Intake extends SubsystemBase {
     //pulse distance sesnor
   //Counter noteDetector = new Counter(Counter.Mode.kSemiperiod);
 
-  DigitalInput beamNoteDetector =  new DigitalInput(1);
-  boolean hasNote = true;
+
 
   //CANdle candle = new CANdle(Constants.RobotConstants.candleCanId, "CTRSwerve");
   int numLeds = 168;
 
   AllianceSelector allianceSelector;
+  HopperBeamBreak beamNoteDetector;
+
+  boolean hasNote = true;
   
-  public Intake(SwerveDrivetrain drivetrain) {
+  public Intake(SwerveDrivetrain drivetrain, HopperBeamBreak beamNoteDetector) {
     // noteDetector.setUpSource(1);
     // noteDetector.setSemiPeriodMode(true);
 
-    SmartDashboard.putNumber("intake1speed", .2);
-    SmartDashboard.putNumber("intake2speed", .3);
+    // SmartDashboard.putNumber("intake1speed", .2);
+    // SmartDashboard.putNumber("intake2speed", .3);
 
     this.allianceSelector = drivetrain.allianceSelector;
+    this.beamNoteDetector = beamNoteDetector;
 
     
 
@@ -76,7 +80,7 @@ public class Intake extends SubsystemBase {
     // SmartDashboard.putBoolean("dectector3: ", haveNote());
     // SmartDashboard.putNumber("whatever", noteDetector.getPeriod());
     // // This method will be called once per scheduler run
-    hasNote = !beamNoteDetector.get();
+    hasNote = beamNoteDetector.get();
 
     if(hasNote){
       ledRainbow();
