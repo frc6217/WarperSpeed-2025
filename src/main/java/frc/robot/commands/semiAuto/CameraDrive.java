@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.commands.semiAuto.SemiAutoParameters.TARGET;
+import frc.robot.sensors.FirstBeamBreak;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.SwerveDrivetrain;
@@ -27,6 +28,7 @@ public class CameraDrive extends Command {
   PIDController translationPidController;
   PIDController rotationPidController;
   PIDController strafePidController;
+  FirstBeamBreak firstBeamBreak;
 
   DoubleSupplier translationErrorSupplier;
   DoubleSupplier rotationErrorSupplier;
@@ -35,11 +37,12 @@ public class CameraDrive extends Command {
   Debouncer debouncer = new Debouncer(0.2);
 
   /** Creates a new CameraDrive. */
-  public CameraDrive(SwerveDrivetrain drivetrain, LimeLightSub ll, SemiAutoParameters parameters, Intake intake) {
+  public CameraDrive(SwerveDrivetrain drivetrain, LimeLightSub ll, SemiAutoParameters parameters, Intake intake, FirstBeamBreak firstBeamBreak) {
     this.drivetrain = drivetrain;
     this.ll = ll;
     this.intake = intake;
     this.parameters = parameters;
+    this.firstBeamBreak = firstBeamBreak;
     addRequirements(drivetrain);
     translationPidController =  new PIDController(parameters.translationPID.P, parameters.translationPID.I, parameters.translationPID.D);
     rotationPidController =  new PIDController(parameters.rotationPID.P, parameters.rotationPID.I, parameters.rotationPID.D);
@@ -153,7 +156,7 @@ public class CameraDrive extends Command {
   public boolean isFinished() {
     SmartDashboard.putString("cameraDriveState", "isFinished");
     if(parameters.target == TARGET.NOTE){
-      return debouncer.calculate(intake.haveNote());
+      return firstBeamBreak.getDebouncedBeamBreak();
     }
     return translationPidController.atSetpoint() && rotationPidController.atSetpoint() && strafePidController.atSetpoint();
   }

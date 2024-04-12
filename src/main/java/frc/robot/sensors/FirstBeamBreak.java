@@ -4,16 +4,29 @@
 
 package frc.robot.sensors;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 
 /** Add your docs here. */
-public class FirstBeamBreak {
+public class FirstBeamBreak extends SubsystemBase{
     // Digital input (constants)
     DigitalInput firstBeamBreak = new DigitalInput(RobotConstants.firstBeamBreakChannel);
+    Debouncer debouncer = new Debouncer(RobotConstants.intakeDebounceTime);
+    boolean debouncedBeamBreak = false;
 
     public boolean get() {
         return !firstBeamBreak.get();
-        //return the 'get' from dio
     }
+
+    @Override
+    public void periodic() { 
+    debouncedBeamBreak = debouncer.calculate(get());
+    }
+
+    public boolean getDebouncedBeamBreak() {
+        return debouncedBeamBreak;
+    }
+
 }

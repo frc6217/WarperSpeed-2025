@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,7 +68,7 @@ public class Intake extends SubsystemBase {
     this.ledrgbFade();
 
     firstIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
-    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit-10);
+    secondIntake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
     fourthInTake.setSmartCurrentLimit(RobotConstants.intakeMotorCurrentLimit);
 
     firstIntake.setIdleMode(IdleMode.kCoast);

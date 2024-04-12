@@ -91,8 +91,8 @@ public class RobotContainer {
 
 
 
-  public CameraDrive autoCameraDriveToNoteCommand = new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note, intake);
-  public IntakeCommand autoIntakeCommand = new IntakeCommand(intake, 0.8);
+  public CameraDrive autoCameraDriveToNoteCommand = new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note, intake, this.firstBeamBreak);
+  //public IntakeCommand autoIntakeCommand = new IntakeCommand(intake, 0.8);
   public Command autoFindNoteClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1);
   public Command autoFindNoteCounterClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1);
 
@@ -116,7 +116,7 @@ public class RobotContainer {
     // path planner named commands
     NamedCommands.registerCommand("autoCameraDriveToNote", autoCameraDriveToNoteCommand);
     NamedCommands.registerCommand("autoShot", autoCommandFactory.doAutoShot());
-    NamedCommands.registerCommand("autoIntake", autoIntakeCommand);
+    NamedCommands.registerCommand("autoIntake", runIntakeUntilNote());
     NamedCommands.registerCommand("autoFindNoteClockWise", autoFindNoteClockWiseCommand);
     NamedCommands.registerCommand("autoFindNoteCounterClockWise", autoFindNoteCounterClockWiseCommand);
 
@@ -137,10 +137,7 @@ public class RobotContainer {
     boolean isLeftPulled = (m_gameOperatorController.getHID().getLeftTriggerAxis()> .6 );
     boolean isRightPulled = (m_gameOperatorController.getHID().getRightTriggerAxis() > .6);
 
-    System.out.println("state: left: " + isLeftPulled + " right: " + isRightPulled);
-
     if ((isLeftPulled && isRightPulled) || (!isLeftPulled && !isRightPulled)) {
-      System.out.println("run both");
       return  CommandSelector.BOTH;
     }
     if (isLeftPulled) {
@@ -149,8 +146,6 @@ public class RobotContainer {
     if (isRightPulled) {
       return CommandSelector.RIGHT;
     }
-
-      System.out.println("are we here?");
     return CommandSelector.BOTH;
   }
 
@@ -250,11 +245,11 @@ public class RobotContainer {
     reduceSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     increaseSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
 
-    testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake).andThen(autoCommandFactory.doAutoShot()));
+    testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak).andThen(autoCommandFactory.doAutoShot()));
     
   }
   public Command getTestAuto(){
-    Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake);
+    Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak);
    // command.andThen(autoCommandFactory.doAutoShot());
     return command;
   }
@@ -284,4 +279,12 @@ public class RobotContainer {
     ParallelCommandGroup commandGroup = new ParallelCommandGroup(new IntakeCommand(intake,-.5), new ThirdIntakeCommand(thirdIntakeWheels, -RobotConstants.thridIntakeSpeed));
     return commandGroup;
   }
+  public Command runIntakeUntilNote() {
+    //example
+    Command c = new ParallelCommandGroup(new IntakeCommand(intake,.8), new ThirdIntakeCommand(thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
+    c.until(hopperBeamBreak::getDebouncedBeamBreak);// beambreak
+    return c;
+
+  }
 }
+

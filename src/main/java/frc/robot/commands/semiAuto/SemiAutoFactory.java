@@ -15,6 +15,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ThirdIntakeCommand;
 import frc.robot.commands.auto.Intake.AutoIntakeEnd;
+import frc.robot.sensors.FirstBeamBreak;
 import frc.robot.subsystems.Intake;
 
 /** Add your docs here. */
@@ -27,18 +28,18 @@ public class SemiAutoFactory {
 
 
     public Command autoPickupNote(){
-        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake),
+        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake, robot.firstBeamBreak),
              new IntakeCommand(robot.intake,.8), new ThirdIntakeCommand(robot.thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
         return group;
     }
 
      public ParallelDeadlineGroup speakerGoTo(){
-        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.shooterLimeLight, Constants.SemiAutoConstants.speaker, robot.intake));
+        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.shooterLimeLight, Constants.SemiAutoConstants.speaker, robot.intake, robot.firstBeamBreak));
         return group;
     }
 
     public Command autoPickupUntilSignal(){
-        ParallelRaceGroup group = new ParallelRaceGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake), new IntakeCommand(robot.intake,.8));
+        ParallelRaceGroup group = new ParallelRaceGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake, robot.firstBeamBreak), new IntakeCommand(robot.intake,.8));
         group.until(robot.intake::haveNote);
         return group;
     }

@@ -28,6 +28,9 @@ public class Climber extends SubsystemBase {
   DigitalInput rightLimitSwitch = new DigitalInput(RobotConstants.rightLimitSwitchChannel);
   
 
+  //create a boolean (flag) called overrideLimitSwitch (defaults false)
+  private boolean limitSwitchOverride = false;
+
   public Climber() {  
   
     leftClimber.restoreFactoryDefaults();
@@ -52,7 +55,16 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+
+    //if override is NOT disabled do this:
+    if(leftLimitSwitch.get() == true){
+      leftClimber.getEncoder().setPosition(0);
+      leftClimber.set(0);
+    }
+    if(rightLimitSwitch.get() == true){
+      rightClimber.getEncoder().setPosition(0);
+      rightClimber.set(0);
+    }
   }
 
   public double getLeftEncoderValue() {
@@ -110,5 +122,34 @@ public class Climber extends SubsystemBase {
     } else {
       rightClimber.set(speed);
     }
+  }
+
+  public void enableLimitSwitchOverride()  {
+    //set a boolean (flag)
+    limitSwitchOverride = true;
+
+    //leftClimber.setSoftLimit(SoftLimitDirection.kReverse, -1000000) // 
+    leftClimber.setSoftLimit(SoftLimitDirection.kReverse, -1000000);
+    rightClimber.setSoftLimit(SoftLimitDirection.kReverse, -1000000);
+  }
+
+  public void disableLimitSwitchOverride() {
+    //clear a boolean (flag)
+    limitSwitchOverride = false;
+    // set softlimit reverse 0
+    leftClimber.setSoftLimit(SoftLimitDirection.kReverse, 0);
+    rightClimber.setSoftLimit(SoftLimitDirection.kReverse, 0);
+  }
+
+  // same for right
+
+
+  public boolean isLeftLimitPressed() {
+    return leftLimitSwitch.get();
+    // return true if limit is pressed
+  }
+  // same for right
+  public boolean isRightLimitPressed() {
+    return rightLimitSwitch.get();
   }
 }

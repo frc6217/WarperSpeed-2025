@@ -135,6 +135,7 @@ public final class Constants {
     public static double thridIntakeSpeed = 0.8;
     public static int leftLimitSwitchChannel = 4;
     public static int rightLimitSwitchChannel = 5;
+    public static double intakeDebounceTime = 1;
   
   }
 
