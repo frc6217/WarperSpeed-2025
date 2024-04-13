@@ -4,9 +4,11 @@
 
 package frc.robot.commands.auto.Shooter;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.Shooter;
 
@@ -15,6 +17,10 @@ public class AutoShootStart extends Command {
 
  PIDShooter shooter;
  Timer timeout = new Timer();
+
+ // add new debounce
+ Debouncer debouncer = new Debouncer(RobotConstants.autoShotDebounceTime);
+ boolean debounceIsReady = false;
 
   public AutoShootStart(PIDShooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,11 +33,15 @@ public class AutoShootStart extends Command {
   public void initialize() {
     shooter.prepareForSpeaker();
     timeout.restart();
+    debounceIsReady = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // calculate debounce (using isReady)
+    debounceIsReady = debouncer.calculate(shooter.isReady());
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -40,6 +50,7 @@ public class AutoShootStart extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.isReady() || timeout.advanceIfElapsed(.5);
+    // use debounced output here
+    return debounceIsReady || timeout.advanceIfElapsed(.5);
   }
 }
