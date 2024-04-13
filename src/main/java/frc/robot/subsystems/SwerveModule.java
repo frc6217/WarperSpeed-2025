@@ -166,7 +166,7 @@ public class SwerveModule extends SubsystemBase{
   private void setSpeed(SwerveModuleState state){
     driveSetpoint = state.speedMetersPerSecond/RobotConstants.driveMaxVelo;
     //SmartDashboard.putNumber(name+" Drive Setpoint ", driveSetpoint);
-    if(Math.abs(driveSetpoint) > .03){
+    if(Math.abs(driveSetpoint) > .001){
      //System.out.println(name  + ": " + MathUtil.clamp(driveSetpoint, -1, 1));
      driveSetpoint = slewRate.calculate(driveSetpoint);
       driveMotor.set(MathUtil.clamp(driveSetpoint, -1, 1));

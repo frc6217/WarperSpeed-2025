@@ -53,9 +53,9 @@ public final class Constants {
 
     public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
 
-    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.023, 0, 0, 13.01, 2);
+    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.02, 0, 0, 13.01, 2);
     public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0001, 0, 0, 88.2, 4);
-    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.0175, 0.001, 0, 0.2, 1.5);
+    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.016, 0.001, 0, 0.2, 1.5);
 
     public static final SemiAutoParameters speaker = new SemiAutoParameters(TARGET.SPEAKER, translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, -1);
 
@@ -98,9 +98,9 @@ public final class Constants {
     public static final double wheelDiameter = Units.inchesToMeters(4);
     public static final double driveSlewTimeInSecond = 0.06;
     public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
-    public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
+    public static final double rotationMaxAngleVelo = 1.5*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
-    public static final int driveMotorCurrentLimit = 50;
+    public static final int driveMotorCurrentLimit = 45;
     public static final int shooterMotorCurrentLimit = 60;
     public static final int intakeMotorCurrentLimit = 50;
     public static final int indexerMotorCurrentLimit = 40;
