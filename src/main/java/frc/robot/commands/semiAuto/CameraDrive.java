@@ -57,6 +57,21 @@ public class CameraDrive extends Command {
 
     strafePidController.setTolerance(parameters.strafePID.tolerance);
     strafePidController.setSetpoint(parameters.strafePID.setPoint);
+
+    SmartDashboard.putNumber("CameraDrive P Translation", parameters.translationPID.P);
+    SmartDashboard.putNumber("CameraDrive Tralation Setpoint", parameters.translationPID.setPoint);
+    SmartDashboard.putNumber("CameraDrive I Translation", parameters.translationPID.I);
+    SmartDashboard.putNumber("CameraDrive D Translation", parameters.translationPID.D);
+    
+    SmartDashboard.putNumber("CameraDrive P rotation", parameters.rotationPID.P);
+    SmartDashboard.putNumber("CameraDrive Rotation Setpoint", parameters.rotationPID.setPoint);
+    SmartDashboard.putNumber("CameraDrive I rotation", parameters.rotationPID.I);
+    SmartDashboard.putNumber("CameraDrive D rotation", parameters.rotationPID.D);
+
+    SmartDashboard.putNumber("CameraDrive P strafe", parameters.strafePID.P);
+    SmartDashboard.putNumber("CameraDrive Strafe Setpoint", parameters.strafePID.setPoint);
+    SmartDashboard.putNumber("CameraDrive I strafe", parameters.strafePID.I);
+    SmartDashboard.putNumber("CameraDrive D strafe", parameters.translationPID.D);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -121,7 +136,23 @@ public class CameraDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-        SmartDashboard.putString("cameraDriveState", "init");
+
+    //
+    parameters.translationPID.P = SmartDashboard.getNumber("CameraDrive P Translation", parameters.translationPID.P);
+    parameters.translationPID.setPoint = SmartDashboard.getNumber("CameraDrive Tralation Setpoint", parameters.translationPID.setPoint);
+    parameters.translationPID.I = SmartDashboard.getNumber("CameraDrive I Translation", parameters.translationPID.I);
+    parameters.translationPID.D = SmartDashboard.getNumber("CameraDrive D Translation", parameters.translationPID.D);
+    
+    parameters.rotationPID.P = SmartDashboard.getNumber("CameraDrive P rotation", parameters.rotationPID.P);
+    parameters.rotationPID.setPoint = SmartDashboard.getNumber("CameraDrive Rotation Setpoint", parameters.rotationPID.setPoint);
+    parameters.rotationPID.I = SmartDashboard.getNumber("CameraDrive I rotation", parameters.rotationPID.I);
+    parameters.rotationPID.D = SmartDashboard.getNumber("CameraDrive D rotation", parameters.rotationPID.D);
+
+    parameters.strafePID.P = SmartDashboard.getNumber("CameraDrive P strafe", parameters.strafePID.P);
+    parameters.strafePID.setPoint = SmartDashboard.getNumber("CameraDrive Strafe Setpoint", parameters.strafePID.setPoint);
+    parameters.strafePID.I = SmartDashboard.getNumber("CameraDrive I strafe", parameters.strafePID.I);
+    parameters.strafePID.D = SmartDashboard.getNumber("CameraDrive D strafe", parameters.translationPID.D);
+        
 
     if (ll.isValid()) {
 
@@ -133,7 +164,6 @@ public class CameraDrive extends Command {
        
       
       double strafeAmount = strafePidController.calculate(strafeErrorsSupplier.getAsDouble());//todo test strafe vs rotation for X
-      SmartDashboard.putNumber("SOMETHING", strafeAmount);
       strafeAmount = MathUtil.clamp(strafeAmount, -.5, .5); //todo move constants
 
       drivetrain.relativeDrive(new Translation2d(-translationAmount, strafeAmount*parameters.direction).times(Constants.RobotConstants.driveMaxVelo), rotationAmount*Constants.RobotConstants.rotationMaxAngleVelo);
@@ -146,7 +176,6 @@ public class CameraDrive extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-        SmartDashboard.putString("cameraDriveState", "end");
 
     drivetrain.stop();
   }
@@ -154,7 +183,6 @@ public class CameraDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    SmartDashboard.putString("cameraDriveState", "isFinished");
     if(parameters.target == TARGET.NOTE){
       return firstBeamBreak.getDebouncedBeamBreak();
     }
