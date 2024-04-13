@@ -96,7 +96,7 @@ public final class Constants {
     public static final double driveGearRatio = 6.67;
     public static final double steerGearRatio = 1.2;
     public static final double wheelDiameter = Units.inchesToMeters(4);
-    public static final double driveSlewTimeInSecond = 0.06;
+    public static final double driveSlewTimeInSecond = 0.04;
     public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
     public static final double rotationMaxAngleVelo = 2*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
@@ -137,7 +137,8 @@ public final class Constants {
     public static double thridIntakeSpeed = 0.8; 
     public static int leftLimitSwitchChannel = 9;
     public static int rightLimitSwitchChannel = 8;
-    public static double intakeDebounceTime = 1;
+    public static double intakeDebounceTime = .05;
+    public static double intakeHopperDebounceTime = 1;
   
   }
 

@@ -261,10 +261,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path"); //todo change to do multiple auto
-    return AutoBuilder.followPath(path);
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path"); //todo change to do multiple auto
+    // return AutoBuilder.followPath(path);
     // An example command will be run in autonomous
-  //return  autoCommandFactory.getAutoCommand();
+  return  autoCommandFactory.getAutoCommand();
   }
 
   public AutoCommandFactory getAutoCommandFactory() {

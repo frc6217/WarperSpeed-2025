@@ -13,7 +13,7 @@ import frc.robot.Constants.RobotConstants;
 
 public class HopperBeamBreak extends SubsystemBase{
     DigitalInput beamNoteDetector =  new DigitalInput(RobotConstants.beamNoteDetectorChannel);
-    Debouncer debouncer = new Debouncer(RobotConstants.intakeDebounceTime);
+    Debouncer debouncer = new Debouncer(RobotConstants.intakeHopperDebounceTime);
     boolean debouncedBeamBreak = false;
 
 
