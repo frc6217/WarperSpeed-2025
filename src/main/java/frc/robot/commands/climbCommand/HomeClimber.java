@@ -42,6 +42,8 @@ public class HomeClimber extends Command {
   public void end(boolean interrupted) {
     // shut off both climbers
     climber.disableLimitSwitchOverride();
+    climber.setLeftClimberSpeed(0);
+    climber.setRightClimberSpeed(0);
   }
 
   // Returns true when the command should end.

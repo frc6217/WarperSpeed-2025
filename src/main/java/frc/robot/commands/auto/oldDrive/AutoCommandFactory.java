@@ -172,7 +172,7 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup doAutoShot(){
       SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-      pCommandGroup.addCommands(new AutoShootStart(shooter).andThen(Commands.waitSeconds(.2)).andThen(Commands.runOnce(indexer::shoot, intake)).andThen(Commands.waitSeconds(.4)));
+      pCommandGroup.addCommands(new AutoShootStart(shooter).andThen(Commands.runOnce(indexer::shoot, intake)).andThen(Commands.waitSeconds(.4)));
       // pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.7), new AutoShootStart(shooter), Commands.runOnce(indexer::shoot, indexer)));
       pCommandGroup.addCommands(new AutoShootEnd(shooter));
       return pCommandGroup;

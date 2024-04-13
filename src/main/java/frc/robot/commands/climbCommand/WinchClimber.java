@@ -6,14 +6,17 @@ package frc.robot.commands.climbCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.ClimberSelector;
 
 public class WinchClimber extends Command {
   /** Creates a new WinchClimber. */
   
   Climber climber;
+  ClimberSelector selection;
   
-  public WinchClimber(Climber climber) {
+  public WinchClimber(Climber climber, ClimberSelector selection) {
     this.climber = climber;
+    this.selection = selection;
     addRequirements(climber);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,9 +28,21 @@ public class WinchClimber extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.winchLeftClimber();
-    climber.winchRightClimber();
-
+   
+    switch (selection) {
+      case LEFT:
+        climber.winchLeftClimber();
+        break;
+      case RIGHT:
+        climber.winchRightClimber();
+        break;
+      case BOTH:
+        climber.winchRightClimber();
+        climber.winchLeftClimber(); 
+        break;
+      default:
+        break;
+    }
   }
 
   // Called once the command ends or is interrupted.

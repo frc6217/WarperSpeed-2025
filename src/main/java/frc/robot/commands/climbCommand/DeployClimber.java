@@ -6,14 +6,17 @@ package frc.robot.commands.climbCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.ClimberSelector;
 
 public class DeployClimber extends Command {
   /** Creates a new DeployClimber. */
 
   Climber climber;
+  ClimberSelector selection;
   
-  public DeployClimber(Climber climber) {
+  public DeployClimber(Climber climber, ClimberSelector selection) {
     this.climber = climber;
+    this.selection = selection;
     addRequirements(climber);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,8 +28,23 @@ public class DeployClimber extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.deployLeftClimber();
-    climber.deployRightClimber();
+
+    switch (selection) {
+      case LEFT:
+        climber.deployLeftClimber();
+        break;
+      case RIGHT:
+        climber.deployRightClimber();
+        break;
+      case BOTH:
+        climber.deployRightClimber();
+        climber.deployLeftClimber(); 
+        break;
+      default:
+        break;
+    }
+    
+
 
   }
 

@@ -4,7 +4,9 @@
 
 package frc.robot.commands.auto;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.LimeLightSub;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -18,6 +20,7 @@ public class CameraFindNote extends Command {
     this.ll = ll;
     this.drivetrain = drivetrain;
     this.direction = direction;
+    addRequirements(drivetrain);
     
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -30,7 +33,7 @@ public class CameraFindNote extends Command {
   @Override
   public void execute() {
     // rotate robot
-    drivetrain.drive(null, 0.3* direction);
+    drivetrain.drive(new Translation2d(0, 0), 0.1* direction *Constants.RobotConstants.rotationMaxAngleVelo);
   }
 
   // Called once the command ends or is interrupted.

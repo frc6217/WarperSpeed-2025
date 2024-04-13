@@ -53,7 +53,7 @@ public final class Constants {
 
     public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
 
-    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.025, 0, 0, 13.01, 2);
+    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.023, 0, 0, 13.01, 2);
     public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0001, 0, 0, 88.2, 4);
     public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.0175, 0.001, 0, 0.2, 1.5);
 
@@ -66,7 +66,7 @@ public final class Constants {
     public static final SemiAutoParameters amp = new SemiAutoParameters(TARGET.AMP, translationPIDAmp, rotationPIDAmp, strafePIDAmp, 1);
 
 
-    public static final ShooterSetPoints speakerSetPoints = new ShooterSetPoints(-4920,-4580);
+    public static final ShooterSetPoints speakerSetPoints = new ShooterSetPoints(-4662,-4417);
     public static final ShooterSetPoints ampSetPoints = new ShooterSetPoints(-450,-900);
     public static final ShooterSetPoints trapSetPoints = new ShooterSetPoints(0,0);
     public static final ShooterSetPoints sourceSetPoints = new ShooterSetPoints(0,0);
@@ -87,6 +87,8 @@ public final class Constants {
     public static final int servoChannel = 2;
     public static final int firstBeamBreakChannel = 3;
     public static final int thirdIntakeWheelsCanid = 11;
+    public static final int leftClimberCanId = 41;
+    public static final int rightClimberCanId = 42;
     public static final double servoCloseAngle = 0;
     public static final double servoOpenAngle = 180;
     public static final double trackWidth = Units.inchesToMeters(24.5);
@@ -132,9 +134,9 @@ public final class Constants {
     public static final double lowRpmIdle = 0;
     public static final double shooterVoltageCompensation = 10;
     public static final double climberSpeed = 0.8;
-    public static double thridIntakeSpeed = 0.8;
-    public static int leftLimitSwitchChannel = 4;
-    public static int rightLimitSwitchChannel = 5;
+    public static double thridIntakeSpeed = 0.8; 
+    public static int leftLimitSwitchChannel = 9;
+    public static int rightLimitSwitchChannel = 8;
     public static double intakeDebounceTime = 1;
   
   }

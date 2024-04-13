@@ -21,6 +21,7 @@ import frc.robot.commands.auto.oldDrive.DriveXfeetYfeetDiseredDegreeAngle;
 import frc.robot.commands.auto.oldDrive.RelativeDiseredDriveNoPID;
 import frc.robot.commands.climbCommand.ClimberSetSpeedCommand;
 import frc.robot.commands.climbCommand.DeployClimber;
+import frc.robot.commands.climbCommand.HomeClimber;
 import frc.robot.commands.climbCommand.WinchClimber;
 import frc.robot.commands.semiAuto.CameraDrive;
 import frc.robot.commands.semiAuto.SemiAutoFactory;
@@ -39,6 +40,7 @@ import frc.robot.subsystems.ServoTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.ThirdIntakeWheels;
+import frc.robot.subsystems.Climber.ClimberSelector;
 
 import java.util.Map;
 
@@ -123,13 +125,9 @@ public class RobotContainer {
 
   }
 
-  private enum CommandSelector {
-    BOTH,
-    LEFT,
-    RIGHT
-  };
 
-  private CommandSelector selectClimberCommand() {
+
+  private ClimberSelector selectClimberCommand() {
 
     //boolean isLeftPulled = m_gameOperatorController.axisGreaterThan(2, .6).getAsBoolean();
     //boolean isRightPulled = m_gameOperatorController.axisGreaterThan(3, 0.6).getAsBoolean();
@@ -138,15 +136,15 @@ public class RobotContainer {
     boolean isRightPulled = (m_gameOperatorController.getHID().getRightTriggerAxis() > .6);
 
     if ((isLeftPulled && isRightPulled) || (!isLeftPulled && !isRightPulled)) {
-      return  CommandSelector.BOTH;
+      return  ClimberSelector.BOTH;
     }
     if (isLeftPulled) {
-      return CommandSelector.LEFT;
+      return ClimberSelector.LEFT;
     }
     if (isRightPulled) {
-      return CommandSelector.RIGHT;
+      return ClimberSelector.RIGHT;
     }
-    return CommandSelector.BOTH;
+    return ClimberSelector.BOTH;
   }
 
   /*
@@ -188,7 +186,7 @@ public class RobotContainer {
     Trigger reduceSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
     Trigger increaseSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
 
-    Trigger unused0 = gameOpX;
+    Trigger homeClimber = gameOpX;
     Trigger unused1 = gameOpPOVRight;
     Trigger unused2 = gameOpleftTrigger;
     Trigger testSemiAutoShot = driverY;
@@ -214,22 +212,23 @@ public class RobotContainer {
     ampShooter.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
     tuneShooter.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
     speakerShooter.or(ampShooter).or(tuneShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
-    shootButton.debounce(.1).and(speakerShooter.or(ampShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
+    shootButton.debounce(.1).and(speakerShooter.or(ampShooter).or(tuneShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
+    homeClimber.whileTrue(new HomeClimber(climber));
 
     climberDown.whileTrue( 
         new SelectCommand<>(
           Map.ofEntries(
-            Map.entry(CommandSelector.BOTH, new WinchClimber(climber)),
-            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, RobotConstants.climberSpeed, 0)),
-            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, RobotConstants.climberSpeed))),
+            Map.entry(ClimberSelector.BOTH, new WinchClimber(climber, ClimberSelector.BOTH)),
+            Map.entry(ClimberSelector.LEFT, new WinchClimber(climber, ClimberSelector.LEFT)),
+            Map.entry(ClimberSelector.RIGHT, new WinchClimber(climber, ClimberSelector.RIGHT))),
             this::selectClimberCommand));
 
     climberUp.whileTrue( 
         new SelectCommand<>(
           Map.ofEntries(
-            Map.entry(CommandSelector.BOTH, new DeployClimber(climber)),
-            Map.entry(CommandSelector.LEFT, new ClimberSetSpeedCommand(climber, -RobotConstants.climberSpeed, 0)),
-            Map.entry(CommandSelector.RIGHT, new ClimberSetSpeedCommand(climber, 0, -RobotConstants.climberSpeed))),
+            Map.entry(ClimberSelector.BOTH, new DeployClimber(climber, ClimberSelector.BOTH)),
+            Map.entry(ClimberSelector.LEFT, new DeployClimber(climber, ClimberSelector.LEFT)),
+            Map.entry(ClimberSelector.RIGHT, new DeployClimber(climber, ClimberSelector.RIGHT))),
             this::selectClimberCommand));
 
    
@@ -245,8 +244,10 @@ public class RobotContainer {
     reduceSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     increaseSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
 
-    testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak).andThen(autoCommandFactory.doAutoShot()));
-    
+    testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak).
+                                andThen(autoCommandFactory.doAutoShot())
+                                .andThen(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1)).andThen(semiAutoFactory.autoPickupNote()));
+    //testSemiAutoShot.whileTrue(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1));
   }
   public Command getTestAuto(){
     Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak);
