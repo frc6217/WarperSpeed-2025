@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8675571881058293,
-        "y": 5.55472336015897
+        "x": 2.430151368616278,
+        "y": 4.143647242163843
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9993498950833093,
-        "y": 5.55472336015897
+        "x": 1.7476682934363506,
+        "y": 4.358141922934678
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Stage Note"
     },
     {
       "anchor": {
-        "x": 1.4649253051475237,
-        "y": 5.55472336015897
+        "x": 1.4161765140632432,
+        "y": 5.5086133925236975
       },
       "prevControl": {
-        "x": 2.2741552371465805,
-        "y": 5.547612425391122
+        "x": 1.6306711948340775,
+        "y": 5.147872338500022
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 0.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

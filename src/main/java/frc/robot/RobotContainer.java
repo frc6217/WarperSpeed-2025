@@ -47,6 +47,7 @@ import java.util.Map;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -57,6 +58,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -88,8 +90,8 @@ public class RobotContainer {
   public final PIDShooter shooter = new PIDShooter();
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
-  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 10);
-  public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 0);
+  public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 0);
+  public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 20);
 
 
 
@@ -101,7 +103,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     semiAutoFactory = new SemiAutoFactory(this);
-    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight, semiAutoFactory);
+    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight, semiAutoFactory, thirdIntakeWheels);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -121,6 +123,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("autoIntake", runIntakeUntilNote());
     NamedCommands.registerCommand("autoFindNoteClockWise", autoFindNoteClockWiseCommand);
     NamedCommands.registerCommand("autoFindNoteCounterClockWise", autoFindNoteCounterClockWiseCommand);
+    NamedCommands.registerCommand("autoSpeakerLineUp", new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak));
 
 
   }
@@ -244,10 +247,10 @@ public class RobotContainer {
     reduceSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::decrement, swerveDrivetrain));
     increaseSpeed.onTrue(Commands.runOnce(swerveDrivetrain.governor::increment, swerveDrivetrain));
 
-    testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak).
-                                andThen(autoCommandFactory.doAutoShot())
-                                .andThen(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1)).andThen(semiAutoFactory.autoPickupNote()));
-    //testSemiAutoShot.whileTrue(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1));
+    // testSemiAutoShot.whileTrue(new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak).
+    //                             andThen(autoCommandFactory.doAutoShot())
+    //                             .andThen(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1)).andThen(semiAutoFactory.autoPickupNote()));
+    // //testSemiAutoShot.whileTrue(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1));
   }
   public Command getTestAuto(){
     Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak);
@@ -261,8 +264,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path"); //todo change to do multiple auto
-    // return AutoBuilder.followPath(path);
+     //PathPlannerAuto auto = new PathPlannerAuto("StageNoteAuto");
+     //PathPlannerAuto auto = new PathPlannerAuto("New Auto");
+     //PathPlannerAuto auto = new PathPlannerAuto("OneNote");
+     //PathPlannerAuto auto = new PathPlannerAuto("Far Auto"); //todo change to do multiple auto
+     //return autoCommandFactory.AlwaysDo().andThen(auto);
     // An example command will be run in autonomous
   return  autoCommandFactory.getAutoCommand();
   }
@@ -282,10 +288,10 @@ public class RobotContainer {
   }
   public Command runIntakeUntilNote() {
     //example
-    Command c = new ParallelCommandGroup(new IntakeCommand(intake,.8), new ThirdIntakeCommand(thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
-    c.until(hopperBeamBreak::getDebouncedBeamBreak);// beambreak
+    Command c = new ParallelDeadlineGroup(new IntakeCommand(intake,.8).until(hopperBeamBreak::getDebouncedBeamBreak), new ThirdIntakeCommand(thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
+// beambreak
     return c;
-
   }
+
 }
 

@@ -45,7 +45,7 @@ public class Climber extends SubsystemBase {
     leftClimber.restoreFactoryDefaults();
     rightClimber.restoreFactoryDefaults();
     leftClimber.setInverted(true);
-    //rightClimber.setInverted(true);
+  //  rightClimber.setInverted(true);
 
     leftClimber.getEncoder().setPosition(0);
     rightClimber.getEncoder().setPosition(0);
@@ -65,10 +65,10 @@ public class Climber extends SubsystemBase {
     //rightClimber.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
 
     //leftClimber.setSoftLimit(SoftLimitDirection.kReverse, 0);
-    leftClimber.setSoftLimit(SoftLimitDirection.kForward, 146);
+    leftClimber.setSoftLimit(SoftLimitDirection.kForward, 140);
 
     //rightClimber.setSoftLimit(SoftLimitDirection.kReverse, 0);
-    rightClimber.setSoftLimit(SoftLimitDirection.kForward, 146);
+    rightClimber.setSoftLimit(SoftLimitDirection.kForward, 140);
 
   }
 
@@ -108,19 +108,19 @@ public class Climber extends SubsystemBase {
   }
 
   public void deployLeftClimber(){
-  setLeftClimberSpeedWithLimit(.4); 
+  setLeftClimberSpeedWithLimit(.5); 
   }
 
   public void deployRightClimber(){
-  setRightClimberSpeedWithLimit(.4); 
+  setRightClimberSpeedWithLimit(.5); 
   }
 
   public void winchLeftClimber(){
-    setLeftClimberSpeedWithLimit(-.4);
+    setLeftClimberSpeedWithLimit(-.5);
   }
 
   public void winchRightClimber(){
-    setRightClimberSpeedWithLimit(-.4);
+    setRightClimberSpeedWithLimit(-.5);
   }
 
   public void stopLeftClimber(){

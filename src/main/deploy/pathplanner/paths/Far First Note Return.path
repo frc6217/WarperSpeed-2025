@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8675571881058293,
-        "y": 5.55472336015897
+        "x": 7.72427008036914,
+        "y": 7.429315761244349
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9993498950833093,
-        "y": 5.55472336015897
+        "x": 6.105810216371029,
+        "y": 6.971077125052112
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "First Far Note"
     },
     {
       "anchor": {
-        "x": 1.4649253051475237,
-        "y": 5.55472336015897
+        "x": 2.888390004808514,
+        "y": 6.298343808089041
       },
       "prevControl": {
-        "x": 2.2741552371465805,
+        "x": 4.934936325964582,
+        "y": 6.365812368127151
+      },
+      "nextControl": {
+        "x": 2.0011620070746092,
+        "y": 6.269094533438474
+      },
+      "isLocked": false,
+      "linkedName": "Far MidPoint"
+    },
+    {
+      "anchor": {
+        "x": 1.4259262722800992,
         "y": 5.547612425391122
+      },
+      "prevControl": {
+        "x": 1.4356760304969531,
+        "y": 6.493338972426163
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot Middle"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,

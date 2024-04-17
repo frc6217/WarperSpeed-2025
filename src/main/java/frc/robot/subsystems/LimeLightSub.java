@@ -51,7 +51,7 @@ public class LimeLightSub extends SubsystemBase {
 
     this.name = name;
 
-    for(int port = 5800; port <= 5807; port++){
+    for(int port = 5800; port <= 5809; port++){
       PortForwarder.add(port+ portOffset, name + ".local", port);
     }
 
