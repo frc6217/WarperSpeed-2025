@@ -217,6 +217,7 @@ public class SwerveModule extends SubsystemBase{
   }
   public void syncEncoders() {
     steerEncoder.setPosition(absEncoder.getAngle().getRadians());
+    System.out.println("Did encoder sync");
   }
 
   @Override
