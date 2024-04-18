@@ -139,7 +139,7 @@ public final class Constants {
     public static int rightLimitSwitchChannel = 8;
     public static double intakeDebounceTime = .05;
     public static double intakeHopperDebounceTime = .5;
-    public static double autoShotDebounceTime = .1;
+    public static double autoShotDebounceTime = .2;
   
   }
 

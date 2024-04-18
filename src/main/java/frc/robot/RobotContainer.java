@@ -170,8 +170,17 @@ public class RobotContainer {
     Trigger gameOpPOVUp = m_gameOperatorController.povUp();
     Trigger gameOpPOVDown = m_gameOperatorController.povDown();
     Trigger gameOpPOVRight = m_gameOperatorController.povRight();
+    @SuppressWarnings("unused") // used in climber choice
     Trigger gameOpleftTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
-    Trigger gameOpRightTrigger = m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton);//m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
+     @SuppressWarnings("unused") //used in climber choice
+    Trigger gameOpRightTrigger = m_gameOperatorController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
+    Trigger gameOpBackLeft = m_gameOperatorController.button(Constants.OperatorConstants.kLeftBackButton);
+    Trigger gameOpBackRight = m_gameOperatorController.button(Constants.OperatorConstants.kRightBackButton);
+
+
+
+
+
     Trigger driverBackLeft = m_driverController.button(Constants.OperatorConstants.kLeftBackButton);
     Trigger driverBackRight = m_driverController.button(Constants.OperatorConstants.kRightBackButton);
     Trigger driverLeftBumper = m_driverController.leftBumper();
@@ -184,26 +193,24 @@ public class RobotContainer {
     Trigger driverToggleFieldOriented = driverY;
     Trigger resetDriverEncoder = driverBackRight;
     Trigger resetDriverGyro = driverBackLeft;
-    Trigger slowMode = m_driverController.leftBumper();
-    Trigger fastMode = m_driverController.rightBumper();
+    Trigger slowMode = driverLeftBumper;
+    Trigger fastMode = driverRightBumper;
     Trigger reduceSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
     Trigger increaseSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
 
     Trigger homeClimber = gameOpX;
     Trigger unused1 = gameOpPOVRight;
-    Trigger unused2 = gameOpleftTrigger;
-    Trigger testSemiAutoShot = driverY;
-    Trigger unused4 = driverRightBumper;
 
     // Operator mapping
     Trigger reverseIntake = gameOpB;
     Trigger intake = gameOpA;
     Trigger speakerShooter = gameOpLeftBumper;
     Trigger ampShooter = gameOpRightBumper;
-    Trigger tuneShooter = gameOpRightTrigger;
+    Trigger tuneShooter = gameOpBackLeft;
     Trigger shootButton = gameOpY;
     Trigger climberDown = gameOpPOVDown;
     Trigger climberUp = gameOpPOVUp;
+    Trigger testButton = gameOpBackRight;
 
     // todo add unused buttons for driver
 
@@ -217,6 +224,7 @@ public class RobotContainer {
     speakerShooter.or(ampShooter).or(tuneShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
     shootButton.debounce(.1).and(speakerShooter.or(ampShooter).or(tuneShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
     homeClimber.whileTrue(new HomeClimber(climber));
+    testButton.whileTrue(autoCommandFactory.doAutoShot());
 
     climberDown.whileTrue( 
         new SelectCommand<>(
