@@ -20,6 +20,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -41,10 +42,12 @@ public class SwerveModule extends SubsystemBase{
   double steerSetpoint = 0;
   IEncoder absEncoder;
   String name;
+  Timer syncTimer = new Timer();
   int operationOrderID;
   double absEncoderOffset;
   SlewRateLimiter slewRate = new SlewRateLimiter(1/RobotConstants.driveSlewTimeInSecond);
   public SwerveModule(Constants constants){
+    syncTimer.start();
     name = new String(constants.name);
 
     driveMotor = new CANSparkMax(constants.driveMotorID, MotorType.kBrushless);
@@ -212,9 +215,20 @@ public class SwerveModule extends SubsystemBase{
       steerMotor.setIdleMode(IdleMode.kCoast);
     }
   }
+  public void syncEncoders() {
+    steerEncoder.setPosition(absEncoder.getAngle().getRadians());
+  }
 
   @Override
   public void periodic() {
+    if(RobotConstants.autoSyncEncoder){
+      boolean isMoving = steerEncoder.getVelocity() > RobotConstants.syncThreshold;
+      boolean isSyncTime = syncTimer.hasElapsed(RobotConstants.autoSyncTimer);
+      if((!isMoving) && isSyncTime) {
+        syncEncoders();
+        syncTimer.restart();
+      }
+    }
 
     // if abs enc value and relative enc val is not within ~5% then log an error
    // if((absEncoder.getAngle().getRadians() - getSteerPosition())/getSteerPosition() >= 0.05) {

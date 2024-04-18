@@ -84,7 +84,7 @@ public class AutoCommandFactory {
         andThen(GoToNearRightNote()).andThen(doSimpleReturnHome()).andThen(doAutoShot()).andThen(DoEnd()));
 
         autoChooser.addOption("Right Start, One Shot, No Move", AlwaysDo().andThen(rightSideStart()).andThen(doAutoFirstShot()).andThen(DoEnd()));
-        autoChooser.addOption("Left Start, One Shot, No Move", AlwaysDo().andThen(rightSideStart()).andThen(doAutoFirstShot()).andThen(DoEnd()));
+        autoChooser.addOption("Left Start, One Shot, No Move", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(DoEnd()));
 
         autoChooser.addOption("Left Amp, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()).andThen(DoEnd()));
         autoChooser.addOption("Left Source, One Shot, leave to Left", AlwaysDo().andThen(leftSideStart()).andThen(doAutoFirstShot()).andThen(doSimpleBackUp()).andThen(DoEnd()));

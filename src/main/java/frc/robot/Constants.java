@@ -107,6 +107,9 @@ public final class Constants {
     public static final int indexerMotorCurrentLimit = 40;
 
     public static final boolean useServoEnabled = false;
+    public static final boolean autoSyncEncoder = true;
+    public static final int autoSyncTimer = 10;
+    public static final double syncThreshold = 1;
     //Random numberdecided make actually number that the angle velo max actually is. 
 /*
     // Practice Robot
