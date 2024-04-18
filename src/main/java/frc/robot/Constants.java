@@ -40,7 +40,7 @@ public final class Constants {
     public static final double sideSetupXdistance = -1.48;
     public static final double sideSetupYdistance = 2.5;
     public static final double sideSetupAngle = 60;
-    public static final double farNoteXdistance = 22.25;
+    public static final double farNoteXdistance = 20.25;
     public static final double farNoteYDistance = 15.25;
     public static final double farNote2YDistance = 10.25;
     public static final double sideRightSetupAngle = 300;
@@ -68,6 +68,7 @@ public final class Constants {
 
     public static final ShooterSetPoints speakerSetPoints = new ShooterSetPoints(-4662,-4417);
     public static final ShooterSetPoints ampSetPoints = new ShooterSetPoints(-450,-900);
+    public static final ShooterSetPoints passingSetPoints = new ShooterSetPoints(-7000, -5500);
     public static final ShooterSetPoints trapSetPoints = new ShooterSetPoints(0,0);
     public static final ShooterSetPoints sourceSetPoints = new ShooterSetPoints(0,0);
     public static final ShooterSetPoints idleSetPoints = new ShooterSetPoints(0,0);

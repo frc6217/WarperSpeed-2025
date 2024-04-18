@@ -26,6 +26,9 @@ public class Drive extends Command {
   Double governor;
   CommandJoystick cJoystick;
 
+  // add a boolean called isXMode (default false)
+  private boolean isXMode = false;
+
   public Drive(SwerveDrivetrain swerveDrivetrain, DoubleSupplier strafeSupplier, DoubleSupplier rotationSupplier, DoubleSupplier translationSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrivetrain);
@@ -53,8 +56,14 @@ public class Drive extends Command {
   public void execute() {
     //TODO add Deadband, add Govenor
     
- 
+    if(isXMode == true) {
+      //check joystick input
+      //if get whatever == 0 AND next == 0 AND 
+    }
     // Negative on the Angle
+    // if there is input from the joysticks (any of them) then drive
+    // if not then IF enable X mode is true, then go to X
+    // else do nothing
     swerveDrivetrain.drive(new Translation2d(getTranslation(), getStrafe()).times(swerveDrivetrain.governor.getGovernor()*Constants.RobotConstants.driveMaxVelo), getRotation()*(Constants.RobotConstants.rotationMaxAngleVelo*swerveDrivetrain.governor.getGovernor()));
     SmartDashboard.putNumber("Pigeon Angle", swerveDrivetrain.getAngle());
   }
@@ -98,4 +107,9 @@ public class Drive extends Command {
   private double getRotationRaw() {
     return getRotation();
   }
+
+  public void toggleXMode() {
+    isXMode = !isXMode;
+  }
+
 }

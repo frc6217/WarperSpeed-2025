@@ -29,7 +29,6 @@ public class VibrateController extends Command {
     driverController.getHID().setRumble(RumbleType.kBothRumble, rumble);
     timer.reset();
     timer.start();
-    System.out.println("stqat");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

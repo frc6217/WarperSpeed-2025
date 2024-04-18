@@ -216,11 +216,16 @@ public class SwerveModule extends SubsystemBase{
   @Override
   public void periodic() {
 
+    // if abs enc value and relative enc val is not within ~5% then log an error
+   // if((absEncoder.getAngle().getRadians() - getSteerPosition())/getSteerPosition() >= 0.05) {
+     // System.err.print("module:" + name + "is outside of 5%");
+  //  }
+
     // if we aren't adjusting steering AND some time passed (5sec maybe)
     // then get ABS enc value and set it to relative postion (with conversion?)
-    SmartDashboard.putNumber(name + " Wheel Angle (degree)", Math.round(Math.toDegrees(getSteerPosition())));
+   // SmartDashboard.putNumber(name + " Wheel Angle (degree)", Math.round(Math.toDegrees(getSteerPosition())));
     //SmartDashboard.putNumber(name + " Absolute Encoder", absEncoder.getAngle().getDegrees());
-    SmartDashboard.putNumber(name + " Absolute Encoder Raw Value: ", absEncoder.getRawValue());
+    //SmartDashboard.putNumber(name + " Absolute Encoder Raw Value: ", absEncoder.getRawValue());
     //SmartDashboard.putNumber(name + " Steer Setpoints", Math.toDegrees(steerSetpoint));
     
     //SmartDashboard.putNumber(name + "RPM of Motor", driveMotor.getEncoder().getVelocity());

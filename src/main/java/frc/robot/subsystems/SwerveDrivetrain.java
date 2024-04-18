@@ -213,7 +213,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Desired Y", desiredTranslation.getY());
     SmartDashboard.putNumber("Desired Rotation: (RPS)", desiredRotation);
     SmartDashboard.putNumber("cSpeeds Y", cSpeeds.vyMetersPerSecond);
-    SmartDashboard.putNumber("get Angle Pigeon: ", this.getAngle());
+    ///SmartDashboard.putNumber("get Angle Pigeon: ", this.getAngle());
     
     for(SwerveModule module : modules){
       module.setState(states[module.operationOrderID]);
@@ -244,7 +244,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     sOdometry.update(getGyroRotation2d(), getModulePositions());
-    SmartDashboard.putNumber("Gyro Angle", getGyroRotation2d().getDegrees());
+   // SmartDashboard.putNumber("Gyro Angle", getGyroRotation2d().getDegrees());
    // SmartDashboard.putNumber("Pigeon getYaw Value: ", getAngle());
     SmartDashboard.putNumber("Odometry pose X: ", Units.metersToFeet(sOdometry.getPoseMeters().getX()));
     SmartDashboard.putNumber("Odometry pose Y: ", Units.metersToFeet(sOdometry.getPoseMeters().getY()));

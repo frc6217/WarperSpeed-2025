@@ -25,7 +25,7 @@ public class PIDShooter extends SubsystemBase {
 
 
   ShooterSetPoints setPointsToUse = new ShooterSetPoints(0, 0);
-  ShooterSetPoints setPointsShooterTune = new ShooterSetPoints(RobotConstants.highRpmSpeaker, RobotConstants.lowRpmSpeaker);
+  ShooterSetPoints setPointsShooterTune = new ShooterSetPoints(-7000, -5500);
   public PIDShooter() {
     SmartDashboard.putNumber("lowShooter RPM", -4980);
     SmartDashboard.putNumber("highShooter RPM", -4570);
@@ -97,8 +97,8 @@ public class PIDShooter extends SubsystemBase {
 
 
   public boolean isReady() {
-    boolean isTopSpeedReady =  (Math.abs(topShooter.getEncoder().getVelocity() - setPointsToUse.topShooterSetPoint)/setPointsToUse.topShooterSetPoint) < .05;
-    boolean isLowSpeedReady =  (Math.abs(lowShooter.getEncoder().getVelocity() - setPointsToUse.bottomShooterSetPoint)/setPointsToUse.bottomShooterSetPoint) < .05;
+    boolean isTopSpeedReady =  Math.abs(topShooter.getEncoder().getVelocity()) > Math.abs((setPointsToUse.topShooterSetPoint - 150));
+    boolean isLowSpeedReady =   Math.abs(lowShooter.getEncoder().getVelocity()) > Math.abs((setPointsToUse.bottomShooterSetPoint - 150));
     return isLowSpeedReady && isTopSpeedReady;
   }
 
@@ -114,7 +114,11 @@ public class PIDShooter extends SubsystemBase {
     highPidController.setIAccum(0);
 
   }
-
+  public void prepareForPassing() {
+    setPointsToUse = SemiAutoConstants.passingSetPoints;
+    lowPidController.setIAccum(0);
+    highPidController.setIAccum(0);
+  }
   public void prepareForAmp() {
     setPointsToUse = SemiAutoConstants.ampSetPoints;
     lowPidController.setIAccum(0);

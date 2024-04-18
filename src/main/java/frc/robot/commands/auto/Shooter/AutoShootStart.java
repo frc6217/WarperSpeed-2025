@@ -51,6 +51,14 @@ public class AutoShootStart extends Command {
   @Override
   public boolean isFinished() {
     // use debounced output here
-    return debounceIsReady || timeout.advanceIfElapsed(.5);
+    
+    //make a boolean that is set to timeout advanceIfElpased
+    //if true, sys print "shooter timeout hit"
+    // OR in the boolean
+    boolean hitTimeOut = timeout.advanceIfElapsed(.5);
+    if(hitTimeOut){
+      System.out.println("shooter timeout hit");
+    }
+    return debounceIsReady || hitTimeOut;
   }
 }

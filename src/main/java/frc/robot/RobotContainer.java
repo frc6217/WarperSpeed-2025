@@ -97,13 +97,13 @@ public class RobotContainer {
 
   public CameraDrive autoCameraDriveToNoteCommand = new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note, intake, this.firstBeamBreak);
   //public IntakeCommand autoIntakeCommand = new IntakeCommand(intake, 0.8);
-  public Command autoFindNoteClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1);
-  public Command autoFindNoteCounterClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1);
+  public Command autoFindNoteClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1);
+  public Command autoFindNoteCounterClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1);
 
   public RobotContainer() {
     // Configure the trigger bindings
     semiAutoFactory = new SemiAutoFactory(this);
-    autoCommandFactory = new AutoCommandFactory(swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight, semiAutoFactory, thirdIntakeWheels);
+    autoCommandFactory = new AutoCommandFactory(this, swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight, semiAutoFactory, thirdIntakeWheels);
     configureBindings();
     SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -186,6 +186,7 @@ public class RobotContainer {
     Trigger driverLeftBumper = m_driverController.leftBumper();
     Trigger driverRightBumper = m_driverController.rightBumper();
     Trigger driverY = m_driverController.y();
+    Trigger driverOpPOVDown = m_driverController.povDown();
 
     // Driver mapping
 
@@ -198,7 +199,7 @@ public class RobotContainer {
     Trigger reduceSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.leftTriggerAxis,.6);
     Trigger increaseSpeed = m_driverController.axisGreaterThan(Constants.OperatorConstants.rightTriggerAxis,.6);
 
-    Trigger homeClimber = gameOpX;
+    Trigger passingShooter = gameOpX;
     Trigger unused1 = gameOpPOVRight;
 
     // Operator mapping
@@ -211,6 +212,7 @@ public class RobotContainer {
     Trigger climberDown = gameOpPOVDown;
     Trigger climberUp = gameOpPOVUp;
     Trigger testButton = gameOpBackRight;
+    Trigger toggleXDefenceMode = driverOpPOVDown;
 
     // todo add unused buttons for driver
 
@@ -218,12 +220,14 @@ public class RobotContainer {
     reverseIntake.and(driverComtrollerAutoPickupButton.negate()).whileTrue(backwardIntakeCommand());
     intake.and(driverComtrollerAutoPickupButton.negate()).whileTrue(forwardIntakeCommand());
 
+
     speakerShooter.whileTrue(Commands.runOnce(shooter::prepareForSpeaker, shooter));
-    ampShooter.whileTrue(Commands.runOnce(shooter::prepareForAmp,shooter));
+    ampShooter.whileTrue(Commands.runOnce(shooter::prepareForAmp, shooter));
+    passingShooter.whileTrue(Commands.runOnce(shooter::prepareForPassing, shooter));
     tuneShooter.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
-    speakerShooter.or(ampShooter).or(tuneShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
-    shootButton.debounce(.1).and(speakerShooter.or(ampShooter).or(tuneShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
-    homeClimber.whileTrue(new HomeClimber(climber));
+    speakerShooter.or(ampShooter).or(tuneShooter).or(passingShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
+    shootButton.debounce(.1).and(speakerShooter.or(ampShooter).or(tuneShooter).or(passingShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
+    //homeClimber.whileTrue(new HomeClimber(climber));
     testButton.whileTrue(autoCommandFactory.doAutoShot());
 
     climberDown.whileTrue( 
