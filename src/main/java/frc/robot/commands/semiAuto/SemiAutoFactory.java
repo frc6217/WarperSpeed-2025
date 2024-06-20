@@ -33,10 +33,10 @@ public class SemiAutoFactory {
         return group;
     }
 
-     public ParallelDeadlineGroup speakerGoTo(){
-        ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.shooterLimeLight, Constants.SemiAutoConstants.speaker, robot.intake, robot.firstBeamBreak));
-        return group;
-    }
+    //  public ParallelDeadlineGroup speakerGoTo(){
+    //     ParallelDeadlineGroup group = new ParallelDeadlineGroup(new CameraDrive(robot.swerveDrivetrain, robot.shooterLimeLight, Constants.SemiAutoConstants.speaker, robot.intake, robot.firstBeamBreak));
+    //     return group;
+    // }
 
     public Command autoPickupUntilSignal(){
         ParallelRaceGroup group = new ParallelRaceGroup(new CameraDrive(robot.swerveDrivetrain, robot.noteFinderLimeLight, Constants.SemiAutoConstants.note, robot.intake, robot.firstBeamBreak), new IntakeCommand(robot.intake,.8));

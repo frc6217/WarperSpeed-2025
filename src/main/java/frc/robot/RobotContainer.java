@@ -91,7 +91,7 @@ public class RobotContainer {
   public final Indexer indexer = new Indexer();
   public final Climber climber = new Climber();
   public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 0);
-  public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 20);
+  //public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 20);
 
 
 
@@ -123,7 +123,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("autoIntake", runIntakeUntilNote());
     NamedCommands.registerCommand("autoFindNoteClockWise", autoFindNoteClockWiseCommand);
     NamedCommands.registerCommand("autoFindNoteCounterClockWise", autoFindNoteCounterClockWiseCommand);
-    NamedCommands.registerCommand("autoSpeakerLineUp", new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak));
+   // NamedCommands.registerCommand("autoSpeakerLineUp", new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak));
 
 
   }
@@ -264,11 +264,11 @@ public class RobotContainer {
     //                             .andThen(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1)).andThen(semiAutoFactory.autoPickupNote()));
     // //testSemiAutoShot.whileTrue(new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1));
   }
-  public Command getTestAuto(){
-    Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak);
-   // command.andThen(autoCommandFactory.doAutoShot());
-    return command;
-  }
+  // public Command getTestAuto(){
+  //   Command command = new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak);
+  //  // command.andThen(autoCommandFactory.doAutoShot());
+  //   return command;
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

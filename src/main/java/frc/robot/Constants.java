@@ -36,11 +36,11 @@ public final class Constants {
 
   public static class AutoConstants{
     public static final double nearNoteXdistance = 4;
-    public static final double nearNoteYdistance = 2;
+    public static final double nearNoteYdistance = 5;
     public static final double sideSetupXdistance = -1.48;
     public static final double sideSetupYdistance = 2.5;
     public static final double sideSetupAngle = 60;
-    public static final double farNoteXdistance = 20.25;
+    public static final double farNoteXdistance = 19.25;
     public static final double farNoteYDistance = 15.25;
     public static final double farNote2YDistance = 10.25;
     public static final double sideRightSetupAngle = 300;
@@ -107,7 +107,7 @@ public final class Constants {
     public static final int indexerMotorCurrentLimit = 40;
 
     public static final boolean useServoEnabled = false;
-    public static final boolean autoSyncEncoder = true;
+    public static final boolean autoSyncEncoder = false;
     public static final int autoSyncTimer = 10;
     public static final double syncThreshold = 1;
     //Random numberdecided make actually number that the angle velo max actually is. 
@@ -139,7 +139,7 @@ public final class Constants {
     public static final double shooterVoltageCompensation = 10;
     public static final double climberSpeed = 0.8;
     public static double thridIntakeSpeed = 0.5; 
-    public static int leftLimitSwitchChannel = 9;
+    public static int leftLimitSwitchChannel = 7;
     public static int rightLimitSwitchChannel = 8;
     public static double intakeDebounceTime = .05;
     public static double intakeHopperDebounceTime = .5;

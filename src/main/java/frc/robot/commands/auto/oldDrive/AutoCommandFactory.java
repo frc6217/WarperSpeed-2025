@@ -197,14 +197,14 @@ public class AutoCommandFactory {
     
     public Command doSimpleReturnHome(){
         Command pCommandGroup = new ParallelDeadlineGroup(
-        new DriveXfeetYfeetDiseredDegreeAngle(.5,0,0, sDrivetrain), 
+        new DriveXfeetYfeetDiseredDegreeAngle(.2,0,0, sDrivetrain), 
         new SequentialCommandGroup(new ParallelDeadlineGroup(Commands.waitSeconds(0.3), new ParallelCommandGroup(new IntakeCommand(intake, .8), new ThirdIntakeCommand(thirdIntakeWheels, Constants.RobotConstants.thridIntakeSpeed))), new AutoShootStart(shooter)));
         return pCommandGroup;
       }
 
     public SequentialCommandGroup GoToNearLeftNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(2, 1.5,30, sDrivetrain));
+        pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(2, AutoConstants.nearNoteYdistance,15, sDrivetrain));
         //pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.nearNoteXdistance , AutoConstants.nearNoteYdistance, sDrivetrain), new AutoIntakeStart(intake, thirdIntakeWheels)));
         pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
         pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.65),new ParallelCommandGroup(new IntakeCommand(intake, .8), new ThirdIntakeCommand(thirdIntakeWheels, Constants.RobotConstants.thridIntakeSpeed))));
@@ -212,7 +212,21 @@ public class AutoCommandFactory {
         return pCommandGroup;
       }
 
-
+    public SequentialCommandGroup ClearMiddleNotesFromLeft(){
+      SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
+      pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(4, AutoConstants.farNoteYDistance-3,0, sDrivetrain).withTimeout(2));
+      pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance, AutoConstants.farNoteYDistance-2,0, sDrivetrain).withTimeout(2), new AutoIntakeStart(intake, thirdIntakeWheels)));
+      pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance, 0, sDrivetrain), new AutoIntakeEnd(intake, thirdIntakeWheels)));
+      return pCommandGroup;
+    }
+ 
+    public SequentialCommandGroup ClearMiddleNotesFromRight(){
+    SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
+    pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(4, -AutoConstants.farNoteYDistance + 4,0, sDrivetrain).withTimeout(2));
+    pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance, -AutoConstants.farNoteYDistance,0, sDrivetrain).withTimeout(2), new AutoIntakeStart(intake, thirdIntakeWheels)));
+    pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance, 1, sDrivetrain), new AutoIntakeEnd(intake, thirdIntakeWheels)));
+    return pCommandGroup;
+    }
     public SequentialCommandGroup  GoToNearMiddleNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new ParallelDeadlineGroup( new DriveXfeetYfeetDiseredDegreeAngle(.5, 0,0, sDrivetrain), new AutoIntakeStart(intake, thirdIntakeWheels)));
@@ -224,7 +238,7 @@ public class AutoCommandFactory {
       }
     public SequentialCommandGroup GoToNearRightNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-       pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(2, -1.5,330, sDrivetrain).withTimeout(.5));
+       pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(2, -AutoConstants.nearNoteYdistance,345, sDrivetrain).withTimeout(.5));
        // pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.nearNoteXdistance , -AutoConstants.nearNoteYdistance, sDrivetrain), new AutoIntakeStart(intake)));
        pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
        pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.65), new ParallelCommandGroup(new IntakeCommand(intake, .8), new ThirdIntakeCommand(thirdIntakeWheels, Constants.RobotConstants.thridIntakeSpeed)))); 
@@ -235,7 +249,7 @@ public class AutoCommandFactory {
       public SequentialCommandGroup GoToFarLeftFirstNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(4, AutoConstants.farNoteYDistance-3,0, sDrivetrain).withTimeout(2));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance - 2, AutoConstants.farNoteYDistance-2,10, sDrivetrain).withTimeout(2), new AutoIntakeStart(intake, thirdIntakeWheels)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance - 2, AutoConstants.farNoteYDistance,10, sDrivetrain).withTimeout(2), new AutoIntakeStart(intake, thirdIntakeWheels)));
         pCommandGroup.addCommands(new CameraFindNote(sDrivetrain, robotContainer.noteFinderLimeLight, -1));
         pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
         pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.2), new AutoIntakeStart(intake, thirdIntakeWheels)));
@@ -262,7 +276,7 @@ public class AutoCommandFactory {
       public SequentialCommandGroup GoToFarRightFirstNote(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         pCommandGroup.addCommands(new DriveXfeetYfeetDiseredDegreeAngle(4, -AutoConstants.farNoteYDistance + 4,0, sDrivetrain).withTimeout(2));
-        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance - 2, -AutoConstants.farNoteYDistance+3,350, sDrivetrain).withTimeout(2), new AutoIntakeStart(intake, thirdIntakeWheels)));
+        pCommandGroup.addCommands(new ParallelDeadlineGroup(new DriveXfeetYfeetDiseredDegreeAngle(AutoConstants.farNoteXdistance - 2, -AutoConstants.farNoteYDistance,350, sDrivetrain).withTimeout(2), new AutoIntakeStart(intake, thirdIntakeWheels)));
         pCommandGroup.addCommands(new CameraFindNote(sDrivetrain, robotContainer.noteFinderLimeLight, 1));
         pCommandGroup.addCommands(semiAutoFactory.autoPickupNote());
         pCommandGroup.addCommands(new ParallelDeadlineGroup(Commands.waitSeconds(.3), new AutoIntakeStart(intake, thirdIntakeWheels)));

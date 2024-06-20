@@ -73,11 +73,11 @@ public class LimeLightSub extends SubsystemBase {
     double area = ta.getDouble(0.0);
 
     //post to smart dashboard periodically
-    SmartDashboard.putNumber(name + " X", x);
-    SmartDashboard.putNumber(name + " Y", y);
-    SmartDashboard.putNumber(name + " Area", area);
-    SmartDashboard.putNumber(name + " skew", targetSkew.getDouble(0));
-    SmartDashboard.putBoolean(name + " seetarget", (tv.getDouble(0)) != 0);
+    // SmartDashboard.putNumber(name + " X", x);
+    // SmartDashboard.putNumber(name + " Y", y);
+    // SmartDashboard.putNumber(name + " Area", area);
+    // SmartDashboard.putNumber(name + " skew", targetSkew.getDouble(0));
+    // SmartDashboard.putBoolean(name + " seetarget", (tv.getDouble(0)) != 0);
   }
 
   public double getArea(){
