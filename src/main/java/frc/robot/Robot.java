@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.SetLedDisabled;
 import frc.robot.commands.brakeCommands.EnableBrakes;
 import frc.robot.commands.brakeCommands.UnenableBrakes;
 
@@ -36,14 +35,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-     //new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain));
-     //new Trigger(this::isEnabled).negate().debounce(3).onTrue(new UnenableBrakes(m_robotContainer.swerveDrivetrain));
-     
-    // Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain).schedule();
-
-    // new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.intake::ledNoNote, m_robotContainer.intake));
-     new Trigger(this::isEnabled).negate().onTrue(new SetLedDisabled(m_robotContainer.intake));
-
 
      FollowPathCommand.warmupCommand().schedule();
   
@@ -58,20 +49,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putBoolean("Hopper Beam Break", m_robotContainer.hopperBeamBreak.get());
-    SmartDashboard.putBoolean("First Beam Break", m_robotContainer.firstBeamBreak.get());
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    //Command unbrake = new UnenableBrakes(m_robotContainer.swerveDrivetrain);
-    //unbrake.schedule();
+   
   }
 
   @Override
@@ -84,7 +68,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_robotContainer.swerveDrivetrain.initialize();
     
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -103,12 +86,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    //CommandScheduler.getInstance().cancelAll();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
-   // new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.swerveDrivetrain::enableBrakes, m_robotContainer.swerveDrivetrain));
-    //Command brakes = new EnableBrakes(m_robotContainer.swerveDrivetrain);
-    //brakes.schedule();
     }
 
     

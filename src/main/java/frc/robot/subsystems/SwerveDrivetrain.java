@@ -40,7 +40,8 @@ public class SwerveDrivetrain extends SubsystemBase {
   public final  SwerveModule backRightModule;// = new SwerveModule(Constants.RobotConstants.backRight);
   public final SwerveModule frontLeftModule;// = new SwerveModule(Constants.RobotConstants.frontLeft);
 
-  public final Pigeon2 pigeon2 = new Pigeon2(50,"CTRSwerve");
+  // public final Pigeon2 pigeon2 = new Pigeon2(50,"CTRSwerve");
+   public final Pigeon2 pigeon2 = new Pigeon2(50);
   public SwerveDriveOdometry sOdometry;
   public SwerveDriveKinematics sKinematics;
   public SwerveModule[] modules;
@@ -89,10 +90,10 @@ public class SwerveDrivetrain extends SubsystemBase {
     modules[backLeftModule.operationOrderID] = backLeftModule;
     modules[backRightModule.operationOrderID] = backRightModule;
     sOdometry = new SwerveDriveOdometry(sKinematics, getGyroRotation2d(), getModulePositions(), new Pose2d(0, 0, new Rotation2d(0)));
-    frontLeftModule.driveEncoder.setPosition(0);
-    frontRightModule.driveEncoder.setPosition(0);
-    backLeftModule.driveEncoder.setPosition(0);
-    backRightModule.driveEncoder.setPosition(0);
+    frontLeftModule.driveMotor.setPosition(0);
+    frontRightModule.driveMotor.setPosition(0);
+    backLeftModule.driveMotor.setPosition(0);
+    backRightModule.driveMotor.setPosition(0);
     cSpeeds.omegaRadiansPerSecond = 0;
     cSpeeds.vxMetersPerSecond = 0;
     cSpeeds.vyMetersPerSecond = 0;
@@ -111,7 +112,7 @@ public class SwerveDrivetrain extends SubsystemBase {
                     new PIDConstants(16.0, 0.0, 0.0), // Translation PID constants
                     new PIDConstants(16.0, 0.0, 0.0), // Rotation PID constants
                     4.6, // Max module speed, in m/s
-                    0.44, // Drive base radius in meters. Distance from robot center to furthest module.
+                    0.53, // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
@@ -197,6 +198,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 
   public void absoluteDrive(Translation2d desiredTranslation, double desiredRotation){
+    //cSpeeds = new ChassisSpeeds(desiredTranslation.getX(), desiredTranslation.getY(), desiredRotation);
     cSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredTranslation.getX(), desiredTranslation.getY(), desiredRotation, getGyroRotation2d());
     //SwerveModuleState[] states = sKinematics.toSwerveModuleStates(cSpeeds);
   
@@ -276,10 +278,10 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
     public void reset() {
     pigeon2.reset();
-    frontLeftModule.driveEncoder.setPosition(0);
-    frontRightModule.driveEncoder.setPosition(0);
-    backLeftModule.driveEncoder.setPosition(0);
-    backRightModule.driveEncoder.setPosition(0);
+    frontLeftModule.driveMotor.setPosition(0);
+    frontRightModule.driveMotor.setPosition(0);
+    backLeftModule.driveMotor.setPosition(0);
+    backRightModule.driveMotor.setPosition(0);
     cSpeeds.omegaRadiansPerSecond = 0;
     cSpeeds.vxMetersPerSecond = 0;
     cSpeeds.vyMetersPerSecond = 0;

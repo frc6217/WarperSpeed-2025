@@ -10,6 +10,32 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import java.util.ResourceBundle.Control;
 
+import javax.swing.text.Position;
+
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DifferentialVelocityDutyCycle;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.compound.Diff_DutyCycleOut_Position;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -31,14 +57,15 @@ import frc.robot.subsystems.SwerveModule.Constants.encoderType;
 public class SwerveModule extends SubsystemBase{
   /** Creates a new SwerveModule. */
 
-  public final CANSparkMax driveMotor;
-  public final CANSparkMax steerMotor;
-  RelativeEncoder driveEncoder;
-  RelativeEncoder steerEncoder;
-  SparkPIDController drivePID;
-
+  public final TalonFX driveMotor;
+  public final TalonFX steerMotor;
+  public PositionDutyCycle steerPID = new PositionDutyCycle(0);
+  public VelocityDutyCycle drivePID = new VelocityDutyCycle(0);
+  Slot0Configs driveConfigs = new Slot0Configs();
+  ClosedLoopRampsConfigs driveRamp = new ClosedLoopRampsConfigs();
+  ClosedLoopRampsConfigs steerRamp = new ClosedLoopRampsConfigs();
   double driveSetpoint = 0;
-  SparkPIDController steerPID;
+  Slot0Configs steerConfigs = new Slot0Configs();
   double steerSetpoint = 0;
   IEncoder absEncoder;
   String name;
@@ -49,33 +76,22 @@ public class SwerveModule extends SubsystemBase{
   public SwerveModule(Constants constants){
     syncTimer.start();
     name = new String(constants.name);
+    
+    driveMotor = new TalonFX(constants.driveMotorID);
+    steerMotor = new TalonFX(constants.steerMotorID);
 
-    driveMotor = new CANSparkMax(constants.driveMotorID, MotorType.kBrushless);
-    steerMotor = new CANSparkMax(constants.steerMotorID, MotorType.kBrushless);
+
+    
   //Add to COnstants
-
     absEncoder = new BBCANEncoder(constants);
     
-    driveEncoder = driveMotor.getEncoder();
-    steerEncoder = steerMotor.getEncoder();
-    drivePID = driveMotor.getPIDController();
 
-    steerPID = steerMotor.getPIDController();
+    driveMotor.setNeutralMode(NeutralModeValue.Coast);
+    steerMotor.setNeutralMode(NeutralModeValue.Coast);
 
-
-    driveMotor.restoreFactoryDefaults();
-    steerMotor.restoreFactoryDefaults();
-
-    driveMotor.setInverted(false);
-    steerMotor.setInverted(false);
-
-    driveMotor.setIdleMode(IdleMode.kCoast);
-    steerMotor.setIdleMode(IdleMode.kCoast);
-
-    steerPID.setPositionPIDWrappingMaxInput(2 * Math.PI);
-    steerPID.setPositionPIDWrappingMinInput(0);
-    steerPID.setPositionPIDWrappingEnabled(true);
-    steerMotor.setSmartCurrentLimit(RobotConstants.steerMotorCurrentLimit);
+    // steerPID.setPositionPIDWrappingMaxInput(2 * Math.PI);
+    // steerPID.setPositionPIDWrappingMinInput(0);
+    // steerPID.setPositionPIDWrappingEnabled(true);
 
     //new swerve
   
@@ -84,71 +100,67 @@ public class SwerveModule extends SubsystemBase{
     //steerEncoder.setPositionConversionFactor((2 * Math.PI) / 58.3); // gear ratio 58
     
     //steerEncoder.setPosition(0);
-    steerEncoder.setPositionConversionFactor(2*Math.PI / 21.4285714286);
+    
 
     //todo set drive Encoder velocity scale
 
+    SmartDashboard.putData(steerMotor);
+
 
 //todo make drive pid work
-    drivePID.setP(0);
-    drivePID.setI(0);
-    drivePID.setD(0);
-    drivePID.setFF(0);
+    driveRamp.withDutyCycleClosedLoopRampPeriod(.2);
+    steerRamp.withDutyCycleClosedLoopRampPeriod(0);
 
-    steerPID.setP(0.3);
-    steerPID.setD(0);
-    steerPID.setI(0);
-    steerPID.setFF(0);
+    steerConfigs = steerConfigs.withKA(0).withKD(0).withKG(0).withKI(.6).withKP(3).withKS(0).withKV(0);
+    steerMotor.getConfigurator().apply(steerConfigs);
+    steerMotor.getConfigurator().apply(new FeedbackConfigs().withSensorToMechanismRatio(21.4285714).withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor));
+    steerMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+    steerMotor.getConfigurator().apply(steerRamp);
+    steerMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(RobotConstants.steerMotorCurrentLimit).withSupplyCurrentLimitEnable(true));
+    ClosedLoopGeneralConfigs d = new ClosedLoopGeneralConfigs();
+    d.ContinuousWrap = true;
+    StatusCode sCode = steerMotor.getConfigurator().apply(d);
+    steerPID.withFeedForward(RobotConstants.feedforward);
+    steerPID.withSlot(0);
+
+    
+   
+    driveConfigs = driveConfigs.withKA(0).withKD(0).withKG(0).withKI(0.35).withKP(0.32).withKS(0).withKV(0);
+    driveMotor.getConfigurator().apply(driveConfigs);
+    driveMotor.getConfigurator().apply(new FeedbackConfigs().withSensorToMechanismRatio(3.13298));
+    driveMotor.getConfigurator().apply(driveRamp);
+    driveMotor.getConfigurator().apply(new MotorOutputConfigs().withDutyCycleNeutralDeadband(.016));
+    driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(RobotConstants.driveMotorCurrentLimit).withSupplyCurrentLimitEnable(true));
+    drivePID.withFeedForward(RobotConstants.feedforward);
+    drivePID.withSlot(0);
+
+    steerMotor.setPosition(absEncoder.getAngle().getRotations());
 
     absEncoderOffset = constants.absEncoderOffset;
 
     operationOrderID = constants.position;
 
     //driveMotor.setSmartCurrentLimit(0, 40);
-    driveMotor.setSmartCurrentLimit(RobotConstants.driveMotorCurrentLimit);
 
-    
+    steerMotor.setControl(steerPID);
 
-    driveEncoder.setPositionConversionFactor(0.044458);
-
-    steerMotor.burnFlash();
-    driveMotor.burnFlash();
   }
   public void initializeEncoder(){
-    steerEncoder.setPosition(absEncoder.getAngle().getRadians());
-    driveEncoder.setPosition(0);
+    steerMotor.setPosition(absEncoder.getAngle().getRotations());
+    //steerMotor.setPosition(0);
+    driveMotor.setPosition(0);
+
+
+    //steerMotor.setPosition(absEncoder.getAngle().getRotations());
+   
   }
-
-  /*
-  @Override
-  public void initSendable(SendableBuilder builder) {
-   // builder.setSmartDashboardType(name + "Swerve Module");
-    builder.addDoubleProperty(name + "DrivePosition", this::getDrivePosition, null);
-    
-    builder.addDoubleProperty(name + "DriveSpeed", this::getDriveSpeed, null);
-    
-    
-    builder.addDoubleProperty(name + "SteerSpeed", this::getSteerSpeed, null);
-    builder.addDoubleProperty(name + "SteerPosition", this::getSteerPosition, null);
-    builder.addDoubleProperty(name + "DriveP", this::getDriveP, this::setDriveP);
-    builder.addDoubleProperty(name + "DriveI", this::getDriveI, this::setDriveI);
-
-    builder.addDoubleProperty("DriveD", this::getDriveD, this::setDriveD);
-    builder.addDoubleProperty("SteerP", this::getSteerP, this::setSteerP);
-    builder.addDoubleProperty("SteerI", this::getSteerI, this::setSteerI);
-    builder.addDoubleProperty("SteerD", this::getSteerD, this::setSteerD);
-    builder.addDoubleProperty(" AngleState", this::getSetPointAngle, null);
-    builder.addDoubleProperty(" SpeedState", this::getSetPointSpeed, null);
-
-  }
-  */
 
 
   private double getSteerPosition(){
-    if(steerEncoder.getPosition() < 0){
-      return 2*Math.PI + steerEncoder.getPosition() % (2* Math.PI);
+    if(steerMotor.getPosition().getValueAsDouble() < 0){
+      return 1 + steerMotor.getPosition().getValueAsDouble() % 1;
     }else{
-      return steerEncoder.getPosition() % (2* Math.PI);
+      return steerMotor.getPosition().getValueAsDouble() % 1;
     }
   }
 
@@ -159,47 +171,48 @@ public class SwerveModule extends SubsystemBase{
   }
 
   public SwerveModuleState getModuleState() {
-    return new SwerveModuleState(driveEncoder.getVelocity(), getCurrentAngle());
+    return new SwerveModuleState(driveMotor.getVelocity().getValueAsDouble(), getCurrentAngle());
   }
 
   private double getDistance() {
-    return driveEncoder.getPosition();
+    return driveMotor.getPosition().getValueAsDouble();
   }
   
   private void setSpeed(SwerveModuleState state){
-    driveSetpoint = state.speedMetersPerSecond/RobotConstants.driveMaxVelo;
+    driveSetpoint = state.speedMetersPerSecond;
     //SmartDashboard.putNumber(name+" Drive Setpoint ", driveSetpoint);
-    if(Math.abs(driveSetpoint) > .001){
-     //System.out.println(name  + ": " + MathUtil.clamp(driveSetpoint, -1, 1));
-     driveSetpoint = slewRate.calculate(driveSetpoint);
-      driveMotor.set(MathUtil.clamp(driveSetpoint, -1, 1));
-      //drivePID.setReference(driveSetpoint, ControlType.kVelocity);
-    } else{
-      driveMotor.set(0);
-    }
+      drivePID.withVelocity(driveSetpoint);
+      driveMotor.setControl(drivePID);
   }
 
   private void setAngle(SwerveModuleState state){
-    steerSetpoint = state.angle.getRadians();
-    if(steerSetpoint < 0){
-      steerSetpoint = 2*Math.PI + steerSetpoint % (2* Math.PI);
-    }else{
-      steerSetpoint = steerSetpoint % (2* Math.PI);
-    }
+    steerSetpoint = state.angle.getRotations();
+    
+    
     //steerSetpoint = (Math.abs(steerSetpoint-getSteerPosition()) < 0.15) ? 0 : steerSetpoint;
-    steerPID.setReference(steerSetpoint, ControlType.kPosition);
+
+    steerPID.withPosition(steerSetpoint);
+    steerMotor.setControl(steerPID);
     //System.out.println(name + "pid out " + steerMotor.get());
   }
 
   public Rotation2d getCurrentAngle(){
-    return new Rotation2d(getSteerPosition());
+    return new Rotation2d(getSteerPosition()*2*Math.PI);
   }
 
   public void setState(SwerveModuleState state){
 
-    state = SwerveModuleState.optimize(state, getCurrentAngle());
-    //state = optimize(state, getCurrentAngle());
+    SmartDashboard.putNumber(name + " input angle", state.angle.getRotations());
+    SmartDashboard.putNumber(name + " getCurrentAngle", getCurrentAngle().getRotations());
 
+   // state = SwerveModuleState.optimize(state, getCurrentAngle());
+    state = optimize(state, getCurrentAngle());
+
+    SmartDashboard.putNumber(name + " Desired Angle", state.angle.getRotations());
+    SmartDashboard.putNumber(name + "PID Out ", steerPID.Position);
+
+    //remove me when I wanna drive
+  
     setAngle(state);
     setSpeed(state);
 
@@ -207,64 +220,34 @@ public class SwerveModule extends SubsystemBase{
 
   public void toggleBrakes(boolean toggle){
     if(toggle){
-    steerMotor.setIdleMode(IdleMode.kBrake);
-    driveMotor.setIdleMode(IdleMode.kBrake);
+    steerMotor.setNeutralMode(NeutralModeValue.Brake);
+    driveMotor.setNeutralMode(NeutralModeValue.Brake);
   }
     else{
-      driveMotor.setIdleMode(IdleMode.kCoast);
-      steerMotor.setIdleMode(IdleMode.kCoast);
+      driveMotor.setNeutralMode(NeutralModeValue.Coast);
+      steerMotor.setNeutralMode(NeutralModeValue.Coast);
     }
   }
   public void syncEncoders() {
-    steerEncoder.setPosition(absEncoder.getAngle().getRadians());
+    steerMotor.setPosition(absEncoder.getAngle().getRotations());
     System.out.println("Did encoder sync");
   }
 
   @Override
   public void periodic() {
     if(RobotConstants.autoSyncEncoder){
-      boolean isMoving = steerEncoder.getVelocity() > RobotConstants.syncThreshold;
+      boolean isMoving = steerMotor.getVelocity().getValueAsDouble() > RobotConstants.syncThreshold;
       boolean isSyncTime = syncTimer.hasElapsed(RobotConstants.autoSyncTimer);
       if((!isMoving) && isSyncTime) {
         syncEncoders();
         syncTimer.restart();
       }
     }
+   // SmartDashboard.putNumber(name + " angle", getSteerPosition());
+   SmartDashboard.putNumber(name + " abs encoder", absEncoder.getAngle().getRotations());
+   SmartDashboard.putNumber(name + "relative encoder raw", steerMotor.getPosition().getValueAsDouble());
+      SmartDashboard.putNumber(name + "relative encoder unwrap", this.getSteerPosition());
 
-    // if abs enc value and relative enc val is not within ~5% then log an error
-   // if((absEncoder.getAngle().getRadians() - getSteerPosition())/getSteerPosition() >= 0.05) {
-     // System.err.print("module:" + name + "is outside of 5%");
-  //  }
-
-    // if we aren't adjusting steering AND some time passed (5sec maybe)
-    // then get ABS enc value and set it to relative postion (with conversion?)
-   // SmartDashboard.putNumber(name + " Wheel Angle (degree)", Math.round(Math.toDegrees(getSteerPosition())));
-    //SmartDashboard.putNumber(name + " Absolute Encoder", absEncoder.getAngle().getDegrees());
-    //SmartDashboard.putNumber(name + " Absolute Encoder Raw Value: ", absEncoder.getRawValue());
-    //SmartDashboard.putNumber(name + " Steer Setpoints", Math.toDegrees(steerSetpoint));
-    
-    //SmartDashboard.putNumber(name + "RPM of Motor", driveMotor.getEncoder().getVelocity());
-    /*
-    SmartDashboard.putNumber(name + " DrivePosition", getDrivePosition());
-    SmartDashboard.putNumber(name + " DriveSpeed", getDriveSpeed());
-    
-
-    SmartDashboard.putNumber(name + " DriveP", getDriveP());
-    SmartDashboard.putNumber(name + " DriveI", getDriveI());
-    SmartDashboard.putNumber(name + " DriveD", getDriveD());
-
-    SmartDashboard.putNumber(name + " SteerP", getSteerP());
-    SmartDashboard.putNumber(name + " SteerI", getSteerI());
-    SmartDashboard.putNumber(name + " SteerD", getSteerD());
-
-    SmartDashboard.putNumber(name + " AngleState", getSetPointAngle());
-    SmartDashboard.putNumber(name + " SpeedState", getSetPointSpeed());
-
-    SmartDashboard.putNumber(name + " SteerSpeed", getSteerSpeed());
-    SmartDashboard.putNumber(name + " SteerPosition", getSteerPosition());
-
-    SmartDashboard.putNumber(name + " abs angle: ", absEncoder.getAngle().getDegrees());
-*/
   }
 
   /**
@@ -276,17 +259,28 @@ public class SwerveModule extends SubsystemBase{
    * @param desiredState The desired state.
    * @param currentAngle The current module angle.
    */
-  public static SwerveModuleState optimize(
-      SwerveModuleState desiredState, Rotation2d currentAngle) {
-    double targetAngle =
-        placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
+  public SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
+
+    double targetRotation = desiredState.angle.getRadians() + Math.PI; 
     double targetSpeed = desiredState.speedMetersPerSecond;
-    double delta = targetAngle - currentAngle.getDegrees();
-    if (Math.abs(delta) > 90) {
+    double delta = (targetRotation) - (currentAngle.getRadians());
+    SmartDashboard.putNumber(name +" delta", delta);
+    SmartDashboard.putNumber(name + " targetRotation", targetRotation);
+    SmartDashboard.putNumber(name + " currentRotation", currentAngle.getRadians());
+    final double QUARTER_TURN = Math.PI/2;
+    if (Math.abs(delta) > QUARTER_TURN) {
       targetSpeed = -targetSpeed;
-      targetAngle = delta > 90 ? (targetAngle -= 180) : (targetAngle += 180);
+      targetRotation = delta > QUARTER_TURN ? (targetRotation += Math.PI) : (targetRotation += Math.PI);;
+
     }
-    return new SwerveModuleState(targetSpeed, Rotation2d.fromDegrees(targetAngle));
+    
+    if (this.operationOrderID == 0)
+    {
+      SmartDashboard.putNumber( name + " optimized target angle", targetRotation);
+      SmartDashboard.putNumber( name + " optimized target speed", targetSpeed);
+      SmartDashboard.putNumber( name + " optimized target delta", delta);
+    }
+    return new SwerveModuleState(targetSpeed, Rotation2d.fromRadians(targetRotation));
   }
 
   /**

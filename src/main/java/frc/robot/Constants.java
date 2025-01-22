@@ -5,11 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
-import frc.robot.commands.semiAuto.SemiAutoParameters;
-import frc.robot.commands.semiAuto.SemiAutoParameters.PIDParameters;
-import frc.robot.commands.semiAuto.SemiAutoParameters.TARGET;
 import frc.robot.subsystems.SwerveModule;
-import frc.robot.subsystems.PIDShooter.ShooterSetPoints;
 import frc.robot.subsystems.SwerveModule.Constants.encoderType;
 
 /**
@@ -35,116 +31,39 @@ public final class Constants {
   }
 
   public static class AutoConstants{
-    public static final double nearNoteXdistance = 4;
-    public static final double nearNoteYdistance = 5;
-    public static final double sideSetupXdistance = -1.48;
-    public static final double sideSetupYdistance = 2.5;
-    public static final double sideSetupAngle = 60;
-    public static final double farNoteXdistance = 19.25;
-    public static final double farNoteYDistance = 15.25;
-    public static final double farNote2YDistance = 10.25;
-    public static final double sideRightSetupAngle = 300;
-  }
 
-  public static class SemiAutoConstants{
-    public static final PIDParameters translationPIDNotePickUp = new PIDParameters(0.2, 0, 0, -18.42, .4);
-    public static final PIDParameters rotationPIDNotePickUp = new PIDParameters(0.0005, 0, 0, 0, 0.4);
-    public static final PIDParameters strafePIDNotePickUp = new PIDParameters(0.01, 0, 0, -1, 1);
+   }
 
-    public static final SemiAutoParameters note = new SemiAutoParameters(TARGET.NOTE, translationPIDNotePickUp, rotationPIDNotePickUp, strafePIDNotePickUp, 1);
-
-    public static final PIDParameters translationPIDSpeaker = new PIDParameters(.02, 0, 0, 13.01, 2);
-    public static final PIDParameters rotationPIDSpeaker = new PIDParameters(0.0001, 0, 0, 88.2, 4);
-    public static final PIDParameters strafePIDSpeaker = new PIDParameters(0.016, 0.001, 0, 0.2, 1.5);
-
-    public static final SemiAutoParameters speaker = new SemiAutoParameters(TARGET.SPEAKER, translationPIDSpeaker, rotationPIDSpeaker, strafePIDSpeaker, -1);
-
-    public static final PIDParameters translationPIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters rotationPIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
-    public static final PIDParameters strafePIDAmp= new PIDParameters(0.0, 0, 0, 0, 0);
-
-    public static final SemiAutoParameters amp = new SemiAutoParameters(TARGET.AMP, translationPIDAmp, rotationPIDAmp, strafePIDAmp, 1);
-
-
-    public static final ShooterSetPoints speakerSetPoints = new ShooterSetPoints(-4662,-4417);
-    public static final ShooterSetPoints ampSetPoints = new ShooterSetPoints(-450,-900);
-    public static final ShooterSetPoints passingSetPoints = new ShooterSetPoints(-7000, -5500);
-    public static final ShooterSetPoints trapSetPoints = new ShooterSetPoints(0,0);
-    public static final ShooterSetPoints sourceSetPoints = new ShooterSetPoints(0,0);
-    public static final ShooterSetPoints idleSetPoints = new ShooterSetPoints(0,0);
-    public static final ShooterSetPoints offSetPoints = new ShooterSetPoints(0,0);
-  }
+  public static class SemiAutoConstants{}
 
 
   public static class RobotConstants{
-    public static final int firstIntakeCanId = 17;
-    public static final int secondIntakeCanId =  14;
-    public static final int candleCanId = 51;
-    public static final int indexerCanId = 7;
-    public static final int fourthIntakeCanId = 10;
-    public static final int lowShooterCanId = 5;
-    public static final int highShooterCanId = 6;
-    public static final int beamNoteDetectorChannel = 1;
-    public static final int servoChannel = 2;
-    public static final int firstBeamBreakChannel = 3;
-    public static final int thirdIntakeWheelsCanid = 11;
-    public static final int leftClimberCanId = 41;
-    public static final int rightClimberCanId = 42;
-    public static final double servoCloseAngle = 0;
-    public static final double servoOpenAngle = 180;
     public static final double trackWidth = Units.inchesToMeters(24.5);
     public static final double trackLength = Units.inchesToMeters(24.5);
-    public static final double driveGearRatio = 6.67;
+    public static final double driveGearRatio = 6.12;
     public static final double steerGearRatio = 1.2;
     public static final double wheelDiameter = Units.inchesToMeters(4);
     public static final double driveSlewTimeInSecond = 0.06;
-    public static final double driveMaxVelo = (5676/60/steerGearRatio)*(wheelDiameter)*Math.PI;
+    public static final double driveMaxVelo = (6000/60/steerGearRatio)*(wheelDiameter)*Math.PI;
     public static final double rotationMaxAngleVelo = 1.5*Math.PI*driveMaxVelo;
     public static final int steerMotorCurrentLimit = 40;
     public static final int driveMotorCurrentLimit = 45;
-    public static final int shooterMotorCurrentLimit = 60;
-    public static final int intakeMotorCurrentLimit = 50;
-    public static final int indexerMotorCurrentLimit = 40;
 
-    public static final boolean useServoEnabled = false;
     public static final boolean autoSyncEncoder = false;
     public static final int autoSyncTimer = 10;
     public static final double syncThreshold = 1;
     //Random numberdecided make actually number that the angle velo max actually is. 
-/*
-    // Practice Robot
-    public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 10, 20, 0, "Front Left", encoderType.Spark);
-    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 12, 22, 0, "Front Right", encoderType.Spark);
-    public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 11, 21, 0, "Back Left", encoderType.Spark);
-    public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 13, 23, 0, "Back Right", encoderType.Spark);
- */
     // Competition Robot
 
-    //bevel gear on wheel goes right
-    public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 16, 15, 60,-0.1062, "Front Left", encoderType.CAN, "CTRSwerve");
-    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 3, 4, 59, -0.1699, "Front Right", encoderType.CAN,"CTRSwerve");
-    public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 19, 18, 61,-0.8731, "Back Left", encoderType.CAN, "CTRSwerve");
-    public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 31, 2, 62,-0.596924, "Back Right", encoderType.CAN,"CTRSwerve");
+    //bevel gear on wheel goes rig
+    public static final SwerveModule.Constants frontLeft = new SwerveModule.Constants(0, 10, 11, 23,-0.921387, "Front Left", encoderType.CAN, "CTRSwerve");
+    public static final SwerveModule.Constants frontRight = new SwerveModule.Constants(1, 8, 9, 22, -0.433594, "Front Right", encoderType.CAN,"CTRSwerve");
+    public static final SwerveModule.Constants backLeft = new SwerveModule.Constants(2, 19, 18, 24,-0.852051, "Back Left", encoderType.CAN, "CTRSwerve");
+    public static final SwerveModule.Constants backRight = new SwerveModule.Constants(3, 3, 2, 21,-0.538818, "Back Right", encoderType.CAN,"CTRSwerve");
     public static final double laserNoteThresholdInches = 7.3;
     public static final double indexerStartOffset = .0887;
     public static final double noteDetectorThreshold = 0.000326;
-    public static final double highRpmSpeaker = 0;
-    public static final double lowRpmSpeaker = 200;
-    public static final double highRpmAmp = 400;
-    public static final double lowRpmAmp = 0;
-    public static final double highRpmTrap = 0;
-    public static final double lowRpmTrap = 0;
-    public static final double highRpmIdle = 0;
-    public static final double lowRpmIdle = 0;
-    public static final double shooterVoltageCompensation = 10;
-    public static final double climberSpeed = 0.8;
-    public static double thridIntakeSpeed = 0.5; 
-    public static int leftLimitSwitchChannel = 7;
-    public static int rightLimitSwitchChannel = 8;
-    public static double intakeDebounceTime = .05;
-    public static double intakeHopperDebounceTime = .5;
-    public static double autoShotDebounceTime = .2;
-  
+    public static final double feedforward = 0.011;  
   }
 
 

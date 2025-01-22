@@ -9,38 +9,12 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SemiAutoConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.FindKS;
-import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ResetDriveTrain;
 import frc.robot.commands.ResetGyro;
-import frc.robot.commands.ThirdIntakeCommand;
 import frc.robot.commands.auto.Autos;
 import frc.robot.commands.auto.CameraFindNote;
-import frc.robot.commands.auto.oldDrive.AbsoluteDiseredDriveNoPID;
-import frc.robot.commands.auto.oldDrive.AutoCommandFactory;
-import frc.robot.commands.auto.oldDrive.DriveXfeetYfeetDiseredDegreeAngle;
-import frc.robot.commands.auto.oldDrive.RelativeDiseredDriveNoPID;
-import frc.robot.commands.climbCommand.ClimberSetSpeedCommand;
-import frc.robot.commands.climbCommand.DeployClimber;
-import frc.robot.commands.climbCommand.HomeClimber;
-import frc.robot.commands.climbCommand.WinchClimber;
-import frc.robot.commands.semiAuto.CameraDrive;
-import frc.robot.commands.semiAuto.SemiAutoFactory;
-import frc.robot.commands.shootCommands.AmpShootCommand;
-import frc.robot.commands.shootCommands.SpeakerShootCommand;
-import frc.robot.commands.shootCommands.SpeedShoot;
-import frc.robot.commands.userNotify.VibrateController;
-import frc.robot.sensors.FirstBeamBreak;
-import frc.robot.sensors.HopperBeamBreak;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimeLightSub;
-import frc.robot.subsystems.PIDShooter;
-import frc.robot.subsystems.ServoTest;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrivetrain;
-import frc.robot.subsystems.ThirdIntakeWheels;
-import frc.robot.subsystems.Climber.ClimberSelector;
 
 import java.util.Map;
 
@@ -76,78 +50,25 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_gameOperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-  
-  AutoCommandFactory autoCommandFactory;
-  SemiAutoFactory semiAutoFactory;
-
-  public final HopperBeamBreak hopperBeamBreak = new HopperBeamBreak();
-  public final FirstBeamBreak firstBeamBreak = new FirstBeamBreak();
-
-
+ 
   public final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain(m_driverController);
-  public final Intake intake = new Intake(swerveDrivetrain, hopperBeamBreak);
-  public final ThirdIntakeWheels thirdIntakeWheels = new ThirdIntakeWheels();
-  public final PIDShooter shooter = new PIDShooter();
-  public final Indexer indexer = new Indexer();
-  public final Climber climber = new Climber();
   public final LimeLightSub noteFinderLimeLight = new LimeLightSub("limelight-pickup", 0);
-  //public final LimeLightSub shooterLimeLight = new LimeLightSub("limelight-shooter", 20);
 
-
-
-  public CameraDrive autoCameraDriveToNoteCommand = new CameraDrive(swerveDrivetrain, noteFinderLimeLight, Constants.SemiAutoConstants.note, intake, this.firstBeamBreak);
-  //public IntakeCommand autoIntakeCommand = new IntakeCommand(intake, 0.8);
   public Command autoFindNoteClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, -1);
   public Command autoFindNoteCounterClockWiseCommand = new CameraFindNote(swerveDrivetrain, noteFinderLimeLight, 1);
 
   public RobotContainer() {
     // Configure the trigger bindings
-    semiAutoFactory = new SemiAutoFactory(this);
-    autoCommandFactory = new AutoCommandFactory(this, swerveDrivetrain, indexer, intake, shooter,noteFinderLimeLight, semiAutoFactory, thirdIntakeWheels);
     configureBindings();
-    SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
+   // SmartDashboard.putData(new PowerDistribution(1, ModuleType.kRev));
     SmartDashboard.putData(CommandScheduler.getInstance());
-
-    new Trigger(intake::haveNote).onTrue(new VibrateController(m_driverController, 1, .5));
-    new Trigger(intake::haveNote).onTrue(new VibrateController(m_gameOperatorController, 1, .5));
-    new Trigger(firstBeamBreak::get).onTrue(new VibrateController(m_driverController, 1, 1));
-
-
 
     swerveDrivetrain.setDefaultCommand(new Drive(swerveDrivetrain, () -> -m_driverController.getLeftX(), () -> -m_driverController.getRightX(), () -> -m_driverController.getLeftY()));
 
-
     // path planner named commands
-    NamedCommands.registerCommand("autoCameraDriveToNote", autoCameraDriveToNoteCommand);
-    NamedCommands.registerCommand("autoShot", autoCommandFactory.doAutoShot());
-    NamedCommands.registerCommand("autoIntake", runIntakeUntilNote());
     NamedCommands.registerCommand("autoFindNoteClockWise", autoFindNoteClockWiseCommand);
     NamedCommands.registerCommand("autoFindNoteCounterClockWise", autoFindNoteCounterClockWiseCommand);
    // NamedCommands.registerCommand("autoSpeakerLineUp", new CameraDrive(swerveDrivetrain, shooterLimeLight, SemiAutoConstants.speaker, this.intake, this.firstBeamBreak));
-
-
-  }
-
-
-
-  private ClimberSelector selectClimberCommand() {
-
-    //boolean isLeftPulled = m_gameOperatorController.axisGreaterThan(2, .6).getAsBoolean();
-    //boolean isRightPulled = m_gameOperatorController.axisGreaterThan(3, 0.6).getAsBoolean();
-
-    boolean isLeftPulled = (m_gameOperatorController.getHID().getLeftTriggerAxis()> .6 );
-    boolean isRightPulled = (m_gameOperatorController.getHID().getRightTriggerAxis() > .6);
-
-    if ((isLeftPulled && isRightPulled) || (!isLeftPulled && !isRightPulled)) {
-      return  ClimberSelector.BOTH;
-    }
-    if (isLeftPulled) {
-      return ClimberSelector.LEFT;
-    }
-    if (isRightPulled) {
-      return ClimberSelector.RIGHT;
-    }
-    return ClimberSelector.BOTH;
   }
 
   /*
@@ -202,49 +123,11 @@ public class RobotContainer {
     Trigger passingShooter = gameOpX;
     Trigger unused1 = gameOpPOVRight;
 
-    // Operator mapping
-    Trigger reverseIntake = gameOpB;
-    Trigger intake = gameOpA;
-    Trigger speakerShooter = gameOpLeftBumper;
-    Trigger ampShooter = gameOpRightBumper;
-    Trigger tuneShooter = gameOpBackLeft;
-    Trigger shootButton = gameOpY;
-    Trigger climberDown = gameOpPOVDown;
-    Trigger climberUp = gameOpPOVUp;
-    Trigger testButton = gameOpBackRight;
-    Trigger toggleXDefenceMode = driverOpPOVDown;
+
 
     // todo add unused buttons for driver
 
     // Operator Commands
-    reverseIntake.and(driverComtrollerAutoPickupButton.negate()).whileTrue(backwardIntakeCommand());
-    intake.and(driverComtrollerAutoPickupButton.negate()).whileTrue(forwardIntakeCommand());
-
-
-    speakerShooter.whileTrue(Commands.runOnce(shooter::prepareForSpeaker, shooter));
-    ampShooter.whileTrue(Commands.runOnce(shooter::prepareForAmp, shooter));
-    passingShooter.whileTrue(Commands.runOnce(shooter::prepareForPassing, shooter));
-    tuneShooter.whileTrue(Commands.runOnce(shooter::prepareForTune, shooter));
-    speakerShooter.or(ampShooter).or(tuneShooter).or(passingShooter).whileFalse(Commands.runOnce(shooter::off, shooter));
-    shootButton.debounce(.1).and(speakerShooter.or(ampShooter).or(tuneShooter).or(passingShooter)).onTrue(Commands.runOnce(indexer::shoot, indexer));
-    //homeClimber.whileTrue(new HomeClimber(climber));
-    testButton.whileTrue(autoCommandFactory.doAutoShot());
-
-    climberDown.whileTrue( 
-        new SelectCommand<>(
-          Map.ofEntries(
-            Map.entry(ClimberSelector.BOTH, new WinchClimber(climber, ClimberSelector.BOTH)),
-            Map.entry(ClimberSelector.LEFT, new WinchClimber(climber, ClimberSelector.LEFT)),
-            Map.entry(ClimberSelector.RIGHT, new WinchClimber(climber, ClimberSelector.RIGHT))),
-            this::selectClimberCommand));
-
-    climberUp.whileTrue( 
-        new SelectCommand<>(
-          Map.ofEntries(
-            Map.entry(ClimberSelector.BOTH, new DeployClimber(climber, ClimberSelector.BOTH)),
-            Map.entry(ClimberSelector.LEFT, new DeployClimber(climber, ClimberSelector.LEFT)),
-            Map.entry(ClimberSelector.RIGHT, new DeployClimber(climber, ClimberSelector.RIGHT))),
-            this::selectClimberCommand));
 
    
     //Driver Commands
@@ -252,7 +135,7 @@ public class RobotContainer {
 
     driverToggleFieldOriented.onTrue(Commands.runOnce(swerveDrivetrain::doRelative));
     driverToggleFieldOriented.onFalse(Commands.runOnce(swerveDrivetrain::doAbsolute));
-    driverComtrollerAutoPickupButton.whileTrue(semiAutoFactory.autoPickupNote());
+    
     resetDriverGyro.whileTrue(new ResetGyro(swerveDrivetrain));
     slowMode.onTrue(Commands.runOnce(swerveDrivetrain.governor::setSlowMode, swerveDrivetrain));
     fastMode.onTrue(Commands.runOnce(swerveDrivetrain.governor::setFastMode, swerveDrivetrain));
@@ -275,35 +158,6 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-     //PathPlannerAuto auto = new PathPlannerAuto("StageNoteAuto");
-     //PathPlannerAuto auto = new PathPlannerAuto("New Auto");
-     //PathPlannerAuto auto = new PathPlannerAuto("OneNote");
-     //PathPlannerAuto auto = new PathPlannerAuto("Far Auto"); //todo change to do multiple auto
-     //return autoCommandFactory.AlwaysDo().andThen(auto);
-    // An example command will be run in autonomous
-  return  autoCommandFactory.getAutoCommand();
-  }
-
-  public AutoCommandFactory getAutoCommandFactory() {
-    return autoCommandFactory;
-  }
-
-
-  public Command forwardIntakeCommand() {
-    ParallelCommandGroup commandGroup = new ParallelCommandGroup(new IntakeCommand(intake,.8), new ThirdIntakeCommand(thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
-    return commandGroup;
-  }
-  public Command backwardIntakeCommand() {
-    ParallelCommandGroup commandGroup = new ParallelCommandGroup(new IntakeCommand(intake,-.5), new ThirdIntakeCommand(thirdIntakeWheels, -RobotConstants.thridIntakeSpeed));
-    return commandGroup;
-  }
-  public Command runIntakeUntilNote() {
-    //example
-    Command c = new ParallelDeadlineGroup(new IntakeCommand(intake,.8).until(hopperBeamBreak::getDebouncedBeamBreak), new ThirdIntakeCommand(thirdIntakeWheels, RobotConstants.thridIntakeSpeed));
-// beambreak
-    return c;
-  }
 
 }
 
